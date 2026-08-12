@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#064b31">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CGK Handling">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>CGK Handling · Hamdan Tour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">H</div>
+      <div><strong>HAMDAN TOUR</strong><span>Operations</span></div>
+      <button class="icon-btn side-close" id="sideClose" aria-label="Tutup"><i data-lucide="panel-left-close"></i></button>
+    </div>
+    <nav>
+      <div class="nav-label">OVERVIEW</div>
+      <a><i data-lucide="layout-dashboard"></i>Dashboard</a>
+      <div class="nav-label">OPERATIONS</div>
+      <a class="active"><i data-lucide="plane"></i>Keberangkatan</a>
+      <a><i data-lucide="plane-landing"></i>Kepulangan</a>
+      <a><i data-lucide="scan-line"></i>CGK Handling</a>
+      <a><i data-lucide="triangle-alert"></i>Kendala</a>
+      <div class="nav-label">DATA</div>
+      <a><i data-lucide="ticket"></i>PNR</a>
+      <a><i data-lucide="users"></i>Passenger</a>
+      <a><i data-lucide="briefcase-business"></i>Vendor</a>
+      <a><i data-lucide="hotel"></i>Hotel</a>
+      <div class="nav-label">REPORT</div>
+      <a><i data-lucide="calendar-days"></i>Calendar</a>
+      <a><i data-lucide="bar-chart-3"></i>Report</a>
+      <a><i data-lucide="download"></i>Export</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sync"><span class="dot"></span><div><b>Tersinkron</b><small>Data source PDF aktif</small></div></div>
+      <div class="user"><div class="avatar">R</div><div><b>rasyid.hamdan</b><small>Operator</small></div><i data-lucide="chevron-down"></i></div>
+      <small class="version">CGK v1.0</small>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn"><i data-lucide="menu"></i></button>
+      <div class="title-wrap"><h1>CGK Handling</h1><p>August 2026 — March 2027</p></div>
+      <div class="top-actions">
+        <div class="global-search"><i data-lucide="search"></i><input id="search" placeholder="Search flight, PNR, package, hotel..."><kbd>Ctrl K</kbd></div>
+        <button class="icon-btn"><i data-lucide="circle-help"></i></button>
+        <button class="icon-btn" id="themeBtn"><i data-lucide="moon"></i></button>
+        <button class="icon-btn notify"><i data-lucide="bell"></i><span>6</span></button>
+        <div class="profile"><div class="avatar">R</div><div><b>rasyid.hamdatour</b><small>Operator</small></div><i data-lucide="chevron-down"></i></div>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">TRAVEL OPERATIONS</div>
+          <h2>CGK Handling Schedule</h2>
+          <p>Operational flight handling · August 2026 — March 2027</p>
+        </div>
+        <div class="hero-actions">
+          <button class="btn ghost" id="todayBtn"><i data-lucide="calendar-check-2"></i>Today</button>
+          <button class="btn ghost" id="exportBtn"><i data-lucide="download"></i>Export</button>
+          <button class="btn ghost" id="printBtn"><i data-lucide="printer"></i>Print</button>
+          <button class="btn primary" id="noteBtn"><i data-lucide="plus"></i>Add Note</button>
+        </div>
+      </div>
+
+      <div class="summary" id="summary"></div>
+
+      <div class="controls">
+        <div class="month-nav">
+          <button class="btn ghost" id="prevBtn"><i data-lucide="chevron-left"></i>Previous</button>
+          <select id="monthSelect" aria-label="Pilih bulan"></select>
+          <button class="btn ghost" id="todaySmall">Today</button>
+          <button class="btn ghost" id="nextBtn">Next<i data-lucide="chevron-right"></i></button>
+        </div>
+        <div class="filters">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="DEPARTURE_CGK">Departure</button>
+          <button class="chip" data-filter="ARRIVAL_CGK">Arrival</button>
+          <span class="filter-sep"></span>
+          <button class="chip" data-airline="GA">GA</button>
+          <button class="chip" data-airline="QR">QR</button>
+          <button class="chip" data-airline="EK">EK</button>
+          <button class="chip" data-airline="WY">WY</button>
+          <button class="chip" data-airline="EY">EY</button>
+          <button class="chip" data-airline="SV">SV</button>
+          <button class="chip" data-airline="BI">BI</button>
+          <button class="chip" data-airline="TR">TR</button>
+          <button class="chip" id="highPax">High Pax</button>
+        </div>
+      </div>
+
+      <div class="calendar-card">
+        <div class="calendar-head">
+          <div><b id="calendarTitle">August 2026</b><span id="resultCount"></span></div>
+          <div class="legend"><span><i class="legend-dot dep"></i>Departure</span><span><i class="legend-dot arr"></i>Arrival</span></div>
+        </div>
+        <div class="weekdays"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
+        <div class="calendar" id="calendar"></div>
+      </div>
+
+      <section class="year-strip">
+        <div class="section-title"><div><b>Period overview</b><span>Source events · Aug 2026 → Mar 2027</span></div></div>
+        <div id="yearOverview" class="year-grid"></div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<div class="drawer-backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><div><span class="eyebrow">HANDLING DETAIL</span><h3 id="drawerTitle">Event</h3></div><button class="icon-btn" id="closeDrawer"><i data-lucide="x"></i></button></div>
+  <div id="drawerBody"></div>
+</aside>
+
+<div class="toast" id="toast"></div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
+</body>
+</html>
