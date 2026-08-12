@@ -1,29 +1,16 @@
-# CGK Handling · Hamdan Tour — PWA
+# CGK Handling PWA — fixed schedule logic
 
-Static HTML/CSS/JS app, ready for HTTPS hosting and iPhone Home Screen installation.
+Important schedule rule:
+- Departure handling = actual first flight departing CGK, using its departure date/time.
+- Return/arrival handling = actual final scheduled flight arriving at CGK, using its arrival date/time.
+- If the PDF marks (+1), the arrival date is the following calendar day.
+- Arrival cards show the handling time on the RIGHT.
+- Duplicate package rows on the same flight/date are consolidated into one handling event; verified pax is summed and PNRs are retained for search.
 
-## Fastest hosting: GitHub Pages
+Example from the source:
+10AUG CGKDOH 1830 2240 QR957
+11AUG DOHJED 0050 0320 QR1184
+17AUG JEDDOH 2235 0055 (+1) QR1189
+18AUG DOHCGK 0235 1535 QR956
 
-1. Create a GitHub repository, for example `cgk-handling`.
-2. Upload all files in this folder to the repository root.
-3. Open **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select `main` and `/ (root)`, then **Save**.
-6. Wait for deployment. GitHub Pages will provide a URL like:
-   `https://USERNAME.github.io/cgk-handling/`
-
-GitHub Pages hosts static HTML/CSS/JavaScript directly from a repository.
-
-## Install on iPhone
-
-1. Open the published URL in **Safari**.
-2. Tap **Share**.
-3. Tap **Add to Home Screen**.
-4. Name it **CGK Handling**.
-5. Tap **Add**.
-
-The included manifest, Apple meta tags, icon, and service worker make it behave like a lightweight PWA. HTTPS is required for service-worker functionality on normal hosted sites.
-
-## Important
-
-This app contains operational travel data. GitHub Pages sites are public on the internet, so do not publish sensitive passenger information, credentials, or private documents in the repository.
+The app therefore shows the return handling on 18 August at 15:35 for QR956.

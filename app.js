@@ -39,8 +39,8 @@ function renderYear(){
 }
 function eventCard(e){
  const dep=e.type==="DEPARTURE_CGK",cls=dep?"dep":"arr";
- return `<div class="event ${cls}" data-id="${e.id||`${e.date}-${e.flight}-${e.time}`}">
-  <div class="time">${e.time}</div><div class="type">${dep?"BERANGKAT":"TIBA"}</div>
+ return `<div class="event ${cls}" data-id="${e.id}">
+  <div class="event-top"><div class="time">${e.time}</div><div class="type">${dep?"BERANGKAT":"TIBA"}</div></div>
   <div class="flight">${e.flight}</div><div class="route">${e.route}</div>
   <div class="pax">${e.pax?`${e.pax} PAX`:"PAX —"}</div>
  </div>`;
@@ -69,12 +69,13 @@ function openDrawer(id){
  const e=findEvent(id);if(!e)return;
  $("#drawerTitle").textContent=e.flight;
  const dep=e.type==="DEPARTURE_CGK";
- $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}</small><div class="big">${e.time}</div><small>${e.route}</small></div>
+ const legs=(e.scheduleLegs||[]).map(x=>`<div class="leg-row"><span>${x.date}</span><b>${x.dep} → ${x.arr}</b><span>${x.route}</span><span>${x.flight}${x.arrivalNextDay?" (+1)":""}</span></div>`).join("");
+ $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}</small><div class="big ${dep?"left":"right"}">${e.time}</div><small>${e.route}</small></div>
  <div class="detail-grid">
-  ${[["Flight",e.flight],["Airline",e.airlineName],["Package",e.package],["PNR",e.pnr],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel],["Vendor",e.vendor],["Status",e.status],["Note",e.note]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}
+  ${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight],["Airline",e.airlineName],["Date",fmtDate(e.date)],["Handling Time",e.time],["Route",e.route],["Package",e.package],["PNR",e.pnr],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel],["Vendor",e.vendor],["Status",e.status],["Note",e.note]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}
  </div>
- <div class="source-box"><b>Source</b><p>PNR HAMDAN TOUR - Google Spreadsheet · PDF page ${e.sourcePage}. Data extracted from the source row. The PDF remains the source of truth.</p></div>
- ${e.verification?`<div class="verify">${e.verification}: metadata pada source row tidak cukup jelas untuk dipetakan 1:1 ke flight ini.</div>`:""}`;
+ <div class="legs-box"><b>Flight schedule source</b>${legs}</div>
+ <div class="source-box"><b>Source</b><p>PNR HAMDAN TOUR - Google Spreadsheet. Handling date/time follows the actual first CGK departure and the final scheduled arrival into CGK. The PDF remains the source of truth.</p></div>`;
  $("#drawer").classList.add("open");$("#backdrop").classList.add("open");
 }
 function closeDrawer(){$("#drawer").classList.remove("open");$("#backdrop").classList.remove("open")}
