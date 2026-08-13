@@ -7,15 +7,15 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=8">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v8.png?rev=8">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v8.png?rev=8">
+  <link rel="manifest" href="manifest.webmanifest?v=9">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v8.png?rev=9">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v8.png?rev=9">
       <title>CGK Handling · Hamdan Tour</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <div class="app-shell">
@@ -57,6 +57,7 @@
             <button class="btn ghost" id="exportBtn"><i data-lucide="download"></i>Export CSV</button>
             <button class="btn ghost" id="printBtn"><i data-lucide="printer"></i>Print</button>
             <button class="btn ghost" id="noteBtn"><i data-lucide="notebook-pen"></i>Add Note</button>
+            <button class="btn primary" id="importBtn"><i data-lucide="file-plus-2"></i>Import Schedule</button>
             <button class="btn ghost" id="filterBtn"><i data-lucide="sliders-horizontal"></i>Filter</button>
           </div>
         </div>
@@ -115,9 +116,97 @@
     <div id="drawerBody"></div>
   </aside>
 
+
+  <div class="modal-backdrop" id="importBackdrop"></div>
+  <div class="schedule-modal" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+    <div class="modal-head">
+      <div><span class="eyebrow">AUTO IMPORT</span><h3 id="importModalTitle">Import Schedule</h3></div>
+      <button class="icon-btn" id="closeImportModal" type="button"><i data-lucide="x"></i></button>
+    </div>
+    <div class="paste-import-box">
+      <div class="paste-import-head"><div><b>1. Paste itinerary</b><span>Masukkan beberapa baris flight. Sistem otomatis mengambil hanya segmen CGK berangkat dan CGK tiba.</span></div><span class="paste-badge">AUTO PARSE</span></div>
+      <textarea id="importPaste" rows="7" placeholder="10AUG CGKDOH 1830 2240 QR957
+11AUG DOHJED 0050 0320 QR1184
+17AUG JEDDOH 2235 0055 (+1) QR1189
+18AUG DOHCGK 0235 1535 QR956"></textarea>
+    </div>
+    <div class="paste-import-box">
+      <div class="paste-import-head"><div><b>2. Upload file</b><span>Excel, CSV, PDF, atau Word (.docx). Isi file akan dibaca lalu dicari baris itinerary otomatis.</span></div><span class="paste-badge">FILE IMPORT</span></div>
+      <input id="importFile" type="file" accept=".xlsx,.xls,.csv,.pdf,.docx,.txt" />
+      <div id="importFileName" class="import-file-name"></div>
+    </div>
+    <div id="importPreview" class="paste-preview hidden"></div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="cancelImport" type="button">Batal</button>
+      <button class="btn primary" id="runImport" type="button"><i data-lucide="scan-line"></i> Baca & Tambahkan</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="scheduleBackdrop"></div>
+  <div class="schedule-modal" id="scheduleModal" role="dialog" aria-modal="true" aria-labelledby="scheduleModalTitle">
+    <div class="modal-head">
+      <div><span class="eyebrow">OPERATOR CUSTOM SCHEDULE</span><h3 id="scheduleModalTitle">Tambah jadwal</h3></div>
+      <button class="icon-btn" id="closeScheduleModal" type="button"><i data-lucide="x"></i></button>
+    </div>
+    <div class="paste-import-box">
+      <div class="paste-import-head">
+        <div><b>Paste itinerary</b><span>Copas jadwal penerbangan → otomatis dibuat menjadi event CGK</span></div>
+        <span class="paste-badge">AUTO PARSE</span>
+      </div>
+      <textarea id="schedulePaste" rows="5" placeholder="Contoh:
+10AUG CGKDOH 1830 2240 QR957
+11AUG DOHJED 0050 0320 QR1184
+17AUG JEDDOH 2235 0055 (+1) QR1189
+18AUG DOHCGK 0235 1535 QR956"></textarea>
+      <div class="paste-actions">
+        <button class="btn ghost" id="clearPaste" type="button">Bersihkan</button>
+        <button class="btn primary" id="parsePasteBtn" type="button"><i data-lucide="scan-line"></i> Baca & buat jadwal</button>
+      </div>
+      <div class="paste-preview hidden" id="pastePreview"></div>
+    </div>
+    <div class="form-divider"><span>atau isi manual</span></div>
+    <form id="scheduleForm">
+      <input type="hidden" id="scheduleId">
+      <input type="hidden" id="scheduleMode" value="new">
+      <div class="form-grid two">
+        <label>Tanggal<input id="scheduleDate" type="date" required></label>
+        <label>Jenis<select id="scheduleType"><option value="DEPARTURE_CGK">BERANGKAT</option><option value="ARRIVAL_CGK">TIBA</option></select></label>
+      </div>
+      <div class="form-grid two">
+        <label>Jam handling<input id="scheduleTime" type="time" required></label>
+        <label>Kode maskapai<input id="scheduleAirline" placeholder="QR"></label>
+      </div>
+      <div class="form-grid two">
+        <label>Nama maskapai<input id="scheduleAirlineName" placeholder="Qatar Airways"></label>
+        <label>Flight number<input id="scheduleFlight" placeholder="QR956"></label>
+      </div>
+      <label>Route<input id="scheduleRoute" placeholder="DOH → CGK"></label>
+      <div class="form-grid two">
+        <label>Package<input id="schedulePackage"></label>
+        <label>PNR<input id="schedulePnr"></label>
+      </div>
+      <div class="form-grid two">
+        <label>PAX<input id="schedulePax" type="number" min="0" inputmode="numeric"></label>
+        <label>Rooms<input id="scheduleRooms" type="number" min="0" inputmode="numeric"></label>
+      </div>
+      <div class="form-grid two">
+        <label>Hotel<input id="scheduleHotel"></label>
+        <label>Vendor<input id="scheduleVendor"></label>
+      </div>
+      <div class="form-grid two">
+        <label>Status<input id="scheduleStatus" placeholder="TICKET / DONE / RELEASE"></label>
+        <label>Note<input id="scheduleNote"></label>
+      </div>
+      <div class="modal-foot"><button class="btn ghost" id="cancelSchedule" type="button">Batal</button><button class="btn primary" type="submit"><i data-lucide="save"></i>Simpan jadwal</button></div>
+    </form>
+  </div>
+
   <div class="toast" id="toast"></div>
-  <script src="data.js?v=5"></script>
-  <script src="app.js?v=5"></script>
-  <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=5").catch(()=>{}));}</script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="data.js?v=11"></script>
+  <script src="app.js?v=11"></script>
+  <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=11").catch(()=>{}));}</script>
 </body>
 </html>
