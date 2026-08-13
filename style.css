@@ -45,3 +45,9 @@ body.modal-open{overflow:hidden}
 .modal-backdrop{touch-action:none;}
 .schedule-modal{touch-action:auto;-webkit-overflow-scrolling:touch;}
 button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+
+/* V19 modal hard reset: closed overlays must never intercept touch/click. */
+.modal-backdrop:not(.open){display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+.schedule-modal:not(.open){visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+.modal-backdrop[hidden],.schedule-modal[hidden]{display:none!important;pointer-events:none!important;visibility:hidden!important;}
+body.modal-open{overflow:hidden!important;}

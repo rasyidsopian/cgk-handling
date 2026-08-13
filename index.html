@@ -20585,7 +20585,7 @@ const PERIODS=[
   {y:2026,m:11,label:"December 2026"},{y:2027,m:0,label:"January 2027"},
   {y:2027,m:1,label:"February 2027"},{y:2027,m:2,label:"March 2027"}
 ];
-const APP_VERSION="14.0.0";
+const APP_VERSION="19";
 let state={index:0,query:"",type:"all",airline:"all",highPax:false};
 let lastRenderedIndex=0;
 const $=s=>document.querySelector(s);
@@ -20686,11 +20686,74 @@ function populateForm(e,date){
   $("#scheduleAirline").value=e?.airline||"";$("#scheduleAirlineName").value=e?.airlineName||"";$("#scheduleFlight").value=e?.flight||"";$("#scheduleRoute").value=e?.route||"";
   $("#schedulePackage").value=e?.package||"";$("#schedulePnr").value=e?.pnr||"";$("#schedulePax").value=e?.pax??"";$("#scheduleRooms").value=e?.rooms??"";$("#scheduleHotel").value=e?.hotel||"";$("#scheduleVendor").value=e?.vendor||"";$("#scheduleStatus").value=e?.status||"";$("#scheduleNote").value=e?.note||"";
 }
-function syncModalLock(){const anyOpen=document.querySelector(".schedule-modal.open,.modal-backdrop.open");document.body.classList.toggle("modal-open",!!anyOpen);}
-function openAddModal(date,copyFrom){clearTimeout(window.__importCloseTimer);closeImportModal();populateForm(copyFrom,date);$("#scheduleMode").value="new";$("#scheduleModalTitle").textContent=copyFrom?"Tambah jadwal serupa":"Tambah jadwal";const m=$("#scheduleModal"),b=$("#scheduleBackdrop");m.hidden=false;b.hidden=false;requestAnimationFrame(()=>{m.setAttribute("aria-hidden","false");m.classList.add("open");b.classList.add("open");syncModalLock();});setTimeout(()=>$("#scheduleDate")?.focus(),60)}
-function openEditModal(id){clearTimeout(window.__importCloseTimer);closeImportModal();const e=findEvent(id);if(!e)return;populateForm(e,e.date);$("#scheduleMode").value=isSourceEvent(id)?"source":"custom";$("#scheduleModalTitle").textContent=isSourceEvent(id)?"Edit jadwal sumber":"Edit jadwal custom";const m=$("#scheduleModal"),b=$("#scheduleBackdrop");m.hidden=false;b.hidden=false;requestAnimationFrame(()=>{m.setAttribute("aria-hidden","false");m.classList.add("open");b.classList.add("open");syncModalLock();});}
-function closeScheduleModal(){const m=$("#scheduleModal"),b=$("#scheduleBackdrop");if(!m)return;m.classList.remove("open");b.classList.remove("open");m.setAttribute("aria-hidden","true");syncModalLock();clearTimeout(window.__scheduleCloseTimer);window.__scheduleCloseTimer=setTimeout(()=>{m.hidden=true;b.hidden=true;$("#scheduleDate")?.blur();},190)}
+function syncModalLock(){
+  const anyOpen=!!document.querySelector(".schedule-modal.open,.modal-backdrop.open");
+  document.body.classList.toggle("modal-open",anyOpen);
+}
+function resetModalElement(el,back){
+  if(el){
+    el.classList.remove("open");
+    el.hidden=true;
+    el.setAttribute("aria-hidden","true");
+    el.style.display="none";
+    el.style.visibility="hidden";
+    el.style.opacity="0";
+    el.style.pointerEvents="none";
+  }
+  if(back){
+    back.classList.remove("open");
+    back.hidden=true;
+    back.setAttribute("aria-hidden","true");
+    back.style.display="none";
+    back.style.visibility="hidden";
+    back.style.opacity="0";
+    back.style.pointerEvents="none";
+  }
+}
+function forceCloseAllModals(){
+  clearTimeout(window.__importCloseTimer);
+  clearTimeout(window.__scheduleCloseTimer);
+  resetModalElement($("#importModal"),$("#importBackdrop"));
+  resetModalElement($("#scheduleModal"),$("#scheduleBackdrop"));
+  $("#scheduleDate")?.blur();
+  $("#importPaste")?.blur();
+  $("#schedulePaste")?.blur();
+  document.body.classList.remove("modal-open");
+}
+function prepareModal(el,back){
+  clearTimeout(window.__importCloseTimer);
+  clearTimeout(window.__scheduleCloseTimer);
+  if(el){el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";}
+  if(back){back.hidden=false;back.removeAttribute("inert");back.setAttribute("aria-hidden","false");back.style.display="block";back.style.visibility="visible";back.style.opacity="1";back.style.pointerEvents="auto";}
+}
+function openAddModal(date,copyFrom){
+  forceCloseAllModals();
+  populateForm(copyFrom,date);
+  $("#scheduleMode").value="new";
+  $("#scheduleModalTitle").textContent=copyFrom?"Tambah jadwal serupa":"Tambah jadwal";
+  const m=$("#scheduleModal"),b=$("#scheduleBackdrop");
+  prepareModal(m,b);
+  requestAnimationFrame(()=>{m.classList.add("open");b.classList.add("open");syncModalLock();$("#scheduleDate")?.focus();});
+}
+function openEditModal(id){
+  forceCloseAllModals();
+  const e=findEvent(id);
+  if(!e)return;
+  populateForm(e,e.date);
+  $("#scheduleMode").value=isSourceEvent(id)?"source":"custom";
+  $("#scheduleModalTitle").textContent=isSourceEvent(id)?"Edit jadwal sumber":"Edit jadwal custom";
+  const m=$("#scheduleModal"),b=$("#scheduleBackdrop");
+  prepareModal(m,b);
+  requestAnimationFrame(()=>{m.classList.add("open");b.classList.add("open");syncModalLock();});
+}
+function closeScheduleModal(){
+  clearTimeout(window.__scheduleCloseTimer);
+  resetModalElement($("#scheduleModal"),$("#scheduleBackdrop"));
+  syncModalLock();
+  return false;
+}
 window.closeScheduleModal=closeScheduleModal;
+window.forceCloseAllModals=forceCloseAllModals;
 function collectForm(){
   const type=$("#scheduleType").value, time=$("#scheduleTime").value.trim(), date=$("#scheduleDate").value;
   const airline=$("#scheduleAirline").value.trim().toUpperCase();
@@ -20735,6 +20798,29 @@ function saveSchedule(e){
 }
 function deleteCustom(id){if(!confirm("Hapus jadwal custom ini?"))return;customEvents=customEvents.filter(e=>String(e.id)!==String(id));saveCustomEvents();closeDrawer();render();toast("Jadwal custom dihapus")}
 
+function importPasteSchedule(){
+  const raw=$("#schedulePaste")?.value?.trim()||"";
+  if(!raw){toast("Paste itinerary dulu");return;}
+  const parsed=parseItineraryText(raw);
+  const box=$("#pastePreview");
+  if(!parsed.length){
+    box?.classList.remove("hidden");
+    if(box)box.innerHTML='<div class="paste-error">Tidak menemukan itinerary CGK yang valid.</div>';
+    return;
+  }
+  if(box){
+    box.classList.remove("hidden");
+    box.innerHTML=`<div class="paste-success"><b>${parsed.length} event siap dibuat</b><span>${parsed.filter(e=>e.type==='DEPARTURE_CGK').length} berangkat · ${parsed.filter(e=>e.type==='ARRIVAL_CGK').length} tiba</span></div>`+parsed.map(e=>`<div class="paste-row ${e.type==='ARRIVAL_CGK'?'arr':'dep'}"><b>${e.date}</b><span>${e.type==='ARRIVAL_CGK'?'TIBA':'BERANGKAT'}</span><strong>${handlingTime(e)}</strong><span>${e.flight}</span><span>${e.route}</span></div>`).join('');
+  }
+  const existing=new Set(allEvents().map(e=>`${e.date}|${e.type}|${e.flight}|${handlingTime(e)}`));
+  let added=0;
+  parsed.forEach(e=>{const key=`${e.date}|${e.type}|${e.flight}|${handlingTime(e)}`;if(existing.has(key))return;customEvents.push(e);existing.add(key);added++;});
+  saveCustomEvents();
+  closeScheduleModal();
+  render();
+  toast(added?`${added} jadwal berhasil ditambahkan`:'Semua jadwal sudah ada');
+}
+
 function previewImport(events){const box=$("#importPreview");if(!events.length){box.classList.remove("hidden");box.innerHTML='<div class="paste-error">Tidak menemukan itinerary CGK yang valid.</div>';return false;}box.classList.remove("hidden");box.innerHTML=`<div class="paste-success"><b>${events.length} event siap ditambahkan</b><span>${events.filter(e=>e.type==='DEPARTURE_CGK').length} berangkat · ${events.filter(e=>e.type==='ARRIVAL_CGK').length} tiba</span></div>`+events.map(e=>`<div class="paste-row ${e.type==='ARRIVAL_CGK'?'arr':'dep'}"><b>${e.date}</b><span>${e.type==='ARRIVAL_CGK'?'TIBA':'BERANGKAT'}</span><strong>${handlingTime(e)}</strong><span>${e.flight}</span><span>${e.route}</span></div>`).join("");return true}
 async function loadExternalScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=true;s.onload=resolve;s.onerror=()=>reject(new Error('Gagal memuat library import'));document.head.appendChild(s);});}
 async function ensureImporter(name){
@@ -20751,7 +20837,7 @@ async function extractFileText(file){
 }
 async function runImport(){
   let raw=$("#importPaste").value.trim();const file=$("#importFile").files[0];
-  try{if(file) raw=(raw?raw+'\n':'')+await extractFileText(file);if(!raw.trim()){toast('Paste itinerary atau upload file dulu');return;}const parsed=parseItineraryText(raw);if(!previewImport(parsed))return;const existingKeys=new Set(allEvents().map(e=>`${e.date}|${e.type}|${e.flight}|${handlingTime(e)}`));let added=0,skip=0;for(const e of parsed){const key=`${e.date}|${e.type}|${e.flight}|${handlingTime(e)}`;if(existingKeys.has(key)){skip++;continue;}customEvents.push(e);existingKeys.add(key);added++;}saveCustomEvents();render();toast(`${added} jadwal ditambahkan${skip?` · ${skip} duplikat dilewati`:''}`);if(added){setTimeout(closeImportModal,250);$("#importPaste").value="";$("#importFile").value="";$("#importFileName").textContent="";}}catch(err){console.error(err);toast('Gagal membaca file: '+(err.message||'format tidak didukung'));}}
+  try{if(file) raw=(raw?raw+'\n':'')+await extractFileText(file);if(!raw.trim()){toast('Paste itinerary atau upload file dulu');return;}const parsed=parseItineraryText(raw);if(!previewImport(parsed))return;const existingKeys=new Set(allEvents().map(e=>`${e.date}|${e.type}|${e.flight}|${handlingTime(e)}`));let added=0,skip=0;for(const e of parsed){const key=`${e.date}|${e.type}|${e.flight}|${handlingTime(e)}`;if(existingKeys.has(key)){skip++;continue;}customEvents.push(e);existingKeys.add(key);added++;}saveCustomEvents();render();toast(`${added} jadwal ditambahkan${skip?` · ${skip} duplikat dilewati`:''}`);if(added){closeImportModal();$("#importPaste").value="";$("#importFile").value="";$("#importFileName").textContent="";}}catch(err){console.error(err);toast('Gagal membaca file: '+(err.message||'format tidak didukung'));}}
 
 function exportCSV(){
   const rows=monthEvents(),head=["Date","Type","Time","Airline","Flight","Route","Package","PNR","Pax","Rooms","Hotel","Vendor","Status","Note","Custom"];
@@ -20780,33 +20866,25 @@ $("#parsePasteBtn").onclick=importPasteSchedule; $("#clearPaste").onclick=()=>{$
 $("#schedulePaste").addEventListener("input",()=>{ if($("#pastePreview")) $("#pastePreview").classList.add("hidden") });
 
 function openImportModal(ev){
-  clearTimeout(window.__importCloseTimer);
   try{ev?.preventDefault();ev?.stopPropagation();}catch(e){}
-  const modal=$("#importModal"), back=$("#importBackdrop"), preview=$("#importPreview"), paste=$("#importPaste");
-  if(!modal||!back){console.error("Import modal elements missing");return false;}
-  closeScheduleModal();
-  modal.hidden=false; back.hidden=false;
+  forceCloseAllModals();
+  const modal=$("#importModal"),back=$("#importBackdrop"),preview=$("#importPreview"),paste=$("#importPaste");
+  if(!modal||!back)return false;
+  prepareModal(modal,back);
   requestAnimationFrame(()=>{
-    modal.classList.add("open"); back.classList.add("open");
-    modal.setAttribute("aria-hidden","false"); back.setAttribute("aria-hidden","false");
-    modal.style.display="block"; modal.style.visibility="visible"; modal.style.opacity="1"; modal.style.pointerEvents="auto";
-    back.style.display="block"; back.style.visibility="visible"; back.style.opacity="1"; back.style.pointerEvents="auto";
+    modal.classList.add("open");
+    back.classList.add("open");
     syncModalLock();
     preview?.classList.add("hidden");
-    setTimeout(()=>paste?.focus(),30);
+    if(paste)setTimeout(()=>paste.focus(),30);
   });
   return false;
 }
 function closeImportModal(ev){
   try{ev?.preventDefault();ev?.stopPropagation();}catch(e){}
-  const modal=$("#importModal"), back=$("#importBackdrop");
-  if(!modal||!back) return false;
-  modal.classList.remove("open"); back.classList.remove("open");
-  modal.setAttribute("aria-hidden","true"); back.setAttribute("aria-hidden","true");
-  modal.style.opacity="0"; modal.style.pointerEvents="none";
-  back.style.opacity="0"; back.style.pointerEvents="none";
+  clearTimeout(window.__importCloseTimer);
+  resetModalElement($("#importModal"),$("#importBackdrop"));
   syncModalLock();
-  window.__importCloseTimer=setTimeout(()=>{ modal.hidden=true; back.hidden=true; modal.style.display="none"; back.style.display="none"; },190);
   return false;
 }
 window.openImportModal=openImportModal; window.__openImportSchedule=openImportModal; window.closeImportModal=closeImportModal;
@@ -20834,6 +20912,7 @@ wireScheduleModal();
 document.addEventListener("click",ev=>{const hit=ev.target?.closest?.("#closeScheduleModal,#cancelSchedule");if(hit){ev.preventDefault();ev.stopPropagation();closeScheduleModal();}},{capture:true});
 $("#scheduleForm").addEventListener("submit",e=>{e.preventDefault();e.stopPropagation();saveSchedule(collectForm())});
 window.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("#search").focus()}if(e.key==="Escape"){closeDrawer();$("#filterPanel").classList.remove("open");closeScheduleModal();closeImportModal()}});
+window.addEventListener("pageshow",()=>{if(!document.querySelector(".schedule-modal.open,.modal-backdrop.open")){document.body.classList.remove("modal-open");}});
 $("#helpBtn").addEventListener("dblclick",()=>toast(`CGK Handling v${APP_VERSION}`));
 function showSavedNote(){const n=localStorage.getItem("cgk-note")||"";const el=$("#savedNote");if(n){el.textContent=`Catatan operator: ${n}`;el.classList.remove("hidden")}else el.classList.add("hidden")}
 function setIndex(i){state.index=Math.max(0,Math.min(PERIODS.length-1,i));lastRenderedIndex=state.index;safeRender()}
@@ -20894,6 +20973,15 @@ if(document.readyState!=="loading") safeRender();
 
 <script>
 (function hardenTouchControls(){
+  document.addEventListener("click",function(ev){
+    const t=ev.target?.closest?.("#importBtn,#closeImportModal,#cancelImport,#closeScheduleModal,#cancelSchedule");
+    if(!t)return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(t.id==="importBtn") window.openImportModal?.(ev);
+    else if(t.id==="closeImportModal"||t.id==="cancelImport") window.closeImportModal?.(ev);
+    else window.closeScheduleModal?.(ev);
+  },{capture:true});
   document.addEventListener("pointerup",function(ev){
     const t=ev.target?.closest?.("#importBtn,#closeImportModal,#cancelImport,#closeScheduleModal,#cancelSchedule");
     if(!t)return;
