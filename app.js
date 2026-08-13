@@ -4,7 +4,7 @@ const PERIODS=[
   {y:2026,m:11,label:"December 2026"},{y:2027,m:0,label:"January 2027"},
   {y:2027,m:1,label:"February 2027"},{y:2027,m:2,label:"March 2027"}
 ];
-const APP_VERSION="13.0.0";
+const APP_VERSION="14.0.0";
 let state={index:0,query:"",type:"all",airline:"all",highPax:false};
 let lastRenderedIndex=0;
 const $=s=>document.querySelector(s);
@@ -73,7 +73,7 @@ function renderCalendar(){
   document.querySelectorAll(".event").forEach(el=>el.addEventListener("click",()=>openDrawer(el.dataset.id)));
   document.querySelectorAll(".more").forEach(el=>el.addEventListener("click",()=>showDay(el.dataset.date)));
   document.querySelectorAll("[data-add-date]").forEach(el=>el.addEventListener("click",e=>{e.stopPropagation();openAddModal(el.dataset.addDate)}));
-  lucide.createIcons();
+  if(window.lucide&&typeof window.lucide.createIcons==="function") window.lucide.createIcons();
 }
 function showDay(date){const ev=monthEvents().filter(e=>e.date===date);if(ev[0])openDrawer(ev[0].id);else openAddModal(date)}
 function findEvent(id){return allEvents().find(e=>String(e.id)===String(id))}
@@ -210,15 +210,26 @@ window.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCa
 $("#helpBtn").addEventListener("dblclick",()=>toast(`CGK Handling v${APP_VERSION}`));
 function showSavedNote(){const n=localStorage.getItem("cgk-note")||"";const el=$("#savedNote");if(n){el.textContent=`Catatan operator: ${n}`;el.classList.remove("hidden")}else el.classList.add("hidden")}
 function setIndex(i){state.index=Math.max(0,Math.min(PERIODS.length-1,i));lastRenderedIndex=state.index;safeRender()}
-function render(){lastRenderedIndex=state.index;renderSummary();renderCalendar();renderYear();$("#monthSelect").value=state.index; if(window.lucide&&lucide.createIcons)lucide.createIcons()}
+function render(){
+  lastRenderedIndex=state.index;
+  try{renderSummary()}catch(err){console.error("summary render failed",err)}
+  try{renderCalendar()}catch(err){console.error("calendar render failed",err);const c=$("#calendar");if(c&&!c.innerHTML.trim())c.innerHTML=`<div class="calendar-error">Gagal memuat kalender. Coba refresh halaman.</div>`}
+  try{renderYear()}catch(err){console.error("year render failed",err)}
+  const ms=$("#monthSelect"); if(ms) ms.value=state.index;
+  if(window.lucide&&typeof window.lucide.createIcons==="function") window.lucide.createIcons();
+}
 function safeRender(){
-  const run=()=>{try{ if(document.getElementById("calendar")) render(); }catch(err){ console.error("CGK render failed",err); }};
+  const run=()=>{
+    if(!document.getElementById("calendar")) return;
+    try{render();}catch(err){console.error("CGK render failed",err)}
+  };
   run();
-  setTimeout(run,120);
+  requestAnimationFrame(run);
+  setTimeout(run,300);
 }
 window.addEventListener("pageshow",()=>safeRender());
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)safeRender()});
-window.addEventListener("DOMContentLoaded",()=>safeRender());
-window.addEventListener("load",()=>safeRender());
+window.addEventListener("DOMContentLoaded",()=>safeRender(),{once:false});
+window.addEventListener("load",()=>safeRender(),{once:false});
 showSavedNote();
-setTimeout(safeRender,0);
+if(document.readyState!=="loading") safeRender();

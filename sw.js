@@ -1,13 +1,13 @@
-const CACHE = 'cgk-handling-v13-20260813';
+const CACHE = 'cgk-handling-v14-20260813';
 const CORE = [
-  './?app=v13',
+  './?app=v14',
   './index.html?v=13',
   './style.css?v=13',
   './app.js?v=13',
   './data.js?v=13',
   './manifest.webmanifest?v=13',
-  './icons/icon-192.png?rev=13',
-  './icons/icon-512.png?rev=13'
+  './icons/icon-192.png?rev=14',
+  './icons/icon-512.png?rev=14'
 ];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
