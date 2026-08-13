@@ -1,17 +1,12 @@
 {
   "name":"CGK Handling · Hamdan Tour",
   "short_name":"CGK Handling",
-  "description":"Operational flight handling calendar Hamdan Tour",
-  "lang":"id-ID",
-  "start_url":"./?app=v11",
-  "scope":"./",
+  "start_url":"./?app=v15",
   "display":"standalone",
-  "background_color":"#f7f9f8",
-  "theme_color":"#086b42",
-  "orientation":"any",
+  "background_color":"#f5f7f6",
+  "theme_color":"#0a6b42",
   "icons":[
-    {"src":"apple-touch-icon-v13.png?rev=11","sizes":"180x180","type":"image/png","purpose":"any"},
-    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+    {"src":"./icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }
