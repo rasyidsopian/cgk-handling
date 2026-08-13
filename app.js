@@ -39,8 +39,10 @@ function renderYear(){
 }
 function eventCard(e){
  const dep=e.type==="DEPARTURE_CGK",cls=dep?"dep":"arr";
- return `<div class="event ${cls}" data-id="${e.id}">
-  <div class="event-top"><div class="time">${e.time}</div><div class="type">${dep?"BERANGKAT":"TIBA"}</div></div>
+ const header=dep
+ ?`<div class="event-top"><div class="time">${e.time}</div><div class="type">BERANGKAT</div></div>`
+ :`<div class="event-top"><div class="type">TIBA</div><div class="time">${e.time}</div></div>`;
+ return `<div class="event ${cls}" data-id="${e.id}">${header}
   <div class="flight">${e.flight}</div><div class="route">${e.route}</div>
   <div class="pax">${e.pax?`${e.pax} PAX`:"PAX —"}</div>
  </div>`;
@@ -90,7 +92,7 @@ PERIODS.forEach((p,i)=>$("#monthSelect").insertAdjacentHTML("beforeend",`<option
 $("#monthSelect").addEventListener("change",e=>setIndex(+e.target.value));
 $("#prevBtn").onclick=()=>setIndex(state.index-1);$("#nextBtn").onclick=()=>setIndex(state.index+1);
 $("#todayBtn").onclick=$("#todaySmall").onclick=()=>{const d=new Date();const i=PERIODS.findIndex(p=>p.y===d.getFullYear()&&p.m===d.getMonth());setIndex(i>=0?i:0)};
-$("#exportBtn").onclick=exportCSV;$("#printBtn").onclick=()=>window.print();$("#noteBtn").onclick=()=>toast("Add Note siap dihubungkan ke modul notes.");
+$("#exportBtn").onclick=exportCSV;$("#printBtn").onclick=()=>window.print();$("#noteBtn").onclick=()=>{const n=prompt("Tambah catatan");if(n){localStorage.setItem("cgk-note",n);toast("Catatan disimpan")}};
 $("#closeDrawer").onclick=closeDrawer;$("#backdrop").onclick=closeDrawer;
 $("#search").addEventListener("input",e=>{state.query=e.target.value;render()});
 document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{state.type=b.dataset.filter;document.querySelectorAll("[data-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()});
