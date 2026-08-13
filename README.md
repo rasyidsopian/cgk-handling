@@ -1,16 +1,33 @@
-# CGK Handling PWA — fixed schedule logic
+# CGK Handling PWA v5
 
-Important schedule rule:
-- Departure handling = actual first flight departing CGK, using its departure date/time.
-- Return/arrival handling = actual final scheduled flight arriving at CGK, using its arrival date/time.
-- If the PDF marks (+1), the arrival date is the following calendar day.
-- Arrival cards show the handling time on the RIGHT.
-- Duplicate package rows on the same flight/date are consolidated into one handling event; verified pax is summed and PNRs are retained for search.
+## Update penting
+- TIBA selalu memakai **waktu kedatangan di CGK** dari flight segment terakhir yang berakhir di `CGK`.
+- Waktu keberangkatan dari transit tidak dipakai sebagai jam handling TIBA.
+- Contoh: `18AUG DOHCGK 0235 1535 QR956` → **18 Agustus, TIBA 15:35**.
+- Event BERANGKAT tetap memakai waktu keberangkatan dari CGK.
+- `(+1)` dihitung ke tanggal hari berikutnya.
 
-Example from the source:
-10AUG CGKDOH 1830 2240 QR957
-11AUG DOHJED 0050 0320 QR1184
-17AUG JEDDOH 2235 0055 (+1) QR1189
-18AUG DOHCGK 0235 1535 QR956
+## UI
+Mengikuti referensi kedua: header compact, calendar card besar, right rail untuk legend/quick actions/catatan, pastel green/orange, dan drawer detail.
 
-The app therefore shows the return handling on 18 August at 15:35 for QR956.
+## Fungsi tombol
+- Today
+- Previous / Next
+- Month selector
+- Search / Ctrl K
+- Export CSV
+- Print
+- Add Note
+- Filter Events
+- Theme
+- Help / Notifications / Profile feedback
+- Event detail drawer
+
+## GitHub Pages
+Upload **isi folder ini** ke root repository, bukan folder induknya.
+Setelah commit, tunggu deployment selesai.
+
+## PWA cache
+Versi ini menggunakan cache `v5-20260813` dan file JS/CSS/data dengan query `?v=5` agar update data lama tidak tertahan oleh service worker versi sebelumnya.
+
+Jika iPhone masih menampilkan versi lama setelah deployment, tutup aplikasi dari app switcher, buka kembali dari Home Screen, lalu refresh URL sekali di Safari.
