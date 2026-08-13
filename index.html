@@ -142,8 +142,8 @@
     </div>
   </div>
 
-  <div class="modal-backdrop" id="scheduleBackdrop"></div>
-  <div class="schedule-modal" id="scheduleModal" role="dialog" aria-modal="true" aria-labelledby="scheduleModalTitle">
+  <div class="modal-backdrop" id="scheduleBackdrop" aria-hidden="true"></div>
+  <div class="schedule-modal" id="scheduleModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="scheduleModalTitle">
     <div class="modal-head">
       <div><span class="eyebrow">OPERATOR CUSTOM SCHEDULE</span><h3 id="scheduleModalTitle">Tambah jadwal</h3></div>
       <button class="icon-btn" id="closeScheduleModal" type="button"><i data-lucide="x"></i></button>
@@ -205,8 +205,8 @@
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="data.js?v=11"></script>
-  <script src="app.js?v=11"></script>
+  <script src="data.js?v=12"></script>
+  <script src="app.js?v=12"></script>
   <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=11").catch(()=>{}));}</script>
 </body>
 </html>

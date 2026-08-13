@@ -4,8 +4,9 @@ const PERIODS=[
   {y:2026,m:11,label:"December 2026"},{y:2027,m:0,label:"January 2027"},
   {y:2027,m:1,label:"February 2027"},{y:2027,m:2,label:"March 2027"}
 ];
-const APP_VERSION="11.0.0";
+const APP_VERSION="12.0.0";
 let state={index:0,query:"",type:"all",airline:"all",highPax:false};
+let lastRenderedIndex=0;
 const $=s=>document.querySelector(s);
 const monthKey=p=>`${p.y}-${String(p.m+1).padStart(2,"0")}`;
 const fmtDate=s=>new Date(`${s}T12:00:00`).toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"});
@@ -104,9 +105,9 @@ function populateForm(e,date){
   $("#scheduleAirline").value=e?.airline||"";$("#scheduleAirlineName").value=e?.airlineName||"";$("#scheduleFlight").value=e?.flight||"";$("#scheduleRoute").value=e?.route||"";
   $("#schedulePackage").value=e?.package||"";$("#schedulePnr").value=e?.pnr||"";$("#schedulePax").value=e?.pax??"";$("#scheduleRooms").value=e?.rooms??"";$("#scheduleHotel").value=e?.hotel||"";$("#scheduleVendor").value=e?.vendor||"";$("#scheduleStatus").value=e?.status||"";$("#scheduleNote").value=e?.note||"";
 }
-function openAddModal(date,copyFrom){populateForm(copyFrom,date);$("#scheduleMode").value="new";$("#scheduleModalTitle").textContent=copyFrom?"Tambah jadwal serupa":"Tambah jadwal";$("#scheduleModal").classList.add("open");$("#scheduleBackdrop").classList.add("open");$("#scheduleDate").focus()}
-function openEditModal(id){const e=findEvent(id);if(!e)return;populateForm(e,e.date);$("#scheduleMode").value=isSourceEvent(id)?"source":"custom";$("#scheduleModalTitle").textContent=isSourceEvent(id)?"Edit jadwal sumber":"Edit jadwal custom";$("#scheduleModal").classList.add("open");$("#scheduleBackdrop").classList.add("open")}
-function closeScheduleModal(){$("#scheduleModal").classList.remove("open");$("#scheduleBackdrop").classList.remove("open")}
+function openAddModal(date,copyFrom){populateForm(copyFrom,date);$("#scheduleMode").value="new";$("#scheduleModalTitle").textContent=copyFrom?"Tambah jadwal serupa":"Tambah jadwal";const m=$("#scheduleModal"),b=$("#scheduleBackdrop");m.setAttribute("aria-hidden","false");m.classList.add("open");b.classList.add("open");document.body.classList.add("modal-open");setTimeout(()=>$("#scheduleDate")?.focus(),30)}
+function openEditModal(id){const e=findEvent(id);if(!e)return;populateForm(e,e.date);$("#scheduleMode").value=isSourceEvent(id)?"source":"custom";$("#scheduleModalTitle").textContent=isSourceEvent(id)?"Edit jadwal sumber":"Edit jadwal custom";const m=$("#scheduleModal"),b=$("#scheduleBackdrop");m.setAttribute("aria-hidden","false");m.classList.add("open");b.classList.add("open");document.body.classList.add("modal-open");}
+function closeScheduleModal(){const m=$("#scheduleModal"),b=$("#scheduleBackdrop");if(!m)return;m.classList.remove("open");b.classList.remove("open");m.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open");setTimeout(()=>$("#scheduleDate")?.blur(),20)}
 function collectForm(){
   const type=$("#scheduleType").value, time=$("#scheduleTime").value.trim(), date=$("#scheduleDate").value;
   const airline=$("#scheduleAirline").value.trim().toUpperCase();
@@ -195,10 +196,21 @@ $("#importBtn").onclick=openImportModal;$("#closeImportModal").onclick=closeImpo
 $("#importPaste").addEventListener("input",()=>$("#importPreview").classList.add("hidden"));
 $("#importFile").addEventListener("change",e=>{const f=e.target.files[0];$("#importFileName").textContent=f?`${f.name} · ${(f.size/1024).toFixed(1)} KB`:""});
 
-$("#closeScheduleModal").onclick=closeScheduleModal;$("#scheduleBackdrop").onclick=closeScheduleModal;$("#cancelSchedule").onclick=closeScheduleModal;$("#scheduleForm").addEventListener("submit",e=>{e.preventDefault();saveSchedule(collectForm())});
+function wireScheduleModal(){
+  const closeBtn=$("#closeScheduleModal"),cancelBtn=$("#cancelSchedule"),backdrop=$("#scheduleBackdrop"),modal=$("#scheduleModal");
+  const safeClose=(ev)=>{if(ev){ev.preventDefault();ev.stopPropagation();}closeScheduleModal();};
+  closeBtn?.addEventListener("click",safeClose);
+  cancelBtn?.addEventListener("click",safeClose);
+  backdrop?.addEventListener("click",ev=>{if(ev.target===backdrop)safeClose(ev)});
+  modal?.addEventListener("click",ev=>ev.stopPropagation());
+}
+wireScheduleModal();
+$("#scheduleForm").addEventListener("submit",e=>{e.preventDefault();e.stopPropagation();saveSchedule(collectForm())});
 window.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("#search").focus()}if(e.key==="Escape"){closeDrawer();$("#filterPanel").classList.remove("open");closeScheduleModal();closeImportModal()}});
 $("#helpBtn").addEventListener("dblclick",()=>toast(`CGK Handling v${APP_VERSION}`));
 function showSavedNote(){const n=localStorage.getItem("cgk-note")||"";const el=$("#savedNote");if(n){el.textContent=`Catatan operator: ${n}`;el.classList.remove("hidden")}else el.classList.add("hidden")}
-function setIndex(i){state.index=Math.max(0,Math.min(PERIODS.length-1,i));render()}
-function render(){renderSummary();renderCalendar();renderYear();$("#monthSelect").value=state.index;lucide.createIcons()}
+function setIndex(i){state.index=Math.max(0,Math.min(PERIODS.length-1,i));lastRenderedIndex=state.index;render()}
+function render(){lastRenderedIndex=state.index;renderSummary();renderCalendar();renderYear();$("#monthSelect").value=state.index;lucide.createIcons()}
+window.addEventListener("pageshow",()=>{render();});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)render();});
 showSavedNote();render();

@@ -1,6 +1,6 @@
-const CACHE = 'cgk-handling-v11-20260813';
+const CACHE = 'cgk-handling-v12-20260813';
 const CORE = [
-  './?app=v11',
+  './?app=v12',
   './index.html?v=11',
   './style.css?v=11',
   './app.js?v=11',
