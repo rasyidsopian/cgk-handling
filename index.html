@@ -7,13 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=18">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=16">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=16">
-  <link rel="icon" type="image/png" href="icon-192.png?rev=16">
-      <title>CGK Handling · Hamdan Tour</title>
+  <link rel="manifest" href="manifest.webmanifest?v=20">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=20">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=20">
+  <link rel="icon" type="image/png" href="icon-192.png?rev=20">
+      <title>CGK Handling · Hamdan Tour · v20</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
   <div class="app-shell">
@@ -203,7 +203,7 @@
 
 
 <script>
-/* CGK Handling v17 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
+/* CGK Handling v20 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
 (async function(){
   try {
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
@@ -20686,54 +20686,26 @@ function populateForm(e,date){
   $("#scheduleAirline").value=e?.airline||"";$("#scheduleAirlineName").value=e?.airlineName||"";$("#scheduleFlight").value=e?.flight||"";$("#scheduleRoute").value=e?.route||"";
   $("#schedulePackage").value=e?.package||"";$("#schedulePnr").value=e?.pnr||"";$("#schedulePax").value=e?.pax??"";$("#scheduleRooms").value=e?.rooms??"";$("#scheduleHotel").value=e?.hotel||"";$("#scheduleVendor").value=e?.vendor||"";$("#scheduleStatus").value=e?.status||"";$("#scheduleNote").value=e?.note||"";
 }
-function syncModalLock(){
-  const anyOpen=!!document.querySelector(".schedule-modal.open,.modal-backdrop.open");
-  document.body.classList.toggle("modal-open",anyOpen);
-}
-function resetModalElement(el,back){
-  if(el){
-    el.classList.remove("open");
-    el.hidden=true;
-    el.setAttribute("aria-hidden","true");
-    el.style.display="none";
-    el.style.visibility="hidden";
-    el.style.opacity="0";
-    el.style.pointerEvents="none";
-  }
-  if(back){
-    back.classList.remove("open");
-    back.hidden=true;
-    back.setAttribute("aria-hidden","true");
-    back.style.display="none";
-    back.style.visibility="hidden";
-    back.style.opacity="0";
-    back.style.pointerEvents="none";
-  }
-}
-function forceCloseAllModals(){
-  clearTimeout(window.__importCloseTimer);
-  clearTimeout(window.__scheduleCloseTimer);
-  resetModalElement($("#importModal"),$("#importBackdrop"));
-  resetModalElement($("#scheduleModal"),$("#scheduleBackdrop"));
-  $("#scheduleDate")?.blur();
-  $("#importPaste")?.blur();
-  $("#schedulePaste")?.blur();
-  document.body.classList.remove("modal-open");
-}
-function prepareModal(el,back){
-  clearTimeout(window.__importCloseTimer);
-  clearTimeout(window.__scheduleCloseTimer);
-  if(el){el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";}
-  if(back){back.hidden=false;back.removeAttribute("inert");back.setAttribute("aria-hidden","false");back.style.display="block";back.style.visibility="visible";back.style.opacity="1";back.style.pointerEvents="auto";}
-}
+const modalManager=(()=>{
+ let activeModal=null,suppressUntil=0;
+ const refs={import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")}};
+ function hide(el){if(!el)return;el.classList.remove("open");el.hidden=true;el.setAttribute("aria-hidden","true");el.setAttribute("inert","");el.style.display="none";el.style.visibility="hidden";el.style.opacity="0";el.style.pointerEvents="none";}
+ function forceCloseAll(){clearTimeout(window.__importCloseTimer);clearTimeout(window.__scheduleCloseTimer);Object.values(refs).forEach(p=>{hide(p.modal());hide(p.backdrop())});document.querySelectorAll('[data-modal-layer="stale"]').forEach(el=>el.remove());activeModal=null;document.body.classList.remove("modal-open");document.body.style.removeProperty("overflow");document.body.style.removeProperty("touch-action");document.documentElement.style.removeProperty("overflow");}
+ function open(type){if(type!=="import"&&type!=="schedule")return false;forceCloseAll();const modal=refs[type].modal(),back=refs[type].backdrop();if(!modal||!back)return false;activeModal=type;document.body.classList.add("modal-open");document.body.style.overflow="hidden";document.body.style.touchAction="none";[back,modal].forEach(el=>{el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";el.classList.add("open")});return true;}
+ function close(){suppressUntil=Date.now()+120;forceCloseAll();}
+ return{open,close,forceCloseAll,get active(){return activeModal},get suppressUntil(){return suppressUntil}};
+})();
+function syncModalLock(){if(!modalManager.active)document.body.classList.remove("modal-open");}
+function forceCloseAllModals(){modalManager.forceCloseAll();}
+function prepareModal(){}
+function resetModalElement(){modalManager.forceCloseAll();}
 function openAddModal(date,copyFrom){
   forceCloseAllModals();
   populateForm(copyFrom,date);
   $("#scheduleMode").value="new";
   $("#scheduleModalTitle").textContent=copyFrom?"Tambah jadwal serupa":"Tambah jadwal";
-  const m=$("#scheduleModal"),b=$("#scheduleBackdrop");
-  prepareModal(m,b);
-  requestAnimationFrame(()=>{m.classList.add("open");b.classList.add("open");syncModalLock();$("#scheduleDate")?.focus();});
+  modalManager.open("schedule");
+  requestAnimationFrame(()=>$("#scheduleDate")?.focus());
 }
 function openEditModal(id){
   forceCloseAllModals();
@@ -20742,14 +20714,11 @@ function openEditModal(id){
   populateForm(e,e.date);
   $("#scheduleMode").value=isSourceEvent(id)?"source":"custom";
   $("#scheduleModalTitle").textContent=isSourceEvent(id)?"Edit jadwal sumber":"Edit jadwal custom";
-  const m=$("#scheduleModal"),b=$("#scheduleBackdrop");
-  prepareModal(m,b);
-  requestAnimationFrame(()=>{m.classList.add("open");b.classList.add("open");syncModalLock();});
+  modalManager.open("schedule");
 }
-function closeScheduleModal(){
-  clearTimeout(window.__scheduleCloseTimer);
-  resetModalElement($("#scheduleModal"),$("#scheduleBackdrop"));
-  syncModalLock();
+function closeScheduleModal(ev){
+  try{ev?.preventDefault();ev?.stopPropagation()}catch(e){}
+  modalManager.close();
   return false;
 }
 window.closeScheduleModal=closeScheduleModal;
@@ -20865,55 +20834,13 @@ $("#closeDrawer").onclick=closeDrawer;$("#backdrop").onclick=closeDrawer;
 $("#parsePasteBtn").onclick=importPasteSchedule; $("#clearPaste").onclick=()=>{$("#schedulePaste").value="";$("#pastePreview").classList.add("hidden")};
 $("#schedulePaste").addEventListener("input",()=>{ if($("#pastePreview")) $("#pastePreview").classList.add("hidden") });
 
-function openImportModal(ev){
-  try{ev?.preventDefault();ev?.stopPropagation();}catch(e){}
-  forceCloseAllModals();
-  const modal=$("#importModal"),back=$("#importBackdrop"),preview=$("#importPreview"),paste=$("#importPaste");
-  if(!modal||!back)return false;
-  prepareModal(modal,back);
-  requestAnimationFrame(()=>{
-    modal.classList.add("open");
-    back.classList.add("open");
-    syncModalLock();
-    preview?.classList.add("hidden");
-    if(paste)setTimeout(()=>paste.focus(),30);
-  });
-  return false;
-}
-function closeImportModal(ev){
-  try{ev?.preventDefault();ev?.stopPropagation();}catch(e){}
-  clearTimeout(window.__importCloseTimer);
-  resetModalElement($("#importModal"),$("#importBackdrop"));
-  syncModalLock();
-  return false;
-}
-window.openImportModal=openImportModal; window.__openImportSchedule=openImportModal; window.closeImportModal=closeImportModal;
-document.addEventListener("click",ev=>{
-  const target=ev.target?.closest?.("#importBtn");
-  if(target){openImportModal(ev);return;}
-  const close=ev.target?.closest?.("#closeImportModal,#cancelImport");
-  if(close){closeImportModal(ev);return;}
-  if(ev.target?.id==="importBackdrop"){closeImportModal(ev);return;}
-  const run=ev.target?.closest?.("#runImport");
-  if(run){ev.preventDefault();ev.stopPropagation();runImport();}
-},{capture:true});
+function openImportModal(ev){try{ev?.preventDefault();ev?.stopPropagation()}catch(e){}if(Date.now()<modalManager.suppressUntil)return false;if(!modalManager.open("import"))return false;$("#importPreview")?.classList.add("hidden");const paste=$("#importPaste");if(paste)requestAnimationFrame(()=>paste.focus());return false;}
+function closeImportModal(ev){try{ev?.preventDefault();ev?.stopPropagation()}catch(e){}modalManager.close();return false}
+window.openImportModal=openImportModal;window.__openImportSchedule=openImportModal;window.closeImportModal=closeImportModal;
+(function bindModalControls(){const sel="#importBtn,#closeImportModal,#cancelImport,#closeScheduleModal,#cancelSchedule";document.body.addEventListener("click",ev=>{const hit=ev.target?.closest?.(sel);if(!hit)return;ev.preventDefault();ev.stopPropagation();if(hit.id==="importBtn")openImportModal(ev);else if(hit.id==="closeImportModal"||hit.id==="cancelImport")closeImportModal(ev);else closeScheduleModal(ev)},{capture:true});document.body.addEventListener("click",ev=>{if(ev.target===document.getElementById("importBackdrop"))closeImportModal(ev);else if(ev.target===document.getElementById("scheduleBackdrop"))closeScheduleModal(ev)});window.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("#search")?.focus()}if(e.key==="Escape"&&modalManager.active){e.preventDefault();modalManager.close()}})})();
 $("#importPaste").addEventListener("input",()=>$("#importPreview").classList.add("hidden"));
 $("#importFile").addEventListener("change",e=>{const f=e.target.files[0];$("#importFileName").textContent=f?`${f.name} · ${(f.size/1024).toFixed(1)} KB`:""});
-
-function wireScheduleModal(){
-  const closeBtn=$("#closeScheduleModal"),cancelBtn=$("#cancelSchedule"),backdrop=$("#scheduleBackdrop"),modal=$("#scheduleModal");
-  const safeClose=(ev)=>{if(ev){ev.preventDefault();ev.stopPropagation();}closeScheduleModal();};
-  closeBtn?.addEventListener("click",safeClose);
-  cancelBtn?.addEventListener("click",safeClose);
-  backdrop?.addEventListener("click",ev=>{if(ev.target===backdrop)safeClose(ev)});
-  modal?.addEventListener("click",ev=>ev.stopPropagation());
-}
-wireScheduleModal();
-document.addEventListener("click",ev=>{const hit=ev.target?.closest?.("#closeScheduleModal,#cancelSchedule");if(hit){ev.preventDefault();ev.stopPropagation();closeScheduleModal();}},{capture:true});
-$("#scheduleForm").addEventListener("submit",e=>{e.preventDefault();e.stopPropagation();saveSchedule(collectForm())});
-window.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("#search").focus()}if(e.key==="Escape"){closeDrawer();$("#filterPanel").classList.remove("open");closeScheduleModal();closeImportModal()}});
-window.addEventListener("pageshow",()=>{if(!document.querySelector(".schedule-modal.open,.modal-backdrop.open")){document.body.classList.remove("modal-open");}});
-$("#helpBtn").addEventListener("dblclick",()=>toast(`CGK Handling v${APP_VERSION}`));
+$("#runImport").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();runImport();});
 function showSavedNote(){const n=localStorage.getItem("cgk-note")||"";const el=$("#savedNote");if(n){el.textContent=`Catatan operator: ${n}`;el.classList.remove("hidden")}else el.classList.add("hidden")}
 function setIndex(i){state.index=Math.max(0,Math.min(PERIODS.length-1,i));lastRenderedIndex=state.index;safeRender()}
 function render(){
@@ -20956,40 +20883,5 @@ if(document.readyState!=="loading") safeRender();
 })();
 </script>
 
-<script>
-(function hardWireImport(){
-  function bind(){
-    const b=document.getElementById('importBtn'), m=document.getElementById('importModal'), x=document.getElementById('closeImportModal'), c=document.getElementById('cancelImport'), bd=document.getElementById('importBackdrop'), r=document.getElementById('runImport');
-    if(!b||!m||!x||!c||!bd||!r)return;
-    b.addEventListener('click',function(e){window.openImportModal?window.openImportModal(e):null},{capture:true});
-    x.addEventListener('click',function(e){window.closeImportModal?window.closeImportModal(e):null},{capture:true});
-    c.addEventListener('click',function(e){window.closeImportModal?window.closeImportModal(e):null},{capture:true});
-    bd.addEventListener('click',function(e){if(e.target===bd&&window.closeImportModal)window.closeImportModal(e)});
-    r.addEventListener('click',function(e){e.preventDefault();e.stopPropagation(); if(window.runImport) window.runImport();});
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-})();
-</script>
-
-<script>
-(function hardenTouchControls(){
-  document.addEventListener("click",function(ev){
-    const t=ev.target?.closest?.("#importBtn,#closeImportModal,#cancelImport,#closeScheduleModal,#cancelSchedule");
-    if(!t)return;
-    ev.preventDefault();
-    ev.stopPropagation();
-    if(t.id==="importBtn") window.openImportModal?.(ev);
-    else if(t.id==="closeImportModal"||t.id==="cancelImport") window.closeImportModal?.(ev);
-    else window.closeScheduleModal?.(ev);
-  },{capture:true});
-  document.addEventListener("pointerup",function(ev){
-    const t=ev.target?.closest?.("#importBtn,#closeImportModal,#cancelImport,#closeScheduleModal,#cancelSchedule");
-    if(!t)return;
-    if(t.id==="importBtn") window.openImportModal?.(ev);
-    else if(t.id==="closeImportModal"||t.id==="cancelImport") window.closeImportModal?.(ev);
-    else window.closeScheduleModal?.(ev);
-  },{capture:true});
-})();
-</script>
 </body>
 </html>
