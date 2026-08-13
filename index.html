@@ -7,38 +7,39 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=15">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v8.png?rev=15">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v8.png?rev=15">
+  <link rel="manifest" href="manifest.webmanifest?v=16">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=16">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=16">
+  <link rel="icon" type="image/png" href="icon-192.png?rev=16">
       <title>CGK Handling · Hamdan Tour</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div class="brand-block">
-        <div class="brand-icon"><i data-lucide="plane"></i></div>
+        <div class="brand-icon"><img src="brand-icon.png" alt="CGK Handling logo"></div>
         <div><h1>CGK Handling</h1><p>August 2026 — March 2027</p></div>
       </div>
       <div class="top-search">
-        <i data-lucide="search"></i>
+        <span class="icon-slot" data-icon="search" aria-hidden="true"></span>
         <input id="search" placeholder="Search flight, PNR, package, hotel..." autocomplete="off">
         <kbd>Ctrl K</kbd>
       </div>
       <div class="top-tools">
-        <button class="tool-btn" id="todayBtn" title="Today"><i data-lucide="calendar-days"></i><span>Today</span></button>
+        <button class="tool-btn" id="todayBtn" title="Today"><span class="icon-slot" data-icon="calendar-days" aria-hidden="true"></span><span>Today</span></button>
         <div class="nav-pair">
-          <button class="tool-btn square" id="prevBtn" title="Previous month"><i data-lucide="chevron-left"></i></button>
-          <button class="tool-btn square" id="nextBtn" title="Next month"><i data-lucide="chevron-right"></i></button>
+          <button class="tool-btn square" id="prevBtn" title="Previous month"><span class="icon-slot" data-icon="chevron-left" aria-hidden="true"></span></button>
+          <button class="tool-btn square" id="nextBtn" title="Next month"><span class="icon-slot" data-icon="chevron-right" aria-hidden="true"></span></button>
         </div>
-        <button class="icon-btn" id="helpBtn" title="Help"><i data-lucide="circle-help"></i></button>
-        <button class="icon-btn" id="themeBtn" title="Theme"><i data-lucide="moon"></i></button>
-        <button class="icon-btn notify" id="notifyBtn" title="Notifications"><i data-lucide="bell"></i><span>6</span></button>
+        <button class="icon-btn" id="helpBtn" title="Help"><span class="icon-slot" data-icon="circle-help" aria-hidden="true"></span></button>
+        <button class="icon-btn" id="themeBtn" title="Theme"><span class="icon-slot" data-icon="moon" aria-hidden="true"></span></button>
+        <button class="icon-btn notify" id="notifyBtn" title="Notifications"><span class="icon-slot" data-icon="bell" aria-hidden="true"></span><span>6</span></button>
         <button class="profile" id="profileBtn" title="Operator profile">
           <div class="avatar">R</div>
           <div><b>rasyid.hamdatour</b><small>Operator</small></div>
-          <i data-lucide="chevron-down"></i>
+          <span class="icon-slot" data-icon="chevron-down" aria-hidden="true"></span>
         </button>
       </div>
     </header>
@@ -47,15 +48,15 @@
       <section class="workspace">
         <div class="calendar-toolbar">
           <div class="month-title-wrap">
-            <button id="monthButton" class="month-title" title="Pilih bulan"><span id="calendarTitle">August 2026</span><i data-lucide="chevron-down"></i></button>
+            <button id="monthButton" class="month-title" title="Pilih bulan"><span id="calendarTitle">August 2026</span><span class="icon-slot" data-icon="chevron-down" aria-hidden="true"></span></button>
             <select id="monthSelect" class="month-select" aria-label="Pilih bulan"></select>
           </div>
           <div class="toolbar-actions">
-            <button class="btn ghost" id="exportBtn"><i data-lucide="download"></i>Export CSV</button>
-            <button class="btn ghost" id="printBtn"><i data-lucide="printer"></i>Print</button>
-            <button class="btn ghost" id="noteBtn"><i data-lucide="notebook-pen"></i>Add Note</button>
-            <button class="btn primary" id="importBtn"><i data-lucide="file-plus-2"></i>Import Schedule</button>
-            <button class="btn ghost" id="filterBtn"><i data-lucide="sliders-horizontal"></i>Filter</button>
+            <button class="btn ghost" id="exportBtn"><span class="icon-slot" data-icon="download" aria-hidden="true"></span>Export CSV</button>
+            <button class="btn ghost" id="printBtn"><span class="icon-slot" data-icon="printer" aria-hidden="true"></span>Print</button>
+            <button class="btn ghost" id="noteBtn"><span class="icon-slot" data-icon="notebook-pen" aria-hidden="true"></span>Add Note</button>
+            <button class="btn primary" id="importBtn"><span class="icon-slot" data-icon="file-plus-2" aria-hidden="true"></span>Import Schedule</button>
+            <button class="btn ghost" id="filterBtn"><span class="icon-slot" data-icon="sliders-horizontal" aria-hidden="true"></span>Filter</button>
           </div>
         </div>
 
@@ -81,14 +82,14 @@
 
         <section class="rail-card">
           <h3>Quick Actions</h3>
-          <button class="quick-action" id="quickExport"><i data-lucide="download"></i><div><b>Export CSV</b><span>Download all schedule data</span></div></button>
-          <button class="quick-action" id="quickPrint"><i data-lucide="printer"></i><div><b>Print Schedule</b><span>Print current view</span></div></button>
-          <button class="quick-action" id="quickNote"><i data-lucide="notebook-pen"></i><div><b>Add Note</b><span>Catat informasi penting</span></div></button>
-          <button class="quick-action" id="quickFilter"><i data-lucide="filter"></i><div><b>Filter Events</b><span>Saring berdasarkan maskapai, jenis</span></div></button>
+          <button class="quick-action" id="quickExport"><span class="icon-slot" data-icon="download" aria-hidden="true"></span><div><b>Export CSV</b><span>Download all schedule data</span></div></button>
+          <button class="quick-action" id="quickPrint"><span class="icon-slot" data-icon="printer" aria-hidden="true"></span><div><b>Print Schedule</b><span>Print current view</span></div></button>
+          <button class="quick-action" id="quickNote"><span class="icon-slot" data-icon="notebook-pen" aria-hidden="true"></span><div><b>Add Note</b><span>Catat informasi penting</span></div></button>
+          <button class="quick-action" id="quickFilter"><span class="icon-slot" data-icon="filter" aria-hidden="true"></span><div><b>Filter Events</b><span>Saring berdasarkan maskapai, jenis</span></div></button>
         </section>
 
         <section class="rail-card note-card">
-          <div class="note-head"><i data-lucide="info"></i><b>Catatan</b></div>
+          <div class="note-head"><span class="icon-slot" data-icon="info" aria-hidden="true"></span><b>Catatan</b></div>
           <p>Waktu TIBA adalah waktu kedatangan di CGK (handling tiba), bukan waktu keberangkatan dari transit.</p>
           <p>Jika terdapat <strong>(+1)</strong> pada itinerary, tanggal kedatangan otomatis dihitung ke hari berikutnya.</p>
           <div id="savedNote" class="saved-note hidden"></div>
@@ -98,7 +99,7 @@
   </div>
 
   <div class="filter-popover" id="filterPanel">
-    <div class="filter-head"><b>Filter Events</b><button class="icon-btn small" id="closeFilter"><i data-lucide="x"></i></button></div>
+    <div class="filter-head"><b>Filter Events</b><button class="icon-btn small" id="closeFilter"><span class="icon-slot" data-icon="x" aria-hidden="true"></span></button></div>
     <div class="filter-group"><span>Jenis</span><div class="filter-row"><button class="chip active" data-filter="all">All</button><button class="chip" data-filter="DEPARTURE_CGK">Departure</button><button class="chip" data-filter="ARRIVAL_CGK">Arrival</button></div></div>
     <div class="filter-group"><span>Maskapai</span><div class="filter-row" id="airlineFilters">
       <button class="chip" data-airline="GA">GA</button><button class="chip" data-airline="QR">QR</button><button class="chip" data-airline="EK">EK</button><button class="chip" data-airline="WY">WY</button><button class="chip" data-airline="EY">EY</button><button class="chip" data-airline="SV">SV</button><button class="chip" data-airline="BI">BI</button><button class="chip" data-airline="TR">TR</button>
@@ -109,7 +110,7 @@
 
   <div class="drawer-backdrop" id="backdrop"></div>
   <aside class="drawer" id="drawer">
-    <div class="drawer-head"><div><span class="eyebrow">HANDLING DETAIL</span><h3 id="drawerTitle">Event</h3></div><button class="icon-btn" id="closeDrawer"><i data-lucide="x"></i></button></div>
+    <div class="drawer-head"><div><span class="eyebrow">HANDLING DETAIL</span><h3 id="drawerTitle">Event</h3></div><button class="icon-btn" id="closeDrawer"><span class="icon-slot" data-icon="x" aria-hidden="true"></span></button></div>
     <div id="drawerBody"></div>
   </aside>
 
@@ -118,7 +119,7 @@
   <div class="schedule-modal" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
     <div class="modal-head">
       <div><span class="eyebrow">AUTO IMPORT</span><h3 id="importModalTitle">Import Schedule</h3></div>
-      <button class="icon-btn" id="closeImportModal" type="button"><i data-lucide="x"></i></button>
+      <button class="icon-btn modal-x" id="closeImportModal" type="button" aria-label="Tutup" onclick="closeImportModal();return false;">×</button>
     </div>
     <div class="paste-import-box">
       <div class="paste-import-head"><div><b>1. Paste itinerary</b><span>Masukkan beberapa baris flight. Sistem otomatis mengambil hanya segmen CGK berangkat dan CGK tiba.</span></div><span class="paste-badge">AUTO PARSE</span></div>
@@ -134,8 +135,8 @@
     </div>
     <div id="importPreview" class="paste-preview hidden"></div>
     <div class="modal-foot">
-      <button class="btn ghost" id="cancelImport" type="button">Batal</button>
-      <button class="btn primary" id="runImport" type="button"><i data-lucide="scan-line"></i> Baca & Tambahkan</button>
+      <button class="btn ghost" id="cancelImport" type="button" onclick="closeImportModal();return false;">Batal</button>
+      <button class="btn primary" id="runImport" type="button"><span class="icon-slot" data-icon="scan-line" aria-hidden="true"></span> Baca & Tambahkan</button>
     </div>
   </div>
 
@@ -143,7 +144,7 @@
   <div class="schedule-modal" id="scheduleModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="scheduleModalTitle">
     <div class="modal-head">
       <div><span class="eyebrow">OPERATOR CUSTOM SCHEDULE</span><h3 id="scheduleModalTitle">Tambah jadwal</h3></div>
-      <button class="icon-btn" id="closeScheduleModal" type="button"><i data-lucide="x"></i></button>
+      <button class="icon-btn modal-x" id="closeScheduleModal" type="button" aria-label="Tutup" onclick="closeScheduleModal();return false;">×</button>
     </div>
     <div class="paste-import-box">
       <div class="paste-import-head">
@@ -157,7 +158,7 @@
 18AUG DOHCGK 0235 1535 QR956"></textarea>
       <div class="paste-actions">
         <button class="btn ghost" id="clearPaste" type="button">Bersihkan</button>
-        <button class="btn primary" id="parsePasteBtn" type="button"><i data-lucide="scan-line"></i> Baca & buat jadwal</button>
+        <button class="btn primary" id="parsePasteBtn" type="button"><span class="icon-slot" data-icon="scan-line" aria-hidden="true"></span> Baca & buat jadwal</button>
       </div>
       <div class="paste-preview hidden" id="pastePreview"></div>
     </div>
@@ -194,7 +195,7 @@
         <label>Status<input id="scheduleStatus" placeholder="TICKET / DONE / RELEASE"></label>
         <label>Note<input id="scheduleNote"></label>
       </div>
-      <div class="modal-foot"><button class="btn ghost" id="cancelSchedule" type="button">Batal</button><button class="btn primary" type="submit"><i data-lucide="save"></i>Simpan jadwal</button></div>
+      <div class="modal-foot"><button class="btn ghost" id="cancelSchedule" type="button" onclick="closeScheduleModal();return false;">Batal</button><button class="btn primary" type="submit"><span class="icon-slot" data-icon="save" aria-hidden="true"></span>Simpan jadwal</button></div>
     </form>
   </div>
 
@@ -202,13 +203,17 @@
 
 
 <script>
-/* CGK Handling v15 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
+/* CGK Handling v16 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
 (async function(){
   try {
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
     if (window.caches) { const keys=await caches.keys(); await Promise.all(keys.map(k=>caches.delete(k))); }
   } catch(e) { console.warn('cache cleanup skipped',e); }
 })();
+</script>
+<script>
+const ICON_PATHS={search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>','calendar-days':'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/><path d="M8 13h3M13 13h3M8 17h3"/>','chevron-left':'<path d="m15 18-6-6 6-6"/>','chevron-right':'<path d="m9 18 6-6-6-6"/>','circle-help':'<circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 1 1 4.4 1.3c-.9 1.1-2.1 1.4-2.1 3"/><path d="M12 17h.01"/>',moon:'<path d="M20 15.3A8.5 8.5 0 0 1 8.7 4 8.5 8.5 0 1 0 20 15.3Z"/>',bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>','chevron-down':'<path d="m6 9 6 6 6-6"/>',download:'<path d="M12 3v11"/><path d="m7 9 5 5 5-5"/><path d="M5 21h14"/>',printer:'<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/>','notebook-pen':'<path d="M4 4h11a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><path d="M8 8h6M8 12h4"/><path d="m16 15 3-3 2 2-3 3-3 .8z"/>','file-plus-2':'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 12v6M9 15h6"/>','sliders-horizontal':'<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="18" r="2"/>',filter:'<path d="M4 5h16l-6.5 7v5l-3 2v-7z"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 10v6"/><path d="M12 7h.01"/>',x:'<path d="m6 6 12 12M18 6 6 18"/>','scan-line':'<path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/>',plus:'<path d="M12 5v14M5 12h14"/>',pencil:'<path d="m4 16-.7 4.7L8 20l10.7-10.7a2.1 2.1 0 0 0-3-3z"/><path d="m14 7 3 3"/>','trash-2':'<path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13M9 7V4h6v3"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>','rotate-ccw':'<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6"/>',save:'<path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/>',plane:'<path d="M12 2v8l8 4v2l-8-2v8l-2 1-1-9-6-2v-2l6 2 1-9z"/>'};
+function renderIcons(root=document){root.querySelectorAll?.('.icon-slot[data-icon]').forEach(el=>{el.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[el.dataset.icon]||'<circle cx="12" cy="12" r="8"/>'}</svg>`;});}
 </script>
 <script>
 const handlingEvents = [
@@ -20642,14 +20647,14 @@ function renderCalendar(){
     const ds=`${p.y}-${String(p.m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
     const dayEvents=events.filter(e=>e.date===ds).sort((a,b)=>handlingTime(a).localeCompare(handlingTime(b)));
     const now=new Date(),isToday=ds===`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-    html+=`<div class="day ${isToday?"today":""}" data-date="${ds}"><div class="day-head"><span class="day-num">${d}</span><div class="day-actions">${isToday?'<span class="today-badge">TODAY</span>':''}<span class="event-count">${dayEvents.length?dayEvents.length+" events":""}</span><button class="day-add" title="Tambah jadwal" aria-label="Tambah jadwal" data-add-date="${ds}"><i data-lucide="plus"></i></button></div></div>${dayEvents.slice(0,4).map(eventCard).join("")}${dayEvents.length>4?`<div class="more" data-date="${ds}">+${dayEvents.length-4} more</div>`:""}</div>`;
+    html+=`<div class="day ${isToday?"today":""}" data-date="${ds}"><div class="day-head"><span class="day-num">${d}</span><div class="day-actions">${isToday?'<span class="today-badge">TODAY</span>':''}<span class="event-count">${dayEvents.length?dayEvents.length+" events":""}</span><button class="day-add" title="Tambah jadwal" aria-label="Tambah jadwal" data-add-date="${ds}"><span class="icon-slot" data-icon="plus" aria-hidden="true"></span></button></div></div>${dayEvents.slice(0,4).map(eventCard).join("")}${dayEvents.length>4?`<div class="more" data-date="${ds}">+${dayEvents.length-4} more</div>`:""}</div>`;
   }
   const total=42,used=start+days;for(let i=used;i<total;i++)html+=`<div class="day muted"><div class="day-head"><span class="day-num"></span></div></div>`;
   $("#calendar").innerHTML=html;
   document.querySelectorAll(".event").forEach(el=>el.addEventListener("click",()=>openDrawer(el.dataset.id)));
   document.querySelectorAll(".more").forEach(el=>el.addEventListener("click",()=>showDay(el.dataset.date)));
   document.querySelectorAll("[data-add-date]").forEach(el=>el.addEventListener("click",e=>{e.stopPropagation();openAddModal(el.dataset.addDate)}));
-  if(window.lucide&&typeof window.lucide.createIcons==="function") window.window.lucide?.createIcons?.();
+  renderIcons();
 }
 function showDay(date){const ev=monthEvents().filter(e=>e.date===date);if(ev[0])openDrawer(ev[0].id);else openAddModal(date)}
 function findEvent(id){return allEvents().find(e=>String(e.id)===String(id))}
@@ -20661,14 +20666,14 @@ function openDrawer(id){
   $("#drawerTitle").textContent=e.flight||"Custom Schedule";
   const legs=(e.scheduleLegs||[]).map(x=>`<div class="leg-row"><span>${x.date}</span><b>${x.dep} → ${x.arr}</b><span>${x.route}</span><span>${x.flight}${x.arrivalNextDay?" (+1)":""}</span></div>`).join("");
   const actions=custom
-    ?`<button class="btn ghost" id="editEventBtn"><i data-lucide="pencil"></i>Edit</button><button class="btn danger" id="deleteCustomBtn"><i data-lucide="trash-2"></i>Hapus</button>`
-    :`<button class="btn ghost" id="editEventBtn"><i data-lucide="pencil"></i>Edit isi</button><button class="btn ghost" id="addSimilarBtn"><i data-lucide="copy"></i>Tambah jadwal serupa</button>${edited?'<button class="btn danger" id="resetEventBtn"><i data-lucide="rotate-ccw"></i>Reset asli</button>':''}`;
+    ?`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>Edit</button><button class="btn danger" id="deleteCustomBtn"><span class="icon-slot" data-icon="trash-2" aria-hidden="true"></span>Hapus</button>`
+    :`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>Edit isi</button><button class="btn ghost" id="addSimilarBtn"><span class="icon-slot" data-icon="copy" aria-hidden="true"></span>Tambah jadwal serupa</button>${edited?'<button class="btn danger" id="resetEventBtn"><span class="icon-slot" data-icon="rotate-ccw" aria-hidden="true"></span>Reset asli</button>':''}`;
   $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div>
   <div class="drawer-actions">${actions}</div>
   <div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div>
   <div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div>
   <div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
-  $("#drawer").classList.add("open");$("#backdrop").classList.add("open");window.lucide?.createIcons?.();
+  $("#drawer").classList.add("open");$("#backdrop").classList.add("open");renderIcons();
   $("#editEventBtn").onclick=()=>{closeDrawer();openEditModal(e.id)};
   if(custom){$("#deleteCustomBtn").onclick=()=>deleteCustom(e.id)}
   else { $("#addSimilarBtn").onclick=()=>{closeDrawer();openAddModal(e.date,e)}; if(edited) $("#resetEventBtn").onclick=()=>resetSourceOverride(e.id); }
@@ -20681,9 +20686,10 @@ function populateForm(e,date){
   $("#scheduleAirline").value=e?.airline||"";$("#scheduleAirlineName").value=e?.airlineName||"";$("#scheduleFlight").value=e?.flight||"";$("#scheduleRoute").value=e?.route||"";
   $("#schedulePackage").value=e?.package||"";$("#schedulePnr").value=e?.pnr||"";$("#schedulePax").value=e?.pax??"";$("#scheduleRooms").value=e?.rooms??"";$("#scheduleHotel").value=e?.hotel||"";$("#scheduleVendor").value=e?.vendor||"";$("#scheduleStatus").value=e?.status||"";$("#scheduleNote").value=e?.note||"";
 }
-function openAddModal(date,copyFrom){populateForm(copyFrom,date);$("#scheduleMode").value="new";$("#scheduleModalTitle").textContent=copyFrom?"Tambah jadwal serupa":"Tambah jadwal";const m=$("#scheduleModal"),b=$("#scheduleBackdrop");m.setAttribute("aria-hidden","false");m.classList.add("open");b.classList.add("open");document.body.classList.add("modal-open");setTimeout(()=>$("#scheduleDate")?.focus(),30)}
-function openEditModal(id){const e=findEvent(id);if(!e)return;populateForm(e,e.date);$("#scheduleMode").value=isSourceEvent(id)?"source":"custom";$("#scheduleModalTitle").textContent=isSourceEvent(id)?"Edit jadwal sumber":"Edit jadwal custom";const m=$("#scheduleModal"),b=$("#scheduleBackdrop");m.setAttribute("aria-hidden","false");m.classList.add("open");b.classList.add("open");document.body.classList.add("modal-open");}
+function openAddModal(date,copyFrom){closeImportModal();populateForm(copyFrom,date);$("#scheduleMode").value="new";$("#scheduleModalTitle").textContent=copyFrom?"Tambah jadwal serupa":"Tambah jadwal";const m=$("#scheduleModal"),b=$("#scheduleBackdrop");m.setAttribute("aria-hidden","false");m.classList.add("open");b.classList.add("open");document.body.classList.add("modal-open");setTimeout(()=>$("#scheduleDate")?.focus(),30)}
+function openEditModal(id){closeImportModal();const e=findEvent(id);if(!e)return;populateForm(e,e.date);$("#scheduleMode").value=isSourceEvent(id)?"source":"custom";$("#scheduleModalTitle").textContent=isSourceEvent(id)?"Edit jadwal sumber":"Edit jadwal custom";const m=$("#scheduleModal"),b=$("#scheduleBackdrop");m.setAttribute("aria-hidden","false");m.classList.add("open");b.classList.add("open");document.body.classList.add("modal-open");}
 function closeScheduleModal(){const m=$("#scheduleModal"),b=$("#scheduleBackdrop");if(!m)return;m.classList.remove("open");b.classList.remove("open");m.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open");setTimeout(()=>$("#scheduleDate")?.blur(),20)}
+window.closeScheduleModal=closeScheduleModal;
 function collectForm(){
   const type=$("#scheduleType").value, time=$("#scheduleTime").value.trim(), date=$("#scheduleDate").value;
   const airline=$("#scheduleAirline").value.trim().toUpperCase();
@@ -20774,6 +20780,7 @@ $("#schedulePaste").addEventListener("input",()=>{ if($("#pastePreview")) $("#pa
 
 function openImportModal(){$("#importModal").classList.add("open");$("#importBackdrop").classList.add("open");$("#importPreview").classList.add("hidden");$("#importPaste").focus()}
 function closeImportModal(){$("#importModal").classList.remove("open");$("#importBackdrop").classList.remove("open")}
+window.closeImportModal=closeImportModal;
 $("#importBtn").onclick=openImportModal;$("#closeImportModal").onclick=closeImportModal;$("#cancelImport").onclick=closeImportModal;$("#importBackdrop").onclick=closeImportModal;$("#runImport").onclick=runImport;
 $("#importPaste").addEventListener("input",()=>$("#importPreview").classList.add("hidden"));
 $("#importFile").addEventListener("change",e=>{const f=e.target.files[0];$("#importFileName").textContent=f?`${f.name} · ${(f.size/1024).toFixed(1)} KB`:""});
@@ -20787,6 +20794,7 @@ function wireScheduleModal(){
   modal?.addEventListener("click",ev=>ev.stopPropagation());
 }
 wireScheduleModal();
+document.addEventListener("click",ev=>{const hit=ev.target?.closest?.("#closeScheduleModal,#cancelSchedule");if(hit){ev.preventDefault();ev.stopPropagation();closeScheduleModal();}},{capture:true});
 $("#scheduleForm").addEventListener("submit",e=>{e.preventDefault();e.stopPropagation();saveSchedule(collectForm())});
 window.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("#search").focus()}if(e.key==="Escape"){closeDrawer();$("#filterPanel").classList.remove("open");closeScheduleModal();closeImportModal()}});
 $("#helpBtn").addEventListener("dblclick",()=>toast(`CGK Handling v${APP_VERSION}`));
@@ -20798,7 +20806,7 @@ function render(){
   try{renderCalendar()}catch(err){console.error("calendar render failed",err);const c=$("#calendar");if(c&&!c.innerHTML.trim())c.innerHTML=`<div class="calendar-error">Gagal memuat kalender. Coba refresh halaman.</div>`}
   try{renderYear()}catch(err){console.error("year render failed",err)}
   const ms=$("#monthSelect"); if(ms) ms.value=state.index;
-  if(window.lucide&&typeof window.lucide.createIcons==="function") window.window.lucide?.createIcons?.();
+  renderIcons();
 }
 function safeRender(){
   const run=()=>{
