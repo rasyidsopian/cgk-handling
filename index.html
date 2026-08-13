@@ -55,7 +55,7 @@
             <button class="btn ghost" id="exportBtn"><span class="icon-slot" data-icon="download" aria-hidden="true"></span>Export CSV</button>
             <button class="btn ghost" id="printBtn"><span class="icon-slot" data-icon="printer" aria-hidden="true"></span>Print</button>
             <button class="btn ghost" id="noteBtn"><span class="icon-slot" data-icon="notebook-pen" aria-hidden="true"></span>Add Note</button>
-            <button class="btn primary" id="importBtn"><span class="icon-slot" data-icon="file-plus-2" aria-hidden="true"></span>Import Schedule</button>
+            <button class="btn primary" id="importBtn" type="button" onclick="window.__openImportSchedule && window.__openImportSchedule(event)"><span class="icon-slot" data-icon="file-plus-2" aria-hidden="true"></span>Import Schedule</button>
             <button class="btn ghost" id="filterBtn"><span class="icon-slot" data-icon="sliders-horizontal" aria-hidden="true"></span>Filter</button>
           </div>
         </div>
@@ -203,7 +203,7 @@
 
 
 <script>
-/* CGK Handling v16 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
+/* CGK Handling v17 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
 (async function(){
   try {
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
@@ -20778,10 +20778,37 @@ $("#closeDrawer").onclick=closeDrawer;$("#backdrop").onclick=closeDrawer;
 $("#parsePasteBtn").onclick=importPasteSchedule; $("#clearPaste").onclick=()=>{$("#schedulePaste").value="";$("#pastePreview").classList.add("hidden")};
 $("#schedulePaste").addEventListener("input",()=>{ if($("#pastePreview")) $("#pastePreview").classList.add("hidden") });
 
-function openImportModal(){$("#importModal").classList.add("open");$("#importBackdrop").classList.add("open");$("#importPreview").classList.add("hidden");$("#importPaste").focus()}
-function closeImportModal(){$("#importModal").classList.remove("open");$("#importBackdrop").classList.remove("open")}
-window.closeImportModal=closeImportModal;
-$("#importBtn").onclick=openImportModal;$("#closeImportModal").onclick=closeImportModal;$("#cancelImport").onclick=closeImportModal;$("#importBackdrop").onclick=closeImportModal;$("#runImport").onclick=runImport;
+function openImportModal(ev){
+  try{ev?.preventDefault();ev?.stopPropagation();}catch(e){}
+  const modal=$("#importModal"), back=$("#importBackdrop"), preview=$("#importPreview"), paste=$("#importPaste");
+  if(!modal||!back){console.error("Import modal elements missing");return false;}
+  modal.classList.add("open"); back.classList.add("open");
+  modal.setAttribute("aria-hidden","false"); back.setAttribute("aria-hidden","false");
+  modal.style.display="block"; modal.style.visibility="visible"; modal.style.opacity="1"; modal.style.pointerEvents="auto";
+  back.style.display="block"; back.style.visibility="visible"; back.style.opacity="1"; back.style.pointerEvents="auto";
+  preview?.classList.add("hidden");
+  setTimeout(()=>paste?.focus(),30);
+  return false;
+}
+function closeImportModal(ev){
+  try{ev?.preventDefault();ev?.stopPropagation();}catch(e){}
+  const modal=$("#importModal"), back=$("#importBackdrop");
+  modal?.classList.remove("open"); back?.classList.remove("open");
+  modal?.setAttribute("aria-hidden","true"); back?.setAttribute("aria-hidden","true");
+  if(modal){modal.style.opacity="0";modal.style.pointerEvents="none";}
+  if(back){back.style.opacity="0";back.style.pointerEvents="none";}
+  return false;
+}
+window.openImportModal=openImportModal; window.__openImportSchedule=openImportModal; window.closeImportModal=closeImportModal;
+document.addEventListener("click",ev=>{
+  const target=ev.target?.closest?.("#importBtn");
+  if(target){openImportModal(ev);return;}
+  const close=ev.target?.closest?.("#closeImportModal,#cancelImport");
+  if(close){closeImportModal(ev);return;}
+  if(ev.target?.id==="importBackdrop"){closeImportModal(ev);return;}
+  const run=ev.target?.closest?.("#runImport");
+  if(run){ev.preventDefault();ev.stopPropagation();runImport();}
+},{capture:true});
 $("#importPaste").addEventListener("input",()=>$("#importPreview").classList.add("hidden"));
 $("#importFile").addEventListener("change",e=>{const f=e.target.files[0];$("#importFileName").textContent=f?`${f.name} · ${(f.size/1024).toFixed(1)} KB`:""});
 
@@ -20837,6 +20864,21 @@ if(document.readyState!=="loading") safeRender();
   window.addEventListener('pageshow', draw);
   setTimeout(draw, 100);
   setTimeout(draw, 500);
+})();
+</script>
+
+<script>
+(function hardWireImport(){
+  function bind(){
+    const b=document.getElementById('importBtn'), m=document.getElementById('importModal'), x=document.getElementById('closeImportModal'), c=document.getElementById('cancelImport'), bd=document.getElementById('importBackdrop'), r=document.getElementById('runImport');
+    if(!b||!m||!x||!c||!bd||!r)return;
+    b.addEventListener('click',function(e){window.openImportModal?window.openImportModal(e):null},{capture:true});
+    x.addEventListener('click',function(e){window.closeImportModal?window.closeImportModal(e):null},{capture:true});
+    c.addEventListener('click',function(e){window.closeImportModal?window.closeImportModal(e):null},{capture:true});
+    bd.addEventListener('click',function(e){if(e.target===bd&&window.closeImportModal)window.closeImportModal(e)});
+    r.addEventListener('click',function(e){e.preventDefault();e.stopPropagation(); if(window.runImport) window.runImport();});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
 })();
 </script>
 </body>
