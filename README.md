@@ -1,4 +1,4 @@
-CGK Handling PWA v17
+CGK Handling PWA v18
 
 Fixes in this build:
 - Replaces missing Lucide dependency with internal inline SVG icons so all toolbar/icon buttons are visible.
