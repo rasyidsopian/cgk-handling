@@ -1,11 +1,11 @@
-const CACHE = 'cgk-handling-v5-20260813';
+const CACHE = 'cgk-handling-v6-20260813';
 const CORE = [
-  './?v=5',
-  './index.html?v=5',
-  './style.css?v=5',
-  './app.js?v=5',
-  './data.js?v=5',
-  './manifest.webmanifest?v=5',
+  './?v=6',
+  './index.html?v=6',
+  './style.css?v=6',
+  './app.js?v=6',
+  './data.js?v=6',
+  './manifest.webmanifest?v=6',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];
@@ -21,7 +21,7 @@ self.addEventListener('fetch', event => {
   const isAppFile=/\.(js|css|html|webmanifest)$/i.test(url.pathname);
   event.respondWith((isAppFile ? fetch(event.request,{cache:'no-store'}).then(response=>{
     const copy=response.clone();caches.open(CACHE).then(c=>c.put(event.request,copy)).catch(()=>{});return response;
-  }).catch(()=>caches.match(event.request)||caches.match('./index.html?v=5')) : caches.match(event.request).then(cached=>cached||fetch(event.request).then(response=>{
+  }).catch(()=>caches.match(event.request)||caches.match('./index.html?v=6')) : caches.match(event.request).then(cached=>cached||fetch(event.request).then(response=>{
     const copy=response.clone();caches.open(CACHE).then(c=>c.put(event.request,copy)).catch(()=>{});return response;
   }))));
 });

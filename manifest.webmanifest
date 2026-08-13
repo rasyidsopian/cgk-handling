@@ -3,13 +3,14 @@
   "short_name":"CGK Handling",
   "description":"Operational flight handling calendar Hamdan Tour",
   "lang":"id-ID",
-  "start_url":"./?v=5",
+  "start_url":"./?v=6",
   "scope":"./",
   "display":"standalone",
   "background_color":"#f7f9f8",
   "theme_color":"#086b42",
   "orientation":"any",
   "icons":[
+    {"src":"icons/icon-180.png","sizes":"180x180","type":"image/png","purpose":"any"},
     {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
     {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
