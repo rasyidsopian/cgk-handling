@@ -4,7 +4,7 @@ const PERIODS=[
   {y:2026,m:11,label:"December 2026"},{y:2027,m:0,label:"January 2027"},
   {y:2027,m:1,label:"February 2027"},{y:2027,m:2,label:"March 2027"}
 ];
-const APP_VERSION="12.0.0";
+const APP_VERSION="13.0.0";
 let state={index:0,query:"",type:"all",airline:"all",highPax:false};
 let lastRenderedIndex=0;
 const $=s=>document.querySelector(s);
@@ -209,8 +209,16 @@ $("#scheduleForm").addEventListener("submit",e=>{e.preventDefault();e.stopPropag
 window.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("#search").focus()}if(e.key==="Escape"){closeDrawer();$("#filterPanel").classList.remove("open");closeScheduleModal();closeImportModal()}});
 $("#helpBtn").addEventListener("dblclick",()=>toast(`CGK Handling v${APP_VERSION}`));
 function showSavedNote(){const n=localStorage.getItem("cgk-note")||"";const el=$("#savedNote");if(n){el.textContent=`Catatan operator: ${n}`;el.classList.remove("hidden")}else el.classList.add("hidden")}
-function setIndex(i){state.index=Math.max(0,Math.min(PERIODS.length-1,i));lastRenderedIndex=state.index;render()}
-function render(){lastRenderedIndex=state.index;renderSummary();renderCalendar();renderYear();$("#monthSelect").value=state.index;lucide.createIcons()}
-window.addEventListener("pageshow",()=>{render();});
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)render();});
-showSavedNote();render();
+function setIndex(i){state.index=Math.max(0,Math.min(PERIODS.length-1,i));lastRenderedIndex=state.index;safeRender()}
+function render(){lastRenderedIndex=state.index;renderSummary();renderCalendar();renderYear();$("#monthSelect").value=state.index; if(window.lucide&&lucide.createIcons)lucide.createIcons()}
+function safeRender(){
+  const run=()=>{try{ if(document.getElementById("calendar")) render(); }catch(err){ console.error("CGK render failed",err); }};
+  run();
+  setTimeout(run,120);
+}
+window.addEventListener("pageshow",()=>safeRender());
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)safeRender()});
+window.addEventListener("DOMContentLoaded",()=>safeRender());
+window.addEventListener("load",()=>safeRender());
+showSavedNote();
+setTimeout(safeRender,0);
