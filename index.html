@@ -21232,6 +21232,7 @@ setTimeout(()=>window.CGKSync?.init(),0);
   }
   function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{try{const c=document.createElement('canvas');c.width=Math.max(1,img.naturalWidth);c.height=Math.max(1,img.naturalHeight);const ctx=c.getContext('2d');ctx.drawImage(img,0,0);resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
   function routeText(route){return pdfText(route).replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').replace(/\s+/g,' ').trim();}
+  function safeRoundRect(doc,x,y,w,h,radius=0,style='FD'){ return safeRect(doc,x,y,w,h,style,radius); }
   async function buildPDF(snapshot){
     const jsPDF=await loadJsPDF();
     const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
@@ -21280,7 +21281,7 @@ setTimeout(()=>window.CGKSync?.init(),0);
     safePdfText(doc,`Report ID ${pdfText(snapshot.reportId)}`,137,y);y+=9;
 
     // COMPACT PREMIUM SUMMARY — same V25 visual language, slightly safer sizing
-    doc.setFillColor(...pale);doc.setDrawColor(...line);safeRoundRect(doc,margin,y,W-2*margin,30,3,'FD');
+    doc.setFillColor(...pale);doc.setDrawColor(...line);safeRect(doc,margin,y,W-2*margin,30,'FD',3);
     const stats=[['Total Attendance',snapshot.totalAttendance],['Departure',snapshot.departureCount],['Arrival',snapshot.arrivalCount],['Handling Days',snapshot.handlingDays],['Expected Incentive',money(snapshot.expectedIncentive)]];
     const cols=[margin+5,margin+38,margin+67,margin+95,margin+126];
     stats.forEach((s,i)=>{
@@ -21334,7 +21335,7 @@ setTimeout(()=>window.CGKSync?.init(),0);
     snapshot.dailyBreakdown.forEach((d)=>{
       if(y>270){newPage('DAILY INCENTIVE BREAKDOWN (continued)');}
       const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
-      doc.setFillColor(...pale);doc.setDrawColor(...line);safeRoundRect(doc,margin,y,W-2*margin,17,2.5,'FD');
+      doc.setFillColor(...pale);doc.setDrawColor(...line);safeRect(doc,margin,y,W-2*margin,17,'FD',2.5);
       doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(8.5);safePdfText(doc,label,margin+4,y+5.8);
       doc.setFont('helvetica','normal');doc.setFontSize(7.0);doc.setTextColor(...muted);
       safePdfText(doc,`${d.attended.length} attendance · Departure ${d.departures} · Arrival ${d.arrivals}`,margin+4,y+11.8);

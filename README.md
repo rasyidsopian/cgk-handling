@@ -1,5 +1,8 @@
-CGK Handling PWA v27
+CGK Handling PWA V30
 
-V27 fixes the first-open Generate Report overlay/input bug by mounting the report modal dynamically only when opened and removing it from the DOM on close. The PDF report layout was redesigned for a denser, more premium A4 document with dark-green table headers, compact daily incentive breakdown, controlled column widths, and safer route rendering (CGK - DOH).
+Fixes:
+- Report PDF generator `safeRoundRect is not defined` error.
+- Keeps V29 report design and V28/V29 functionality.
+- sync-config.js unchanged.
 
-Sync configuration is unchanged from V26; sync-config.js was not modified.
+Upload the contents of this folder to the repository root.
