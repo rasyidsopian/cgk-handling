@@ -69,3 +69,20 @@ body.modal-open{overflow:hidden!important;}
 
 /* v22 realtime sync + verification UI */
 .sync-indicator{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:10px;font-weight:800;letter-spacing:.04em;color:var(--muted);white-space:nowrap}.sync-dot{width:7px;height:7px;border-radius:50%;background:#9aa7a1}.sync-indicator[data-mode="online"] .sync-dot{background:#16a66a}.sync-indicator[data-mode="syncing"] .sync-dot{background:#e6a11a}.sync-indicator[data-mode="error"] .sync-dot{background:#d45252}.verify-badge{font-size:10px;font-weight:800;color:#a66b00;padding:3px 7px;border-radius:999px;background:#fff6df;border:1px solid #f4d99a}.daily-row>div>span{margin-left:8px;color:var(--muted);font-size:10px}.event,.day-add,.btn,.tool-btn,.icon-btn,.quick-action,.profile{cursor:pointer}.day,.calendar-cell{cursor:default}.event input,.event textarea,.event select{cursor:text}.modal-backdrop[hidden],.modal[hidden]{display:none!important;pointer-events:none!important}.sync-indicator{cursor:default}@media(max-width:900px){.sync-indicator{padding:6px 7px}.sync-label{display:none}.sync-indicator{min-width:24px;justify-content:center}}
+
+/* V26 report modal + PDF polish */
+.report-backdrop.modal-backdrop{z-index:900;display:none;}
+.report-backdrop.modal-backdrop.open{display:block;}
+.report-modal.schedule-modal{z-index:901;display:none;align-items:stretch;flex-direction:column;}
+.report-modal.schedule-modal.open{display:flex;}
+.report-modal .report-form-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:10px;}
+.report-modal .report-field{display:flex;flex-direction:column;gap:6px;font-size:9px;color:#718079;font-weight:800;}
+.report-modal .report-field input,.report-modal .report-field select{height:40px;border:1px solid var(--line);border-radius:10px;padding:0 11px;background:#fff;color:var(--text);outline:none;}
+.report-modal .report-wide{grid-column:1/-1;}
+.report-modal .report-note{display:flex;gap:8px;align-items:flex-start;margin:12px 0;padding:10px 11px;border:1px solid #dbe8df;background:#f6faf7;border-radius:10px;font-size:9px;color:#6c7d74;}
+.report-modal .report-validation{margin-top:10px;padding:8px 10px;border-radius:9px;background:#fff1ef;border:1px solid #efc1ba;color:#a53f31;font-size:9px;font-weight:700;}
+@media (max-width:700px){
+  .report-modal .report-form-grid{grid-template-columns:1fr;}
+  .report-modal .report-wide{grid-column:auto;}
+  .report-modal.schedule-modal{width:min(94vw,560px);max-height:84vh;padding:15px;}
+}
