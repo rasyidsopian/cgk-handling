@@ -106,3 +106,10 @@ body.modal-open{overflow:hidden!important;}
   .report-root .report-form-grid{grid-template-columns:1fr}
   .report-root .report-wide{grid-column:auto}
 }
+/* V28 report modal hard isolation + compact premium PDF support */
+.report-root{position:fixed!important;inset:0!important;z-index:9999!important;pointer-events:none!important;isolation:isolate!important;display:block!important;visibility:visible!important;opacity:1!important;}
+.report-root[aria-hidden="true"]{display:none!important;visibility:hidden!important;pointer-events:none!important;}
+.report-root .report-backdrop{position:absolute!important;inset:0!important;z-index:0!important;display:block!important;pointer-events:auto!important;}
+.report-root .report-dialog{position:absolute!important;z-index:1!important;pointer-events:auto!important;max-height:calc(100vh - 24px)!important;overflow:auto!important;}
+.report-root .report-dialog input,.report-root .report-dialog select,.report-root .report-dialog button{position:relative;z-index:2;pointer-events:auto;touch-action:manipulation;}
+body.report-modal-open{overflow:hidden!important;}

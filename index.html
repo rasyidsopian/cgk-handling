@@ -21069,10 +21069,12 @@ setTimeout(()=>window.CGKSync?.init(),0);
   function lockPage(){
     previousOverflow=document.body.style.overflow;
     document.body.style.overflow='hidden';
+    document.body.classList.add('report-modal-open');
   }
   function unlockPage(){
     document.body.style.overflow=previousOverflow;
     previousOverflow='';
+    document.body.classList.remove('report-modal-open');
   }
   function closeReport(focusBack=true){
     const root=activeRoot;
@@ -21080,6 +21082,9 @@ setTimeout(()=>window.CGKSync?.init(),0);
     if(root){
       const active=document.activeElement;
       if(active && root.contains(active) && typeof active.blur==='function') active.blur();
+      root.setAttribute('aria-hidden','true');
+      root.inert=true;
+      root.style.pointerEvents='none';
       root.remove();
     }
     unlockPage();
@@ -21115,6 +21120,8 @@ setTimeout(()=>window.CGKSync?.init(),0);
       </section>`;
     document.body.appendChild(root);
     activeRoot=root;
+    root.setAttribute('aria-hidden','false');
+    root.inert=false;
     lockPage();
     renderIcons(root);
     const modal=$r('.report-dialog',root), backdrop=$r('[data-report-backdrop]',root), modeSelect=$r('#reportPeriodMode',root), monthSelect=$r('#reportMonthSelect',root), yearSelect=$r('#reportYearSelect',root), startInput=$r('#reportStartDate',root), endInput=$r('#reportEndDate',root);
@@ -21205,53 +21212,103 @@ setTimeout(()=>window.CGKSync?.init(),0);
   function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d');ctx.drawImage(img,0,0);try{resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
   function wrap(doc,text,maxWidth,fontSize){doc.setFontSize(fontSize);return doc.splitTextToSize(String(text??'-'),maxWidth);}
   function routeText(route){return String(route||'-').replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').trim();}
+  function pdfNum(v,fallback=0){const n=Number(v);return Number.isFinite(n)?n:fallback;}
+  function pdfText(v,fallback='-'){const s=String(v??'').trim();return s?s:fallback;}
+  function pdfLines(doc,text,maxWidth,size,maxLines=2){doc.setFontSize(pdfNum(size,7));const out=doc.splitTextToSize(pdfText(text),Math.max(1,pdfNum(maxWidth,10)));return Array.isArray(out)?out.map(x=>String(x)).slice(0,maxLines):[pdfText(text)];}
+  function safePdfText(doc,text,x,y,opts={}){const xx=pdfNum(x),yy=pdfNum(y);try{doc.text(pdfText(text),xx,yy,opts||{});}catch(e){console.warn('PDF text fallback',e);doc.text(String(pdfText(text)),xx,yy);}}
+  function safePdfLines(doc,lines,x,y,opts={}){const xx=pdfNum(x),yy=pdfNum(y);const arr=Array.isArray(lines)?lines.map(v=>String(v)):[String(lines)];try{doc.text(arr,xx,yy,opts||{});}catch(e){safePdfText(doc,arr.join(' '),xx,yy,opts);}}
+  function safeRect(doc,x,y,w,h,style='FD',radius=0){const xx=pdfNum(x),yy=pdfNum(y),ww=Math.max(0,pdfNum(w)),hh=Math.max(0,pdfNum(h));try{if(radius>0)doc.roundedRect(xx,yy,ww,hh,pdfNum(radius),pdfNum(radius),style);else doc.rect(xx,yy,ww,hh,style);}catch(e){try{doc.rect(xx,yy,ww,hh,style);}catch(_){}}}
+  async function loadJsPDF(){
+    if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;
+    return await new Promise((resolve,reject)=>{
+      const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      const existing=document.querySelector('script[data-jspdf]');
+      if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF),{once:true});existing.addEventListener('error',reject,{once:true});return;}
+      const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';
+      s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('Library PDF tidak tersedia.'));
+      s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));
+      document.head.appendChild(s);
+    });
+  }
+  function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{try{const c=document.createElement('canvas');c.width=Math.max(1,img.naturalWidth);c.height=Math.max(1,img.naturalHeight);const ctx=c.getContext('2d');ctx.drawImage(img,0,0);resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
+  function routeText(route){return pdfText(route).replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').replace(/\s+/g,' ').trim();}
   async function buildPDF(snapshot){
     const jsPDF=await loadJsPDF();
     const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
     const W=210,H=297,margin=11;
-    const green=[5,105,63], deep=[16,44,34], muted=[104,117,111], line=[214,224,218], pale=[240,247,243], alt=[248,251,249], white=[255,255,255], gold=[183,137,56];
+    const green=[5,105,63], deep=[18,42,33], muted=[105,120,113], line=[215,225,219], pale=[242,248,245], alt=[249,252,250], white=[255,255,255], warn=[165,104,0];
     let page=1,y=11;
-    const logo=await imageToDataURL('brand-icon.png?pdf='+Date.now()).catch(()=>null);
-    const footer=()=>{doc.setDrawColor(...line);doc.setLineWidth(.25);doc.line(margin,286,W-margin,286);doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(...muted);doc.text('Hamdan Tour · CGK Handling Operations · Confidential Operational Report',margin,291);doc.text(`Page ${page}`,W-margin,291,{align:'right'});};
-    const addPage=(section)=>{footer();doc.addPage();page++;y=13;doc.setFont('helvetica','bold');doc.setFontSize(8.2);doc.setTextColor(...green);doc.text(section,margin,y);y+=6;};
-    // premium header
-    doc.setFillColor(...green);doc.roundedRect(margin,9,W-2*margin,31,4,4,'F');
-    if(logo)doc.addImage(logo,'PNG',margin+5,14,20,20);
-    doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(15.5);doc.text('HAMDAN TOUR HANDLING REPORT',42,20);
-    doc.setFont('helvetica','normal');doc.setFontSize(7.4);doc.setTextColor(229,244,237);doc.text('Operational Attendance & Handling Incentive Report',42,26);
-    doc.setFont('helvetica','bold');doc.setFontSize(6.8);doc.setTextColor(215,236,226);doc.text('CGK HANDLING OPERATIONS',42,32);
+    let logo=null;
+    try{logo=await imageToDataURL('brand-icon.png?report='+Date.now());}catch(_){logo=null;}
+    const footer=()=>{
+      doc.setDrawColor(...line);doc.setLineWidth(.25);doc.line(pdfNum(margin),286,pdfNum(W-margin),286);
+      doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.setTextColor(...muted);
+      safePdfText(doc,'Hamdan Tour · CGK Handling Operations · Confidential Operational Report',margin,291);
+      safePdfText(doc,`Page ${page}`,W-margin,291,{align:'right'});
+    };
+    const addPage=(section)=>{footer();doc.addPage();page++;y=13;doc.setFont('helvetica','bold');doc.setFontSize(8.4);doc.setTextColor(...green);safePdfText(doc,section,margin,y);y+=6;};
+    // HEADER
+    doc.setFillColor(...green);safeRect(doc,margin,9,W-2*margin,31,'F',4);
+    if(logo){try{doc.addImage(logo,'PNG',margin+4,14,20,20,undefined,'FAST');}catch(e){console.warn('logo omitted',e);}}
+    doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(15);safePdfText(doc,'HAMDAN TOUR HANDLING REPORT',42,20);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(225,243,234);safePdfText(doc,'Operational Attendance & Handling Incentive Report',42,26);
+    doc.setFont('helvetica','bold');doc.setFontSize(6.6);doc.setTextColor(209,233,222);safePdfText(doc,'CGK HANDLING OPERATIONS',42,32);
     y=47;
-    // info cards
+    // REPORT INFO
     const infoW=(W-2*margin-8)/3, infoX=[margin,margin+infoW+4,margin+(infoW+4)*2];
     const labels=['PREPARED FOR','REPORT PERIOD','GENERATED'];
-    const vals=[snapshot.personName,snapshot.periodLabel,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})];
-    labels.forEach((lab,i)=>{doc.setFillColor(...pale);doc.setDrawColor(...line);doc.roundedRect(infoX[i],y,infoW,18,2.5,2.5,'FD');doc.setTextColor(...muted);doc.setFont('helvetica','bold');doc.setFontSize(6.1);doc.text(lab,infoX[i]+4,y+5);doc.setTextColor(...deep);doc.setFont('helvetica','bold');doc.setFontSize(i===0?7.2:6.8);doc.text(wrap(doc,vals[i],infoW-8,i===0?7.2:6.8).slice(0,2),infoX[i]+4,y+10);});
-    y+=23;
-    doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.setTextColor(...muted);doc.text(`REPORT ID  ${snapshot.reportId}`,margin,y);y+=5;
-    // summary cards
+    const vals=[pdfText(snapshot.personName),pdfText(snapshot.periodLabel),new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})];
+    labels.forEach((lab,i)=>{
+      const x=infoX[i];doc.setFillColor(...pale);doc.setDrawColor(...line);safeRect(doc,x,y,infoW,19,'FD',2.5);
+      doc.setFont('helvetica','bold');doc.setFontSize(5.9);doc.setTextColor(...muted);safePdfText(doc,lab,x+4,y+5);
+      doc.setFont('helvetica','bold');doc.setTextColor(...deep);doc.setFontSize(i===0?6.8:6.6);
+      safePdfLines(doc,pdfLines(doc,vals[i],infoW-8,i===0?6.8:6.6,2),x+4,y+10);
+    });
+    y+=24;doc.setFont('helvetica','normal');doc.setFontSize(6.1);doc.setTextColor(...muted);safePdfText(doc,`REPORT ID  ${pdfText(snapshot.reportId)}`,margin,y);y+=6;
+    // SUMMARY
     const stats=[['TOTAL ATTENDANCE',snapshot.totalAttendance],['DEPARTURE',snapshot.departureCount],['ARRIVAL',snapshot.arrivalCount],['HANDLING DAYS',snapshot.handlingDays],['EXPECTED INCENTIVE',money(snapshot.expectedIncentive)]];
     const sw=(W-2*margin-8)/5;
-    stats.forEach((st,i)=>{const x=margin+i*(sw+2);doc.setFillColor(i===4?green:white);doc.setDrawColor(i===4?green:line);doc.roundedRect(x,y,sw,19,2.5,2.5,'FD');doc.setFont('helvetica','bold');doc.setFontSize(5.4);doc.setTextColor(...(i===4?white:muted));doc.text(st[0],x+3,y+5.5);doc.setFontSize(i===4?8.6:9.2);doc.setTextColor(...(i===4?white:deep));doc.text(String(st[1]),x+3,y+13.5);});
-    y+=26;
-    // attendance title
-    const sectionTitle=(title,sub)=>{doc.setFont('helvetica','bold');doc.setFontSize(8.4);doc.setTextColor(...green);doc.text(title,margin,y);if(sub){doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(...muted);doc.text(sub,margin+62,y);}y+=5;};
-    sectionTitle('ATTENDANCE DETAIL','Attendance yang sudah berstatus CHECKED IN');
+    stats.forEach((st,i)=>{
+      const x=margin+i*(sw+2);doc.setFillColor(...(i===4?green:white));doc.setDrawColor(...(i===4?green:line));safeRect(doc,x,y,sw,18,'FD',2.3);
+      doc.setFont('helvetica','bold');doc.setFontSize(5.2);doc.setTextColor(...(i===4?white:muted));safePdfText(doc,st[0],x+3,y+5.2);
+      doc.setFontSize(i===4?8.2:9);doc.setTextColor(...(i===4?white:deep));safePdfText(doc,pdfText(st[1]),x+3,y+13.2);
+    });
+    y+=25;
+    const sectionTitle=(title,sub)=>{doc.setFont('helvetica','bold');doc.setFontSize(8.2);doc.setTextColor(...green);safePdfText(doc,title,margin,y);if(sub){doc.setFont('helvetica','normal');doc.setFontSize(6.1);doc.setTextColor(...muted);safePdfText(doc,sub,margin+65,y);}y+=5;};
+    // ATTENDANCE TABLE
+    sectionTitle('ATTENDANCE DETAIL','Checked-in handling only');
     const headers=['NO','DATE','TYPE','TIME','FLIGHT','ROUTE','PAX','STATUS','INCENTIVE'];
-    const widths=[7,24,19,14,18,37,10,24,34];
-    const tableX=margin; const drawTableHeader=()=>{let x=tableX;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(5.9);headers.forEach((h,i)=>{doc.rect(x,y,widths[i],7,'F');doc.text(h,x+1.4,y+4.6);x+=widths[i];});y+=7;};
-    drawTableHeader();
-    snapshot.attendanceRows.forEach((r,idx)=>{if(y>270){addPage('ATTENDANCE DETAIL — CONTINUED');drawTableHeader();}const route=routeText(r.event.route);const row=[String(idx+1),new Date(r.event.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA',handlingTime(r.event),r.event.flight||'-',route,String(r.event.pax??'-'),'CHECKED IN',r.incentiveLabel];let x=tableX;const rh=7.4;row.forEach((v,i)=>{const fill=idx%2?white:alt;doc.setFillColor(...fill);doc.setDrawColor(...line);doc.rect(x,y,widths[i],rh,'FD');doc.setTextColor(...deep);doc.setFont('helvetica',i===8?'bold':'normal');doc.setFontSize(5.7);const lines=wrap(doc,v,widths[i]-3,5.7).slice(0,2);doc.text(lines,x+1.4,y+3.1);x+=widths[i];});y+=rh;});
-    y+=6;
-    sectionTitle('DAILY INCENTIVE','Per tanggal · mengikuti incentive engine aplikasi');
+    const widths=[7,24,19,14,18,36,10,25,35];
+    const tableX=margin;
+    const drawHeader=(heads,widthsArr)=>{let x=tableX;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(5.7);heads.forEach((h,i)=>{safeRect(doc,x,y,widthsArr[i],7,'F');safePdfText(doc,h,x+1.2,y+4.6);x+=widthsArr[i];});y+=7;};
+    drawHeader(headers,widths);
+    snapshot.attendanceRows.forEach((r,idx)=>{
+      if(y>269){addPage('ATTENDANCE DETAIL — CONTINUED');drawHeader(headers,widths);}
+      const row=[String(idx+1),new Date(r.event.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA',pdfText(handlingTime(r.event)),pdfText(r.event.flight),routeText(r.event.route),pdfText(r.event.pax), 'CHECKED IN', pdfText(r.incentiveLabel)];
+      let x=tableX;const rh=7.2;
+      row.forEach((v,i)=>{
+        doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,widths[i],rh,'FD');doc.setTextColor(...deep);doc.setFont('helvetica',i===8?'bold':'normal');doc.setFontSize(5.55);
+        const lines=pdfLines(doc,v,widths[i]-2.8,5.55,2);safePdfLines(doc,lines,x+1.3,y+3.0,{align:i===8?'right':'left'});x+=widths[i];
+      });y+=rh;
+    });
+    y+=5;
+    // DAILY BREAKDOWN COMPACT
+    sectionTitle('DAILY INCENTIVE BREAKDOWN','One row per handling date');
     const dh=['DATE','ATTEND.','DEPARTURE','ARRIVAL','DAILY INCENTIVE'];
-    const dw=[39,28,35,27,48];
-    let dx=tableX;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(5.9);dh.forEach((h,i)=>{doc.rect(dx,y,dw[i],7,'F');doc.text(h,dx+1.5,y+4.6);dx+=dw[i];});y+=7;
-    snapshot.dailyBreakdown.forEach((d,idx)=>{if(y>272){addPage('DAILY INCENTIVE — CONTINUED');let tx=tableX;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(5.9);dh.forEach((h,i)=>{doc.rect(tx,y,dw[i],7,'F');doc.text(h,tx+1.5,y+4.6);tx+=dw[i];});y+=7;}const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});const vals=[label,String(d.attended.length),String(d.departures),String(d.arrivals),d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount)];let tx=tableX;const rh=7;vals.forEach((v,i)=>{doc.setFillColor(idx%2?white:alt);doc.setDrawColor(...line);doc.rect(tx,y,dw[i],rh,'FD');doc.setTextColor(...deep);doc.setFont('helvetica',i===4?'bold':'normal');doc.setFontSize(5.7);doc.text(v,tx+(i===4?dw[i]-1.5:1.5),y+4.5,{align:i===4?'right':'left'});tx+=dw[i];});y+=rh;});
-    y+=6;
-    if(y>269)addPage('REPORT NOTES');
-    doc.setFillColor(...pale);doc.setDrawColor(...line);doc.roundedRect(margin,y,W-2*margin,13,2.5,2.5,'FD');
-    doc.setFont('helvetica','bold');doc.setFontSize(6.2);doc.setTextColor(...green);doc.text('REPORT NOTES',margin+4,y+4.5);
-    doc.setFont('helvetica','normal');doc.setTextColor(...muted);doc.setFontSize(5.8);doc.text('Snapshot attendance pada saat report dibuat · Jadwal belum CHECKED IN tidak termasuk · Expected incentive mengikuti tanggal dan aturan handling aplikasi.',margin+4,y+9.2);
+    const dw=[40,27,35,27,47];
+    drawHeader(dh,dw);
+    snapshot.dailyBreakdown.forEach((d,idx)=>{
+      if(y>271){addPage('DAILY INCENTIVE — CONTINUED');drawHeader(dh,dw);}
+      const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+      const vals=[label,String(d.attended.length),String(d.departures),String(d.arrivals),d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount)];
+      let x=tableX;const rh=6.8;
+      vals.forEach((v,i)=>{doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,dw[i],rh,'FD');doc.setTextColor(...(i===4&&d.status==='NEEDS_VERIFICATION'?warn:deep));doc.setFont('helvetica',i===4?'bold':'normal');doc.setFontSize(5.6);safePdfText(doc,v,i===4?x+dw[i]-1.5:x+1.4,y+4.3,{align:i===4?'right':'left'});x+=dw[i];});y+=rh;
+    });
+    y+=5;
+    if(y>271)addPage('REPORT NOTES');
+    doc.setFillColor(...pale);doc.setDrawColor(...line);safeRect(doc,margin,y,W-2*margin,12,'FD',2.2);
+    doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(...green);safePdfText(doc,'REPORT NOTES',margin+4,y+4.2);
+    doc.setFont('helvetica','normal');doc.setFontSize(5.5);doc.setTextColor(...muted);safePdfText(doc,'Snapshot attendance pada saat report dibuat · Jadwal belum CHECKED IN tidak termasuk · Expected incentive mengikuti tanggal dan incentive engine aplikasi.',margin+4,y+8.7);
     footer();
     const safeName=sanitizeFileName(snapshot.personName),safePeriod=sanitizeFileName(snapshot.periodLabel.replaceAll(' ','_'));doc.save(`Hamdan_Tour_Handling_Report_${safeName}_${safePeriod}.pdf`);
   }
