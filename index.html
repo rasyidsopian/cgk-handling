@@ -7,13 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=22">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=22">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=22">
-  <link rel="icon" type="image/png" href="icon-192.png?rev=22">
-      <title>CGK Handling · Hamdan Tour · v22</title>
+  <link rel="manifest" href="manifest.webmanifest?v=23">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=23">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=23">
+  <link rel="icon" type="image/png" href="icon-192.png?rev=23">
+      <title>CGK Handling · Hamdan Tour · v23</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=22">
+  <link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
   <div class="app-shell">
@@ -115,15 +115,15 @@
     <button class="btn primary full" id="clearFilters">Reset filter</button>
   </div>
 
-  <div class="drawer-backdrop" id="backdrop"></div>
-  <aside class="drawer" id="drawer">
+  <div class="drawer-backdrop" id="backdrop" hidden aria-hidden="true" inert></div>
+  <aside class="drawer" id="drawer" hidden aria-hidden="true" inert>
     <div class="drawer-head"><div><span class="eyebrow">HANDLING DETAIL</span><h3 id="drawerTitle">Event</h3></div><button class="icon-btn" id="closeDrawer"><span class="icon-slot" data-icon="x" aria-hidden="true"></span></button></div>
     <div id="drawerBody"></div>
   </aside>
 
 
-  <div class="modal-backdrop" id="importBackdrop" hidden></div>
-  <div class="schedule-modal" id="importModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="importModalTitle" hidden>
+  <div class="modal-backdrop" id="importBackdrop" hidden aria-hidden="true" inert></div>
+  <div class="schedule-modal" id="importModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="importModalTitle" hidden inert>
     <div class="modal-head">
       <div><span class="eyebrow">AUTO IMPORT</span><h3 id="importModalTitle">Import Schedule</h3></div>
       <button class="icon-btn modal-x" id="closeImportModal" type="button" aria-label="Tutup" onclick="closeImportModal();return false;">×</button>
@@ -147,8 +147,8 @@
     </div>
   </div>
 
-  <div class="modal-backdrop" id="scheduleBackdrop" aria-hidden="true" hidden></div>
-  <div class="schedule-modal" id="scheduleModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="scheduleModalTitle" hidden>
+  <div class="modal-backdrop" id="scheduleBackdrop" aria-hidden="true" hidden inert></div>
+  <div class="schedule-modal" id="scheduleModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="scheduleModalTitle" hidden inert>
     <div class="modal-head">
       <div><span class="eyebrow">OPERATOR CUSTOM SCHEDULE</span><h3 id="scheduleModalTitle">Tambah jadwal</h3></div>
       <button class="icon-btn modal-x" id="closeScheduleModal" type="button" aria-label="Tutup" onclick="closeScheduleModal();return false;">×</button>
@@ -20773,13 +20773,21 @@ function openDrawer(id){
   const actions=`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>${custom?"Edit":"Edit isi"}</button>${!custom&&edited?`<button class="btn ghost" id="resetEventBtn"><span class="icon-slot" data-icon="rotate-ccw" aria-hidden="true"></span>Reset asli</button>`:""}<button class="btn danger" id="deleteEventBtn"><span class="icon-slot" data-icon="trash-2" aria-hidden="true"></span>Hapus</button>`;
   const attendanceBox=`<div class="attendance-panel ${attended?"checked":""}"><div><span class="eyebrow">ATTENDANCE</span><strong>${attended?"✓ Sudah Absen":"Belum Absen"}</strong>${attended?`<small>${new Date(attendanceByEventId[String(e.id)].checkedInAt).toLocaleString("id-ID",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</small>`:""}</div><button class="btn ${attended?"ghost":"primary"} small" id="attendanceDrawerBtn" type="button">${attended?"Batalkan Absen":"✓ Absen Masuk"}</button></div>`;
   $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div><div class="drawer-actions">${actions}</div>${attendanceBox}<div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div><div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div><div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
-  $("#drawer").classList.add("open");$("#backdrop").classList.add("open");renderIcons();
+  const drawer=$("#drawer"),back=$("#backdrop");
+  drawer.hidden=false;drawer.removeAttribute("inert");drawer.setAttribute("aria-hidden","false");drawer.style.visibility="visible";drawer.style.pointerEvents="auto";drawer.style.transform="translateX(0)";drawer.classList.add("open");
+  back.hidden=false;back.removeAttribute("inert");back.setAttribute("aria-hidden","false");back.style.display="block";back.style.visibility="visible";back.style.opacity="1";back.style.pointerEvents="auto";back.classList.add("open");
+  renderIcons();
   $("#editEventBtn").onclick=()=>{closeDrawer();openEditModal(e.id)};
   $("#attendanceDrawerBtn").onclick=()=>{toggleAttendance(e.id);openDrawer(e.id)};
   $("#deleteEventBtn").onclick=()=>deleteSchedule(e.id);
   if(edited&&$("#resetEventBtn")) $("#resetEventBtn").onclick=()=>resetSourceOverride(e.id);
 }
-function closeDrawer(){$("#drawer").classList.remove("open");$("#backdrop").classList.remove("open")}
+function closeDrawer(){
+  const drawer=$("#drawer"),back=$("#backdrop");
+  if(document.activeElement && drawer.contains(document.activeElement)){try{document.activeElement.blur()}catch(e){}}
+  drawer.classList.remove("open");drawer.hidden=true;drawer.setAttribute("aria-hidden","true");drawer.setAttribute("inert","");drawer.style.visibility="hidden";drawer.style.pointerEvents="none";drawer.style.transform="translateX(100%)";
+  back.classList.remove("open");back.hidden=true;back.setAttribute("aria-hidden","true");back.setAttribute("inert","");back.style.display="none";back.style.visibility="hidden";back.style.opacity="0";back.style.pointerEvents="none";
+}
 function deleteSchedule(id){
   const e=findEvent(id);if(!e)return;
   const label=`${e.flight||"Jadwal"} · ${e.type==="ARRIVAL_CGK"?"TIBA":"BERANGKAT"} · ${fmtDate(e.date)} · ${handlingTime(e)}`;
@@ -20849,13 +20857,71 @@ function populateForm(e,date){
   $("#schedulePackage").value=e?.package||"";$("#schedulePnr").value=e?.pnr||"";$("#schedulePax").value=e?.pax??"";$("#scheduleRooms").value=e?.rooms??"";$("#scheduleHotel").value=e?.hotel||"";$("#scheduleVendor").value=e?.vendor||"";$("#scheduleStatus").value=e?.status||"";$("#scheduleNote").value=e?.note||"";
 }
 const modalManager=(()=>{
- let activeModal=null,suppressUntil=0;
- const refs={import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")}};
- function hide(el){if(!el)return;el.classList.remove("open");el.hidden=true;el.setAttribute("aria-hidden","true");el.setAttribute("inert","");el.style.display="none";el.style.visibility="hidden";el.style.opacity="0";el.style.pointerEvents="none";}
- function forceCloseAll(){clearTimeout(window.__importCloseTimer);clearTimeout(window.__scheduleCloseTimer);Object.values(refs).forEach(p=>{hide(p.modal());hide(p.backdrop())});document.querySelectorAll('[data-modal-layer="stale"]').forEach(el=>el.remove());activeModal=null;document.body.classList.remove("modal-open");document.body.style.removeProperty("overflow");document.body.style.removeProperty("touch-action");document.documentElement.style.removeProperty("overflow");}
- function open(type){if(type!=="import"&&type!=="schedule")return false;forceCloseAll();const modal=refs[type].modal(),back=refs[type].backdrop();if(!modal||!back)return false;activeModal=type;document.body.classList.add("modal-open");document.body.style.overflow="hidden";document.body.style.touchAction="none";[back,modal].forEach(el=>{el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";el.classList.add("open")});return true;}
- function close(){suppressUntil=Date.now()+120;forceCloseAll();}
- return{open,close,forceCloseAll,get active(){return activeModal},get suppressUntil(){return suppressUntil}};
+  let activeModal=null,suppressUntil=0;
+  const refs={
+    import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},
+    schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")}
+  };
+  function hide(el){
+    if(!el)return;
+    el.classList.remove("open");
+    el.hidden=true;
+    el.setAttribute("aria-hidden","true");
+    el.setAttribute("inert","");
+    el.style.display="none";
+    el.style.visibility="hidden";
+    el.style.opacity="0";
+    el.style.pointerEvents="none";
+  }
+  function blurIfInside(el){
+    const a=document.activeElement;
+    if(a && el && (a===el || el.contains(a))){
+      try{a.blur()}catch(e){}
+    }
+  }
+  function forceCloseAll(){
+    clearTimeout(window.__importCloseTimer);
+    clearTimeout(window.__scheduleCloseTimer);
+    Object.values(refs).forEach(p=>{blurIfInside(p.modal());hide(p.modal());hide(p.backdrop())});
+    const drawer=document.getElementById("drawer");
+    const drawerBackdrop=document.getElementById("backdrop");
+    blurIfInside(drawer);
+    if(drawer){drawer.classList.remove("open");drawer.hidden=true;drawer.setAttribute("aria-hidden","true");drawer.setAttribute("inert","");drawer.style.visibility="hidden";drawer.style.pointerEvents="none";drawer.style.transform="translateX(100%)";}
+    if(drawerBackdrop){drawerBackdrop.classList.remove("open");drawerBackdrop.hidden=true;drawerBackdrop.setAttribute("aria-hidden","true");drawerBackdrop.setAttribute("inert","");drawerBackdrop.style.display="none";drawerBackdrop.style.visibility="hidden";drawerBackdrop.style.opacity="0";drawerBackdrop.style.pointerEvents="none";}
+    document.querySelectorAll('[data-modal-layer="stale"]').forEach(el=>el.remove());
+    activeModal=null;
+    document.body.classList.remove("modal-open","drawer-open","overlay-open","body-locked");
+    document.body.style.removeProperty("overflow");
+    document.body.style.removeProperty("touch-action");
+    document.body.style.removeProperty("pointer-events");
+    document.documentElement.style.removeProperty("overflow");
+    document.documentElement.style.removeProperty("pointer-events");
+  }
+  function open(type){
+    if(type!=="import"&&type!=="schedule")return false;
+    forceCloseAll();
+    const modal=refs[type].modal(),back=refs[type].backdrop();
+    if(!modal||!back)return false;
+    activeModal=type;
+    document.body.classList.add("modal-open");
+    document.body.style.overflow="hidden";
+    document.body.style.touchAction="none";
+    [back,modal].forEach(el=>{
+      el.hidden=false;
+      el.removeAttribute("inert");
+      el.setAttribute("aria-hidden","false");
+      el.style.display=el===back?"block":"flex";
+      el.style.visibility="visible";
+      el.style.opacity="1";
+      el.style.pointerEvents="auto";
+      el.classList.add("open");
+    });
+    return true;
+  }
+  function close(){suppressUntil=Date.now()+120;forceCloseAll();}
+  // Defensive cleanup before the very first render.
+  forceCloseAll();
+  return{open,close,forceCloseAll,get active(){return activeModal},get suppressUntil(){return suppressUntil}};
 })();
 function syncModalLock(){if(!modalManager.active)document.body.classList.remove("modal-open");}
 function forceCloseAllModals(){modalManager.forceCloseAll();}
@@ -21031,6 +21097,8 @@ window.addEventListener("DOMContentLoaded",()=>safeRender(),{once:false});
 window.addEventListener("load",()=>safeRender(),{once:false});
 showSavedNote();
 if(document.readyState!=="loading") safeRender();
+// V23 initial UI cleanup: no modal, drawer, overlay, or form field may be active on first paint.
+try{forceCloseAllModals();closeDrawer();if(document.activeElement && document.activeElement.matches("input,textarea,select,button")){document.activeElement.blur();}}catch(e){console.warn("Initial UI cleanup failed",e)}
 setTimeout(()=>window.CGKSync?.init(),0);
 
 </script>
