@@ -33,6 +33,7 @@
         <kbd>Ctrl K</kbd>
       </div>
       <div class="top-tools">
+        <button class="tool-btn report-top-btn" id="topReportBtn" title="Generate Handling Report" aria-label="Generate Handling Report"><span class="icon-slot" data-icon="file-text" aria-hidden="true"></span><span>Report</span></button>
         <button class="tool-btn" id="todayBtn" title="Today"><span class="icon-slot" data-icon="calendar-days" aria-hidden="true"></span><span>Today</span></button>
         <div class="nav-pair">
           <button class="tool-btn square" id="prevBtn" title="Previous month"><span class="icon-slot" data-icon="chevron-left" aria-hidden="true"></span></button>
@@ -58,12 +59,12 @@
             <select id="monthSelect" class="month-select" aria-label="Pilih bulan"></select>
           </div>
           <div class="toolbar-actions">
+            <button class="btn primary report-btn report-btn-top" id="reportBtn" type="button" aria-label="Generate Handling Report"><span class="icon-slot" data-icon="file-text" aria-hidden="true"></span>Generate Report</button>
             <button class="btn ghost" id="exportBtn"><span class="icon-slot" data-icon="download" aria-hidden="true"></span>Export CSV</button>
             <button class="btn ghost" id="printBtn"><span class="icon-slot" data-icon="printer" aria-hidden="true"></span>Print</button>
             <button class="btn ghost" id="noteBtn"><span class="icon-slot" data-icon="notebook-pen" aria-hidden="true"></span>Add Note</button>
             <button class="btn primary" id="importBtn" type="button" onclick="window.__openImportSchedule && window.__openImportSchedule(event)"><span class="icon-slot" data-icon="file-plus-2" aria-hidden="true"></span>Import Schedule</button>
             <button class="btn ghost" id="filterBtn"><span class="icon-slot" data-icon="sliders-horizontal" aria-hidden="true"></span>Filter</button>
-            <button class="btn primary report-btn" id="reportBtn" type="button"><span class="icon-slot" data-icon="file-text" aria-hidden="true"></span>Generate Report</button>
           </div>
         </div>
 
@@ -21221,7 +21222,7 @@ setTimeout(()=>window.CGKSync?.init(),0);
     const btn=$r('#generateReportPdf');btn.disabled=true;btn.classList.add('loading');const old=btn.textContent;btn.textContent='Membuat PDF…';
     try{await buildPDF(snap);closeReport();toast('Report PDF berhasil diunduh');}catch(err){console.error(err);validation.textContent=err.message||'Gagal membuat PDF.';validation.hidden=false;}finally{btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="icon-slot" data-icon="file-down" aria-hidden="true"></span>Generate PDF';try{renderIcons();}catch(e){}}
   }
-  $r('#reportBtn')?.addEventListener('click',openReport);$r('#quickReport')?.addEventListener('click',openReport);$r('#closeReportModal')?.addEventListener('click',closeReport);$r('#cancelReport')?.addEventListener('click',closeReport);backdrop.addEventListener('click',closeReport);modeSelect.addEventListener('change',setModeState);
+  $r('#reportBtn')?.addEventListener('click',openReport);$r('#topReportBtn')?.addEventListener('click',openReport);$r('#quickReport')?.addEventListener('click',openReport);$r('#closeReportModal')?.addEventListener('click',closeReport);$r('#cancelReport')?.addEventListener('click',closeReport);backdrop.addEventListener('click',closeReport);modeSelect.addEventListener('change',setModeState);
   window.CGKReport={open:openReport,close:closeReport,generate:generateReport};
   $r('#generateReportPdf')?.addEventListener('click',generateReport);
 })();
