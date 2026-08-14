@@ -7,13 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=20">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=20">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=20">
-  <link rel="icon" type="image/png" href="icon-192.png?rev=20">
-      <title>CGK Handling · Hamdan Tour · v20</title>
+  <link rel="manifest" href="manifest.webmanifest?v=21">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=21">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=21">
+  <link rel="icon" type="image/png" href="icon-192.png?rev=21">
+      <title>CGK Handling · Hamdan Tour · v21</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
   <div class="app-shell">
@@ -70,6 +70,12 @@
         <section class="year-strip">
           <div class="section-title"><div><b>Period overview</b><span>Source events · Aug 2026 → Mar 2027</span></div><span id="resultCount"></span></div>
           <div id="yearOverview" class="year-grid"></div>
+        </section>
+        <section class="incentive-section" id="incentiveSection">
+          <div class="incentive-head"><div><span class="eyebrow">HANDLING INCENTIVE</span><h2>Akumulasi insentif</h2><p>Insentif dihitung dari setiap jadwal yang berstatus <b>ABSEN MASUK</b>.</p></div><label class="month-picker-mini">Bulan<select id="incentiveMonthSelect" aria-label="Pilih bulan insentif"></select></label></div>
+          <div id="incentiveSummary" class="incentive-grid"></div>
+          <div class="received-card"><div><span class="eyebrow">REKONSILIASI</span><h3>Insentif diterima</h3><p>Masukkan nominal aktual yang sudah dibayarkan untuk bulan terpilih.</p></div><div class="received-actions"><div id="receivedValue" class="received-value">Rp0</div><button class="btn primary" id="receivedBtn" type="button"><span class="icon-slot" data-icon="wallet-cards" aria-hidden="true"></span>Input Insentif Diterima</button></div></div>
+          <div class="daily-breakdown" id="dailyBreakdown"></div>
         </section>
       </section>
 
@@ -203,7 +209,7 @@
 
 
 <script>
-/* CGK Handling v20 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
+/* CGK Handling v21 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
 (async function(){
   try {
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
@@ -20585,7 +20591,7 @@ const PERIODS=[
   {y:2026,m:11,label:"December 2026"},{y:2027,m:0,label:"January 2027"},
   {y:2027,m:1,label:"February 2027"},{y:2027,m:2,label:"March 2027"}
 ];
-const APP_VERSION="19";
+const APP_VERSION="21";
 let state={index:0,query:"",type:"all",airline:"all",highPax:false};
 let lastRenderedIndex=0;
 const $=s=>document.querySelector(s);
@@ -20599,9 +20605,18 @@ function loadCustomEvents(){try{return JSON.parse(localStorage.getItem("cgk-cust
 function saveCustomEvents(){localStorage.setItem("cgk-custom-events",JSON.stringify(customEvents))}
 function loadOverrides(){try{return JSON.parse(localStorage.getItem("cgk-event-overrides")||"{}")}catch{return {}}}
 function saveOverrides(){localStorage.setItem("cgk-event-overrides",JSON.stringify(eventOverrides))}
+function loadDeleted(){try{return JSON.parse(localStorage.getItem("cgk-deleted-events")||"[]")}catch{return []}}
+function saveDeleted(){localStorage.setItem("cgk-deleted-events",JSON.stringify(deletedEvents))}
+function loadAttendance(){try{return JSON.parse(localStorage.getItem("cgk-attendance")||"{}")}catch{return {}}}
+function saveAttendance(){localStorage.setItem("cgk-attendance",JSON.stringify(attendanceByEventId))}
+function loadReceived(){try{return JSON.parse(localStorage.getItem("cgk-received-incentive")||"{}")}catch{return {}}}
+function saveReceived(){localStorage.setItem("cgk-received-incentive",JSON.stringify(receivedIncentiveByMonth))}
 let customEvents=loadCustomEvents();
 let eventOverrides=loadOverrides();
-function allEvents(){return handlingEvents.map(e=>eventOverrides[e.id]?{...e,...eventOverrides[e.id],id:e.id,custom:false,sourceEdited:true}:e).concat(customEvents)}
+let deletedEvents=loadDeleted();
+let attendanceByEventId=loadAttendance();
+let receivedIncentiveByMonth=loadReceived();
+function allEvents(){return handlingEvents.filter(e=>!deletedEvents.includes(String(e.id))).map(e=>eventOverrides[e.id]?{...e,...eventOverrides[e.id],id:e.id,custom:false,sourceEdited:true}:e).concat(customEvents)}
 
 function monthEvents(){
   const p=PERIODS[state.index],k=monthKey(p);
@@ -20633,10 +20648,12 @@ function renderYear(){
 }
 function eventCard(e){
   const dep=e.type==="DEPARTURE_CGK",cls=dep?"dep":"arr",time=handlingTime(e),custom=e.custom===true;
+  const attended=!!attendanceByEventId[String(e.id)]?.checkedIn;
   const header=dep
     ?`<div class="event-top"><div><div class="type">BERANGKAT</div><div class="time">${time}</div></div>${custom?`<span class="custom-badge">CUSTOM</span>`:""}</div>`
-    :`<div class="event-top"><div class="type">TIBA</div><div class="time">${time}</div></div>`;
-  return `<div class="event ${cls} ${custom?"custom-event":""}" data-id="${e.id}">${header}<div class="flight">${e.flight||"CUSTOM"}</div><div class="route">${e.route||"-"}</div><div class="pax">${e.pax?`${e.pax} PAX`:"PAX —"}</div></div>`;
+    :`<div class="event-top"><div><div class="type">TIBA</div><div class="time right-time">${time}</div></div></div>`;
+  const attendBtn=`<button class="event-attendance ${attended?"checked":""}" data-attend-id="${e.id}" type="button">${attended?"✓ ABSEN MASUK":"○ ABSEN MASUK"}</button>`;
+  return `<div class="event ${cls} ${custom?"custom-event":""} ${attended?"is-attended":""}" data-id="${e.id}">${header}<div class="flight">${e.flight||"CUSTOM"}</div><div class="route">${e.route||"-"}</div><div class="pax">${e.pax?`${e.pax} PAX`:"PAX —"}</div>${attendBtn}</div>`;
 }
 function renderCalendar(){
   const p=PERIODS[state.index],events=monthEvents();
@@ -20651,7 +20668,8 @@ function renderCalendar(){
   }
   const total=42,used=start+days;for(let i=used;i<total;i++)html+=`<div class="day muted"><div class="day-head"><span class="day-num"></span></div></div>`;
   $("#calendar").innerHTML=html;
-  document.querySelectorAll(".event").forEach(el=>el.addEventListener("click",()=>openDrawer(el.dataset.id)));
+  document.querySelectorAll(".event").forEach(el=>el.addEventListener("click",ev=>{if(ev.target.closest("[data-attend-id]"))return;openDrawer(el.dataset.id)}));
+  document.querySelectorAll(".event-attendance").forEach(el=>el.addEventListener("click",ev=>{ev.preventDefault();ev.stopPropagation();toggleAttendance(el.dataset.attendId)}));
   document.querySelectorAll(".more").forEach(el=>el.addEventListener("click",()=>showDay(el.dataset.date)));
   document.querySelectorAll("[data-add-date]").forEach(el=>el.addEventListener("click",e=>{e.stopPropagation();openAddModal(el.dataset.addDate)}));
   renderIcons();
@@ -20662,23 +20680,58 @@ function isCustomEvent(id){return customEvents.some(e=>String(e.id)===String(id)
 function isSourceEvent(id){return handlingEvents.some(e=>String(e.id)===String(id))}
 function openDrawer(id){
   const e=findEvent(id);if(!e)return;
-  const dep=e.type==="DEPARTURE_CGK",time=handlingTime(e),custom=e.custom===true,edited=e.sourceEdited===true;
+  const dep=e.type==="DEPARTURE_CGK",time=handlingTime(e),custom=e.custom===true,edited=e.sourceEdited===true,attended=!!attendanceByEventId[String(e.id)]?.checkedIn;
   $("#drawerTitle").textContent=e.flight||"Custom Schedule";
   const legs=(e.scheduleLegs||[]).map(x=>`<div class="leg-row"><span>${x.date}</span><b>${x.dep} → ${x.arr}</b><span>${x.route}</span><span>${x.flight}${x.arrivalNextDay?" (+1)":""}</span></div>`).join("");
-  const actions=custom
-    ?`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>Edit</button><button class="btn danger" id="deleteCustomBtn"><span class="icon-slot" data-icon="trash-2" aria-hidden="true"></span>Hapus</button>`
-    :`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>Edit isi</button><button class="btn ghost" id="addSimilarBtn"><span class="icon-slot" data-icon="copy" aria-hidden="true"></span>Tambah jadwal serupa</button>${edited?'<button class="btn danger" id="resetEventBtn"><span class="icon-slot" data-icon="rotate-ccw" aria-hidden="true"></span>Reset asli</button>':''}`;
-  $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div>
-  <div class="drawer-actions">${actions}</div>
-  <div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div>
-  <div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div>
-  <div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
+  const actions=`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>${custom?"Edit":"Edit isi"}</button>${!custom&&edited?`<button class="btn ghost" id="resetEventBtn"><span class="icon-slot" data-icon="rotate-ccw" aria-hidden="true"></span>Reset asli</button>`:""}<button class="btn danger" id="deleteEventBtn"><span class="icon-slot" data-icon="trash-2" aria-hidden="true"></span>Hapus</button>`;
+  const attendanceBox=`<div class="attendance-panel ${attended?"checked":""}"><div><span class="eyebrow">ATTENDANCE</span><strong>${attended?"✓ Sudah Absen":"Belum Absen"}</strong>${attended?`<small>${new Date(attendanceByEventId[String(e.id)].checkedInAt).toLocaleString("id-ID",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</small>`:""}</div><button class="btn ${attended?"ghost":"primary"} small" id="attendanceDrawerBtn" type="button">${attended?"Batalkan Absen":"✓ Absen Masuk"}</button></div>`;
+  $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div><div class="drawer-actions">${actions}</div>${attendanceBox}<div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div><div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div><div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
   $("#drawer").classList.add("open");$("#backdrop").classList.add("open");renderIcons();
   $("#editEventBtn").onclick=()=>{closeDrawer();openEditModal(e.id)};
-  if(custom){$("#deleteCustomBtn").onclick=()=>deleteCustom(e.id)}
-  else { $("#addSimilarBtn").onclick=()=>{closeDrawer();openAddModal(e.date,e)}; if(edited) $("#resetEventBtn").onclick=()=>resetSourceOverride(e.id); }
+  $("#attendanceDrawerBtn").onclick=()=>{toggleAttendance(e.id);openDrawer(e.id)};
+  $("#deleteEventBtn").onclick=()=>deleteSchedule(e.id);
+  if(edited&&$("#resetEventBtn")) $("#resetEventBtn").onclick=()=>resetSourceOverride(e.id);
 }
 function closeDrawer(){$("#drawer").classList.remove("open");$("#backdrop").classList.remove("open")}
+function deleteSchedule(id){
+  const e=findEvent(id);if(!e)return;
+  const label=`${e.flight||"Jadwal"} · ${e.type==="ARRIVAL_CGK"?"TIBA":"BERANGKAT"} · ${fmtDate(e.date)} · ${handlingTime(e)}`;
+  if(!confirm(`Hapus jadwal ini?\n\n${label}`))return;
+  if(e.custom===true){customEvents=customEvents.filter(x=>String(x.id)!==String(id));saveCustomEvents();}
+  else {if(!deletedEvents.includes(String(id)))deletedEvents.push(String(id));saveDeleted();delete eventOverrides[id];saveOverrides();}
+  delete attendanceByEventId[String(id)];saveAttendance();closeDrawer();render();toast("Jadwal dihapus");
+}
+function toggleAttendance(id){
+  const key=String(id),e=findEvent(id);if(!e)return;
+  if(attendanceByEventId[key]?.checkedIn){delete attendanceByEventId[key];saveAttendance();toast("Absen dibatalkan");}
+  else {attendanceByEventId[key]={checkedIn:true,checkedInAt:new Date().toISOString(),date:e.date};saveAttendance();toast("Absen masuk dicatat");}
+  render();
+}
+function getIncentiveRate(date){ return String(date) >= "2026-11-01" ? 150000 : 50000; }
+function formatRp(n){return `Rp${Number(n||0).toLocaleString("id-ID")}`}
+function calculateMonthlyIncentive(key){
+  const ev=allEvents().filter(e=>e.date?.slice(0,7)===key);
+  const attended=ev.filter(e=>attendanceByEventId[String(e.id)]?.checkedIn);
+  const expected=attended.reduce((sum,e)=>sum+getIncentiveRate(e.date),0);
+  const days={}; attended.forEach(e=>(days[e.date]??=[]).push(e));
+  const daily=Object.entries(days).sort((a,b)=>a[0].localeCompare(b[0])).map(([date,list])=>({date,count:list.length,rate:getIncentiveRate(list[0].date),total:list.reduce((sum,e)=>sum+getIncentiveRate(e.date),0)}));
+  return {events:ev,attended,expected,daily};
+}
+function renderIncentive(){
+  const sel=$("#incentiveMonthSelect");if(!sel)return;
+  if(!sel.options.length){PERIODS.forEach(p=>sel.insertAdjacentHTML("beforeend",`<option value="${monthKey(p)}">${p.label}</option>`));sel.value=monthKey(PERIODS[Math.max(0,state.index)]);}
+  const key=sel.value||monthKey(PERIODS[state.index]);
+  const r=calculateMonthlyIncentive(key),received=Number(receivedIncentiveByMonth[key]||0),diff=received-r.expected;
+  const rate=key>="2026-11"?150000:50000, attendanceRate=r.events.length?(r.attended.length/r.events.length*100):0;
+  $("#incentiveSummary").innerHTML=`<div class="incentive-stat"><span>Total Handling</span><b>${r.events.length}</b><small>${key}</small></div><div class="incentive-stat"><span>Total Absen</span><b>${r.attended.length}</b><small>${attendanceRate.toFixed(1)}% attendance</small></div><div class="incentive-stat"><span>Rate</span><b>${formatRp(rate)}</b><small>per attendance</small></div><div class="incentive-stat highlight"><span>Expected</span><b>${formatRp(r.expected)}</b><small>berdasarkan absen</small></div><div class="incentive-stat"><span>Received</span><b>${formatRp(received)}</b><small>input operator</small></div><div class="incentive-stat ${diff===0?"neutral":diff<0?"negative":"positive"}"><span>${diff===0?"Status":diff<0?"Kurang":"Lebih"}</span><b>${formatRp(Math.abs(diff))}</b><small>${diff===0?"Sesuai":"dari expected"}</small></div>`;
+  $("#receivedValue").textContent=formatRp(received);
+  $("#dailyBreakdown").innerHTML=`<div class="daily-head"><div><b>Daily breakdown</b><span>${r.attended.length} attendance · ${formatRp(r.expected)}</span></div></div>${r.daily.length?r.daily.map(d=>`<div class="daily-row"><div><b>${new Date(d.date+"T12:00:00").toLocaleDateString("id-ID",{day:"2-digit",month:"short"})}</b><span>${d.count} attendance × ${formatRp(d.rate)}</span></div><strong>${formatRp(d.total)}</strong></div>`).join(""):`<div class="daily-empty">Belum ada absensi pada bulan ini.</div>`}`;
+}
+function inputReceivedIncentive(){
+  const key=$("#incentiveMonthSelect").value,current=Number(receivedIncentiveByMonth[key]||0);
+  const raw=prompt(`Insentif diterima untuk ${key}\nMasukkan nominal rupiah tanpa titik/koma.`,current?String(current):"");
+  if(raw===null)return; const amount=Math.max(0,Number(String(raw).replace(/[^0-9]/g,""))||0); receivedIncentiveByMonth[key]=amount;saveReceived();renderIncentive();toast("Insentif diterima diperbarui");
+}
 function resetSourceOverride(id){ if(!eventOverrides[id]) return; if(!confirm("Kembalikan jadwal sumber ke data asli PDF?")) return; delete eventOverrides[id]; saveOverrides(); closeDrawer(); render(); toast("Jadwal dikembalikan ke data asli"); }
 
 function populateForm(e,date){
@@ -20809,8 +20862,8 @@ async function runImport(){
   try{if(file) raw=(raw?raw+'\n':'')+await extractFileText(file);if(!raw.trim()){toast('Paste itinerary atau upload file dulu');return;}const parsed=parseItineraryText(raw);if(!previewImport(parsed))return;const existingKeys=new Set(allEvents().map(e=>`${e.date}|${e.type}|${e.flight}|${handlingTime(e)}`));let added=0,skip=0;for(const e of parsed){const key=`${e.date}|${e.type}|${e.flight}|${handlingTime(e)}`;if(existingKeys.has(key)){skip++;continue;}customEvents.push(e);existingKeys.add(key);added++;}saveCustomEvents();render();toast(`${added} jadwal ditambahkan${skip?` · ${skip} duplikat dilewati`:''}`);if(added){closeImportModal();$("#importPaste").value="";$("#importFile").value="";$("#importFileName").textContent="";}}catch(err){console.error(err);toast('Gagal membaca file: '+(err.message||'format tidak didukung'));}}
 
 function exportCSV(){
-  const rows=monthEvents(),head=["Date","Type","Time","Airline","Flight","Route","Package","PNR","Pax","Rooms","Hotel","Vendor","Status","Note","Custom"];
-  const csv=[head,...rows.map(e=>[e.date,e.type,handlingTime(e),e.airline,e.flight,e.route,e.package,e.pnr,e.pax??"",e.rooms??"",e.hotel,e.vendor,e.status,e.note??"",e.custom?"YES":"NO"])].map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");
+  const rows=monthEvents(),head=["Date","Type","Time","Airline","Flight","Route","Package","PNR","Pax","Rooms","Hotel","Vendor","Status","Note","Custom","Attendance"];
+  const csv=[head,...rows.map(e=>[e.date,e.type,handlingTime(e),e.airline,e.flight,e.route,e.package,e.pnr,e.pax??"",e.rooms??"",e.hotel,e.vendor,e.status,e.note??"",e.custom?"YES":"NO",attendanceByEventId[String(e.id)]?.checkedIn?"ABSEN MASUK":"BELUM ABSEN"])].map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");
   const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`CGK-Handling-${monthKey(PERIODS[state.index])}.csv`;a.click();URL.revokeObjectURL(a.href);toast("CSV berhasil diexport");
 }
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),1800)}
@@ -20828,6 +20881,8 @@ $("#filterBtn").onclick=$("#quickFilter").onclick=toggleFilter;$("#closeFilter")
 $("#search").addEventListener("input",e=>{state.query=e.target.value;render()});
 function bindFilters(){document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{state.type=b.dataset.filter;document.querySelectorAll("[data-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()});document.querySelectorAll("[data-airline]").forEach(b=>b.onclick=()=>{const same=state.airline===b.dataset.airline;document.querySelectorAll("[data-airline]").forEach(x=>x.classList.remove("active"));state.airline=same?"all":b.dataset.airline;if(!same)b.classList.add("active");render()});$("#highPax").onclick=()=>{state.highPax=!state.highPax;$("#highPax").classList.toggle("active",state.highPax);render()}}
 bindFilters();
+$("#incentiveMonthSelect")?.addEventListener("change",()=>renderIncentive());
+$("#receivedBtn")?.addEventListener("click",inputReceivedIncentive);
 $("#helpBtn").onclick=()=>toast("Klik + di setiap tanggal untuk tambah jadwal · Klik event untuk detail · Ctrl K untuk search");$("#notifyBtn").onclick=()=>toast("6 notifikasi operator");$("#profileBtn").onclick=()=>toast("Profil operator aktif");
 $("#themeBtn").onclick=()=>{document.body.classList.toggle("dark");toast(document.body.classList.contains("dark")?"Dark mode aktif":"Light mode aktif")};
 $("#closeDrawer").onclick=closeDrawer;$("#backdrop").onclick=closeDrawer;
@@ -20848,6 +20903,7 @@ function render(){
   try{renderSummary()}catch(err){console.error("summary render failed",err)}
   try{renderCalendar()}catch(err){console.error("calendar render failed",err);const c=$("#calendar");if(c&&!c.innerHTML.trim())c.innerHTML=`<div class="calendar-error">Gagal memuat kalender. Coba refresh halaman.</div>`}
   try{renderYear()}catch(err){console.error("year render failed",err)}
+  try{renderIncentive()}catch(err){console.error("incentive render failed",err)}
   const ms=$("#monthSelect"); if(ms) ms.value=state.index;
   renderIcons();
 }
