@@ -7,13 +7,18 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=23">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=23">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=23">
-  <link rel="icon" type="image/png" href="icon-192.png?rev=23">
-      <title>CGK Handling · Hamdan Tour · v23</title>
+  <link rel="manifest" href="manifest.webmanifest?v=24">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=24">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=24">
+  <link rel="icon" type="image/png" href="icon-192.png?rev=24">
+      <title>CGK Handling · Hamdan Tour · v24</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=23">
+  <link rel="stylesheet" href="style.css?v=24">
+  <style id="report-styles">
+    .report-modal{max-width:760px}.report-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:4px 20px 14px}.report-wide{grid-column:1/-1}.report-field{display:flex;flex-direction:column;gap:7px;color:#68776f;font-size:11px;font-weight:700}.report-field input,.report-field select{width:100%;padding:11px 12px;border:1px solid #dfe8e2;border-radius:11px;background:#fff;color:#183c2c;font:600 12px Inter,system-ui,sans-serif;box-sizing:border-box;outline:none}.report-field input:focus,.report-field select:focus{border-color:#7cb898;box-shadow:0 0 0 3px rgba(14,122,72,.08)}.report-note{margin:2px 20px 14px;padding:12px 13px;border:1px solid #e2ebe5;background:#f7faf8;border-radius:12px;display:flex;gap:9px;align-items:flex-start;color:#718079;font-size:10px;line-height:1.45}.report-note .icon-slot{margin-top:1px;flex:none}.report-validation{margin:0 20px 14px;padding:10px 12px;border-radius:10px;background:#fff2ef;border:1px solid #f0cfc6;color:#a54433;font-size:11px;font-weight:700}.report-btn{box-shadow:0 8px 18px rgba(10,107,66,.16)}
+    @media(max-width:760px){.report-form-grid{grid-template-columns:1fr}.report-wide{grid-column:auto}.report-modal{width:calc(100vw - 22px);max-width:none}}
+    .pdf-preview-canvas{display:none}
+  </style>
 </head>
 <body>
   <div class="app-shell">
@@ -58,6 +63,7 @@
             <button class="btn ghost" id="noteBtn"><span class="icon-slot" data-icon="notebook-pen" aria-hidden="true"></span>Add Note</button>
             <button class="btn primary" id="importBtn" type="button" onclick="window.__openImportSchedule && window.__openImportSchedule(event)"><span class="icon-slot" data-icon="file-plus-2" aria-hidden="true"></span>Import Schedule</button>
             <button class="btn ghost" id="filterBtn"><span class="icon-slot" data-icon="sliders-horizontal" aria-hidden="true"></span>Filter</button>
+            <button class="btn primary report-btn" id="reportBtn" type="button"><span class="icon-slot" data-icon="file-text" aria-hidden="true"></span>Generate Report</button>
           </div>
         </div>
 
@@ -93,6 +99,7 @@
           <button class="quick-action" id="quickPrint"><span class="icon-slot" data-icon="printer" aria-hidden="true"></span><div><b>Print Schedule</b><span>Print current view</span></div></button>
           <button class="quick-action" id="quickNote"><span class="icon-slot" data-icon="notebook-pen" aria-hidden="true"></span><div><b>Add Note</b><span>Catat informasi penting</span></div></button>
           <button class="quick-action" id="quickFilter"><span class="icon-slot" data-icon="filter" aria-hidden="true"></span><div><b>Filter Events</b><span>Saring berdasarkan maskapai, jenis</span></div></button>
+          <button class="quick-action" id="quickReport"><span class="icon-slot" data-icon="file-text" aria-hidden="true"></span><div><b>Generate Report</b><span>Download report attendance PDF</span></div></button>
         </section>
 
         <section class="rail-card note-card">
@@ -115,15 +122,34 @@
     <button class="btn primary full" id="clearFilters">Reset filter</button>
   </div>
 
-  <div class="drawer-backdrop" id="backdrop" hidden aria-hidden="true" inert></div>
-  <aside class="drawer" id="drawer" hidden aria-hidden="true" inert>
+  <div class="drawer-backdrop" id="backdrop"></div>
+  <aside class="drawer" id="drawer">
     <div class="drawer-head"><div><span class="eyebrow">HANDLING DETAIL</span><h3 id="drawerTitle">Event</h3></div><button class="icon-btn" id="closeDrawer"><span class="icon-slot" data-icon="x" aria-hidden="true"></span></button></div>
     <div id="drawerBody"></div>
   </aside>
 
 
-  <div class="modal-backdrop" id="importBackdrop" hidden aria-hidden="true" inert></div>
-  <div class="schedule-modal" id="importModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="importModalTitle" hidden inert>
+  <div class="report-backdrop modal-backdrop" id="reportBackdrop" hidden></div>
+  <div class="schedule-modal report-modal" id="reportModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="reportModalTitle" hidden>
+    <div class="modal-head">
+      <div><span class="eyebrow">DOCUMENT EXPORT</span><h3 id="reportModalTitle">Hamdan Tour Handling Report</h3></div>
+      <button class="icon-btn modal-x" id="closeReportModal" type="button" aria-label="Tutup">×</button>
+    </div>
+    <div class="report-form-grid">
+      <label class="report-field report-wide"><span>Nama Lengkap</span><input id="reportPersonName" type="text" maxlength="180" placeholder="Contoh: Muhammad Rasyid Dwi Sopian" autocomplete="off"></label>
+      <label class="report-field"><span>Periode</span><select id="reportPeriodMode"><option value="all">Semua attendance</option><option value="range">Custom date range</option><option value="month">Bulan tertentu</option><option value="year">Tahun tertentu</option></select></label>
+      <label class="report-field"><span>Bulan</span><select id="reportMonthSelect"></select></label>
+      <label class="report-field"><span>Tahun</span><select id="reportYearSelect"></select></label>
+      <label class="report-field"><span>Tanggal Mulai</span><input id="reportStartDate" type="date"></label>
+      <label class="report-field"><span>Tanggal Akhir</span><input id="reportEndDate" type="date"></label>
+    </div>
+    <div class="report-note"><span class="icon-slot" data-icon="info" aria-hidden="true"></span><div>Report hanya mengambil jadwal yang sudah <b>ABSEN MASUK</b>. Tanggal yang digunakan adalah tanggal handling event.</div></div>
+    <div id="reportValidation" class="report-validation" hidden></div>
+    <div class="modal-foot"><button class="btn ghost" id="cancelReport" type="button">Batal</button><button class="btn primary" id="generateReportPdf" type="button"><span class="icon-slot" data-icon="file-down" aria-hidden="true"></span>Generate PDF</button></div>
+  </div>
+
+  <div class="modal-backdrop" id="importBackdrop" hidden></div>
+  <div class="schedule-modal" id="importModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="importModalTitle" hidden>
     <div class="modal-head">
       <div><span class="eyebrow">AUTO IMPORT</span><h3 id="importModalTitle">Import Schedule</h3></div>
       <button class="icon-btn modal-x" id="closeImportModal" type="button" aria-label="Tutup" onclick="closeImportModal();return false;">×</button>
@@ -147,8 +173,8 @@
     </div>
   </div>
 
-  <div class="modal-backdrop" id="scheduleBackdrop" aria-hidden="true" hidden inert></div>
-  <div class="schedule-modal" id="scheduleModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="scheduleModalTitle" hidden inert>
+  <div class="modal-backdrop" id="scheduleBackdrop" aria-hidden="true" hidden></div>
+  <div class="schedule-modal" id="scheduleModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="scheduleModalTitle" hidden>
     <div class="modal-head">
       <div><span class="eyebrow">OPERATOR CUSTOM SCHEDULE</span><h3 id="scheduleModalTitle">Tambah jadwal</h3></div>
       <button class="icon-btn modal-x" id="closeScheduleModal" type="button" aria-label="Tutup" onclick="closeScheduleModal();return false;">×</button>
@@ -218,7 +244,7 @@
   } catch(e) { console.warn('cache cleanup skipped',e); }
 })();
 </script>
-<script src="sync-config.js?v=22"></script>
+<script src="sync-config.js?v=24"></script>
 <script>
 /* Cross-device realtime sync adapter. Configure Supabase in sync-config.js. */
 (function(){
@@ -20773,21 +20799,13 @@ function openDrawer(id){
   const actions=`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>${custom?"Edit":"Edit isi"}</button>${!custom&&edited?`<button class="btn ghost" id="resetEventBtn"><span class="icon-slot" data-icon="rotate-ccw" aria-hidden="true"></span>Reset asli</button>`:""}<button class="btn danger" id="deleteEventBtn"><span class="icon-slot" data-icon="trash-2" aria-hidden="true"></span>Hapus</button>`;
   const attendanceBox=`<div class="attendance-panel ${attended?"checked":""}"><div><span class="eyebrow">ATTENDANCE</span><strong>${attended?"✓ Sudah Absen":"Belum Absen"}</strong>${attended?`<small>${new Date(attendanceByEventId[String(e.id)].checkedInAt).toLocaleString("id-ID",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</small>`:""}</div><button class="btn ${attended?"ghost":"primary"} small" id="attendanceDrawerBtn" type="button">${attended?"Batalkan Absen":"✓ Absen Masuk"}</button></div>`;
   $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div><div class="drawer-actions">${actions}</div>${attendanceBox}<div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div><div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div><div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
-  const drawer=$("#drawer"),back=$("#backdrop");
-  drawer.hidden=false;drawer.removeAttribute("inert");drawer.setAttribute("aria-hidden","false");drawer.style.visibility="visible";drawer.style.pointerEvents="auto";drawer.style.transform="translateX(0)";drawer.classList.add("open");
-  back.hidden=false;back.removeAttribute("inert");back.setAttribute("aria-hidden","false");back.style.display="block";back.style.visibility="visible";back.style.opacity="1";back.style.pointerEvents="auto";back.classList.add("open");
-  renderIcons();
+  $("#drawer").classList.add("open");$("#backdrop").classList.add("open");renderIcons();
   $("#editEventBtn").onclick=()=>{closeDrawer();openEditModal(e.id)};
   $("#attendanceDrawerBtn").onclick=()=>{toggleAttendance(e.id);openDrawer(e.id)};
   $("#deleteEventBtn").onclick=()=>deleteSchedule(e.id);
   if(edited&&$("#resetEventBtn")) $("#resetEventBtn").onclick=()=>resetSourceOverride(e.id);
 }
-function closeDrawer(){
-  const drawer=$("#drawer"),back=$("#backdrop");
-  if(document.activeElement && drawer.contains(document.activeElement)){try{document.activeElement.blur()}catch(e){}}
-  drawer.classList.remove("open");drawer.hidden=true;drawer.setAttribute("aria-hidden","true");drawer.setAttribute("inert","");drawer.style.visibility="hidden";drawer.style.pointerEvents="none";drawer.style.transform="translateX(100%)";
-  back.classList.remove("open");back.hidden=true;back.setAttribute("aria-hidden","true");back.setAttribute("inert","");back.style.display="none";back.style.visibility="hidden";back.style.opacity="0";back.style.pointerEvents="none";
-}
+function closeDrawer(){$("#drawer").classList.remove("open");$("#backdrop").classList.remove("open")}
 function deleteSchedule(id){
   const e=findEvent(id);if(!e)return;
   const label=`${e.flight||"Jadwal"} · ${e.type==="ARRIVAL_CGK"?"TIBA":"BERANGKAT"} · ${fmtDate(e.date)} · ${handlingTime(e)}`;
@@ -20857,71 +20875,13 @@ function populateForm(e,date){
   $("#schedulePackage").value=e?.package||"";$("#schedulePnr").value=e?.pnr||"";$("#schedulePax").value=e?.pax??"";$("#scheduleRooms").value=e?.rooms??"";$("#scheduleHotel").value=e?.hotel||"";$("#scheduleVendor").value=e?.vendor||"";$("#scheduleStatus").value=e?.status||"";$("#scheduleNote").value=e?.note||"";
 }
 const modalManager=(()=>{
-  let activeModal=null,suppressUntil=0;
-  const refs={
-    import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},
-    schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")}
-  };
-  function hide(el){
-    if(!el)return;
-    el.classList.remove("open");
-    el.hidden=true;
-    el.setAttribute("aria-hidden","true");
-    el.setAttribute("inert","");
-    el.style.display="none";
-    el.style.visibility="hidden";
-    el.style.opacity="0";
-    el.style.pointerEvents="none";
-  }
-  function blurIfInside(el){
-    const a=document.activeElement;
-    if(a && el && (a===el || el.contains(a))){
-      try{a.blur()}catch(e){}
-    }
-  }
-  function forceCloseAll(){
-    clearTimeout(window.__importCloseTimer);
-    clearTimeout(window.__scheduleCloseTimer);
-    Object.values(refs).forEach(p=>{blurIfInside(p.modal());hide(p.modal());hide(p.backdrop())});
-    const drawer=document.getElementById("drawer");
-    const drawerBackdrop=document.getElementById("backdrop");
-    blurIfInside(drawer);
-    if(drawer){drawer.classList.remove("open");drawer.hidden=true;drawer.setAttribute("aria-hidden","true");drawer.setAttribute("inert","");drawer.style.visibility="hidden";drawer.style.pointerEvents="none";drawer.style.transform="translateX(100%)";}
-    if(drawerBackdrop){drawerBackdrop.classList.remove("open");drawerBackdrop.hidden=true;drawerBackdrop.setAttribute("aria-hidden","true");drawerBackdrop.setAttribute("inert","");drawerBackdrop.style.display="none";drawerBackdrop.style.visibility="hidden";drawerBackdrop.style.opacity="0";drawerBackdrop.style.pointerEvents="none";}
-    document.querySelectorAll('[data-modal-layer="stale"]').forEach(el=>el.remove());
-    activeModal=null;
-    document.body.classList.remove("modal-open","drawer-open","overlay-open","body-locked");
-    document.body.style.removeProperty("overflow");
-    document.body.style.removeProperty("touch-action");
-    document.body.style.removeProperty("pointer-events");
-    document.documentElement.style.removeProperty("overflow");
-    document.documentElement.style.removeProperty("pointer-events");
-  }
-  function open(type){
-    if(type!=="import"&&type!=="schedule")return false;
-    forceCloseAll();
-    const modal=refs[type].modal(),back=refs[type].backdrop();
-    if(!modal||!back)return false;
-    activeModal=type;
-    document.body.classList.add("modal-open");
-    document.body.style.overflow="hidden";
-    document.body.style.touchAction="none";
-    [back,modal].forEach(el=>{
-      el.hidden=false;
-      el.removeAttribute("inert");
-      el.setAttribute("aria-hidden","false");
-      el.style.display=el===back?"block":"flex";
-      el.style.visibility="visible";
-      el.style.opacity="1";
-      el.style.pointerEvents="auto";
-      el.classList.add("open");
-    });
-    return true;
-  }
-  function close(){suppressUntil=Date.now()+120;forceCloseAll();}
-  // Defensive cleanup before the very first render.
-  forceCloseAll();
-  return{open,close,forceCloseAll,get active(){return activeModal},get suppressUntil(){return suppressUntil}};
+ let activeModal=null,suppressUntil=0;
+ const refs={import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")}};
+ function hide(el){if(!el)return;el.classList.remove("open");el.hidden=true;el.setAttribute("aria-hidden","true");el.setAttribute("inert","");el.style.display="none";el.style.visibility="hidden";el.style.opacity="0";el.style.pointerEvents="none";}
+ function forceCloseAll(){clearTimeout(window.__importCloseTimer);clearTimeout(window.__scheduleCloseTimer);Object.values(refs).forEach(p=>{hide(p.modal());hide(p.backdrop())});document.querySelectorAll('[data-modal-layer="stale"]').forEach(el=>el.remove());activeModal=null;document.body.classList.remove("modal-open");document.body.style.removeProperty("overflow");document.body.style.removeProperty("touch-action");document.documentElement.style.removeProperty("overflow");}
+ function open(type){if(type!=="import"&&type!=="schedule")return false;forceCloseAll();const modal=refs[type].modal(),back=refs[type].backdrop();if(!modal||!back)return false;activeModal=type;document.body.classList.add("modal-open");document.body.style.overflow="hidden";document.body.style.touchAction="none";[back,modal].forEach(el=>{el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";el.classList.add("open")});return true;}
+ function close(){suppressUntil=Date.now()+120;forceCloseAll();}
+ return{open,close,forceCloseAll,get active(){return activeModal},get suppressUntil(){return suppressUntil}};
 })();
 function syncModalLock(){if(!modalManager.active)document.body.classList.remove("modal-open");}
 function forceCloseAllModals(){modalManager.forceCloseAll();}
@@ -21097,8 +21057,6 @@ window.addEventListener("DOMContentLoaded",()=>safeRender(),{once:false});
 window.addEventListener("load",()=>safeRender(),{once:false});
 showSavedNote();
 if(document.readyState!=="loading") safeRender();
-// V23 initial UI cleanup: no modal, drawer, overlay, or form field may be active on first paint.
-try{forceCloseAllModals();closeDrawer();if(document.activeElement && document.activeElement.matches("input,textarea,select,button")){document.activeElement.blur();}}catch(e){console.warn("Initial UI cleanup failed",e)}
 setTimeout(()=>window.CGKSync?.init(),0);
 
 </script>
@@ -21114,6 +21072,158 @@ setTimeout(()=>window.CGKSync?.init(),0);
   window.addEventListener('pageshow', draw);
   setTimeout(draw, 100);
   setTimeout(draw, 500);
+})();
+
+/* ========================= CGK HANDLING REPORT GENERATOR ========================= */
+(function initReportGenerator(){
+  const $r=(s)=>document.querySelector(s);
+  const modal=$r('#reportModal'), backdrop=$r('#reportBackdrop');
+  if(!modal||!backdrop)return;
+  const periods = Array.isArray(window.PERIODS) ? window.PERIODS : (typeof PERIODS!=='undefined'?PERIODS:[]);
+  const reportMonthSelect=$r('#reportMonthSelect'), reportYearSelect=$r('#reportYearSelect');
+  const modeSelect=$r('#reportPeriodMode'), startInput=$r('#reportStartDate'), endInput=$r('#reportEndDate');
+  function lockReport(open){
+    if(open){modal.hidden=false;backdrop.hidden=false;modal.setAttribute('aria-hidden','false');backdrop.setAttribute('aria-hidden','false');modal.removeAttribute('inert');backdrop.removeAttribute('inert');modal.style.display='block';backdrop.style.display='block';modal.style.visibility='visible';backdrop.style.visibility='visible';modal.style.opacity='1';backdrop.style.opacity='1';modal.style.pointerEvents='auto';backdrop.style.pointerEvents='auto';modal.classList.add('open');backdrop.classList.add('open');document.body.classList.add('modal-open');}
+    else{modal.classList.remove('open');backdrop.classList.remove('open');modal.hidden=true;backdrop.hidden=true;modal.setAttribute('aria-hidden','true');backdrop.setAttribute('aria-hidden','true');modal.setAttribute('inert','');backdrop.setAttribute('inert','');modal.style.display='none';backdrop.style.display='none';modal.style.visibility='hidden';backdrop.style.visibility='hidden';modal.style.opacity='0';backdrop.style.opacity='0';modal.style.pointerEvents='none';backdrop.style.pointerEvents='none';document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.body.style.removeProperty('touch-action');}
+  }
+  function fillPeriodSelectors(){
+    const monthNames=[['01','Januari'],['02','Februari'],['03','Maret'],['04','April'],['05','Mei'],['06','Juni'],['07','Juli'],['08','Agustus'],['09','September'],['10','Oktober'],['11','November'],['12','Desember']];
+    const years=[2026,2027];
+    reportMonthSelect.innerHTML='<option value="all">Semua bulan</option>'+monthNames.map(([n,l])=>`<option value="${n}">${l}</option>`).join('');
+    reportYearSelect.innerHTML='<option value="all">Semua tahun</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+    setModeState();
+  }
+  function setModeState(){
+    const m=modeSelect.value;
+    const monthDisabled=m!=='month'; const yearDisabled=m!=='year'; const rangeDisabled=m!=='range';
+    reportMonthSelect.disabled=monthDisabled; reportYearSelect.disabled=(m!=='month'&&m!=='year'); startInput.disabled=rangeDisabled; endInput.disabled=rangeDisabled;
+  }
+  function openReport(){
+    fillPeriodSelectors();
+    $r('#reportPersonName').value=''; $r('#reportValidation').hidden=true;
+    modeSelect.value='all'; setModeState(); lockReport(true);
+    requestAnimationFrame(()=>{$r('#reportPersonName')?.focus();});
+  }
+  function closeReport(){lockReport(false);}
+  function getLiveEvents(){return typeof allEvents==='function'?allEvents():[];}
+  function getLiveAttendance(){return typeof attendanceByEventId!=='undefined'?attendanceByEventId:{};}
+  function getAttendedRows(){
+    const events=getLiveEvents();const attendance=getLiveAttendance();
+    return events.filter(e=>attendance[String(e.id)]?.checkedIn).map(e=>({event:{...e}, attendance:{...attendance[String(e.id)]}}));
+  }
+  function periodFilter(rows){
+    const mode=modeSelect.value;
+    if(mode==='all')return rows;
+    if(mode==='range'){
+      const start=startInput.value,end=endInput.value;if(!start||!end)return null;if(start>end)return 'INVALID_RANGE';
+      return rows.filter(r=>r.event.date>=start&&r.event.date<=end);
+    }
+    if(mode==='month'){
+      const month=reportMonthSelect.value, year=reportYearSelect.value;
+      return rows.filter(r=>{const mk=r.event.date?.slice(5,7), y=r.event.date?.slice(0,4); return (month==='all'||mk===month) && (year==='all'||y===year);});
+    }
+    if(mode==='year'){
+      const year=reportYearSelect.value; if(year==='all')return rows; return rows.filter(r=>r.event.date?.slice(0,4)===year);
+    }
+    return rows;
+  }
+  function daysBetweenRows(rows){return [...new Set(rows.map(r=>r.event.date))].sort();}
+  function dailyReport(rows,date){
+    const dayRows=rows.filter(r=>r.event.date===date);
+    const departures=dayRows.filter(r=>r.event.type==='DEPARTURE_CGK').length;
+    const arrivals=dayRows.filter(r=>r.event.type==='ARRIVAL_CGK').length;
+    if(typeof calculateDailyIncentive==='function'){
+      const base=calculateDailyIncentive(date);
+      return {date,rows:dayRows,attended:dayRows,departures,arrivals,amount:Number(base.amount||0),status:base.status||'DEFINED'};
+    }
+    let amount=0,status='DEFINED';
+    const key=date.slice(0,7);
+    if(key<'2026-11') amount=dayRows.length*50000;
+    else if(departures===1&&arrivals===0) amount=150000;
+    else if(departures===2&&arrivals===0) amount=200000;
+    else if(departures===0&&arrivals>=1) amount=75000;
+    else if(departures===1&&arrivals===1) amount=200000;
+    else {amount=0;status='NEEDS_VERIFICATION';}
+    return {date,rows:dayRows,attended:dayRows,departures,arrivals,amount,status};
+  }
+  function getPeriodLabel(rows){
+    if(!rows.length)return 'Tidak ada data';
+    const dates=daysBetweenRows(rows);const first=dates[0],last=dates[dates.length-1];
+    const monthNames=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    if(first===last)return new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+    return `${new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})} — ${new Date(last+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}`;
+  }
+  function reportId(){return `HTR-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${String(Date.now()).slice(-6)}`;}
+  function sanitizeFileName(s){return String(s).trim().replace(/[^a-zA-Z0-9-_]+/g,'_').replace(/^_+|_+$/g,'')||'Report';}
+  function money(n){return typeof formatRp==='function'?formatRp(n):`Rp${Number(n||0).toLocaleString('id-ID')}`;}
+  async function loadJsPDF(){
+    if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;
+    return await new Promise((resolve,reject)=>{const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';const existing=document.querySelector('script[data-jspdf]');if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF));existing.addEventListener('error',reject);return;}const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('jsPDF tidak tersedia'));s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));document.head.appendChild(s);});
+  }
+  function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d');ctx.drawImage(img,0,0);try{resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
+  function wrap(doc,text,maxWidth,fontSize){doc.setFontSize(fontSize);return doc.splitTextToSize(String(text??'-'),maxWidth);}
+  async function buildPDF(snapshot){
+    const jsPDF=await loadJsPDF(); const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210, margin=16, green=[10,107,66], dark=[22,58,45], muted=[102,117,109], line=[221,231,225], pale=[245,249,246];
+    let y=16; let page=1;
+    const logo=await imageToDataURL('brand-icon.png?report='+Date.now()).catch(()=>null);
+    const addFooter=()=>{doc.setDrawColor(...line);doc.line(margin,284,W-margin,284);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...muted);doc.text('Hamdan Tour · CGK Handling Operations · Confidential Operational Report',margin,289);doc.text(`Page ${page}`,W-margin,289,{align:'right'});};
+    const newPage=()=>{addFooter();doc.addPage();page++;y=18;};
+    if(logo)doc.addImage(logo,'PNG',margin,11,16,16);
+    doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(17);doc.text('HAMDAN TOUR HANDLING REPORT',38,18);
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...muted);doc.text('Operational Attendance & Handling Incentive Report',38,24);
+    doc.setDrawColor(...green);doc.setLineWidth(0.8);doc.line(margin,31,W-margin,31);y=40;
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);doc.text('REPORT INFORMATION',margin,y);y+=7;
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...muted);doc.text('Prepared For',margin,y);doc.text('Report Period',78,y);doc.text('Generated',137,y);y+=5;
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...dark);doc.text(snapshot.personName,margin,y);doc.text(snapshot.periodLabel,78,y);doc.setFontSize(8);doc.text(new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),137,y);y+=6;doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...muted);doc.text(`Report ID ${snapshot.reportId}`,137,y);y+=9;
+    doc.setFillColor(...pale);doc.roundedRect(margin,y,W-2*margin,30,3,3,'F');
+    const stats=[['Total Attendance',snapshot.totalAttendance],['Departure',snapshot.departureCount],['Arrival',snapshot.arrivalCount],['Handling Days',snapshot.handlingDays],['Expected Incentive',money(snapshot.expectedIncentive)]];
+    const cols=[margin+5,margin+38,margin+67,margin+95,margin+126];
+    stats.forEach((s,i)=>{doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...muted);doc.text(s[0],cols[i],y+8);doc.setFont('helvetica','bold');doc.setFontSize(i===4?10:12);doc.setTextColor(...dark);doc.text(String(s[1]),cols[i],y+16);});
+    y+=40;
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);doc.text('ATTENDANCE DETAIL',margin,y);y+=6;
+    const headers=['No','Date','Type','Time','Flight','Route','PAX','Attendance','Incentive'];
+    const widths=[8,23,21,17,19,37,12,27,28]; let x=margin;
+    const drawTableHeader=()=>{doc.setFillColor(...green);doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(7);x=margin;headers.forEach((h,i)=>{doc.rect(x,y,widths[i],8,'F');doc.text(h,x+2,y+5);x+=widths[i];});y+=8;doc.setTextColor(...dark);};
+    drawTableHeader();
+    snapshot.attendanceRows.forEach((r,idx)=>{
+      if(y>270){newPage();doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);doc.text('ATTENDANCE DETAIL (continued)',margin,y);y+=6;drawTableHeader();}
+      const d=r.event.date; const row=[String(idx+1),new Date(d+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA',handlingTime(r.event),r.event.flight||'-',r.event.route||'-',String(r.event.pax??'-'),'CHECKED IN',r.incentiveLabel];
+      const h=11; x=margin;doc.setFillColor(idx%2?255:249,idx%2?255:252,idx%2?255:249);row.forEach((val,i)=>{doc.setFillColor(idx%2?255:249,idx%2?255:252,idx%2?255:249);doc.rect(x,y,widths[i],h,'F');doc.setDrawColor(...line);doc.rect(x,y,widths[i],h);doc.setTextColor(...dark);doc.setFont('helvetica',i===8?'bold':'normal');doc.setFontSize(6.5);const lines=wrap(doc,val,widths[i]-4,6.5);doc.text(lines.slice(0,2),x+2,y+4.2);x+=widths[i];});y+=h;
+    });
+    if(y>255)newPage(); else y+=8;
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);doc.text('DAILY INCENTIVE BREAKDOWN',margin,y);y+=7;
+    snapshot.dailyBreakdown.forEach((d)=>{
+      if(y>270){newPage();doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);doc.text('DAILY INCENTIVE BREAKDOWN (continued)',margin,y);y+=7;}
+      const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+      doc.setFillColor(...pale);doc.roundedRect(margin,y,W-2*margin,18,2.5,2.5,'F');doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(label,margin+4,y+6);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...muted);doc.text(`${d.attended.length} attendance · Departure ${d.departures} · Arrival ${d.arrivals}`,margin+4,y+12);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...dark);doc.text(d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount),W-margin-4,y+10,{align:'right'});y+=22;
+    });
+    y+=4;if(y>255)newPage();
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);doc.text('REPORT NOTES',margin,y);y+=7;doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...muted);
+    const notes = ['Report dibuat sebagai snapshot dari attendance saat tombol Generate PDF ditekan.','Jadwal yang belum berstatus ABSEN MASUK tidak dimasukkan ke attendance detail.','Expected incentive mengikuti incentive engine aplikasi dan tanggal handling event.','Keterangan kombinasi harian digunakan untuk menjelaskan nilai insentif per tanggal.'];
+    notes.forEach((n,i)=>{doc.text(`• ${n}`,margin,y);y+=5;});
+    addFooter();
+    const safeName=sanitizeFileName(snapshot.personName);const safePeriod=sanitizeFileName(snapshot.periodLabel.replaceAll(' ','_'));doc.save(`Hamdan_Tour_Handling_Report_${safeName}_${safePeriod}.pdf`);
+  }
+  function buildSnapshot(rows,personName){
+    const daily=daysBetweenRows(rows).map(d=>dailyReport(rows,d));
+    const expected=daily.reduce((s,d)=>s+d.amount,0);const dep=rows.filter(r=>r.event.type==='DEPARTURE_CGK').length;const arr=rows.filter(r=>r.event.type==='ARRIVAL_CGK').length;
+    const attendanceRows=rows.map(r=>{const d=daily.find(x=>x.date===r.event.date);let incentiveLabel=d?.status==='NEEDS_VERIFICATION'?'Perlu Verifikasi':(d?.amount?`Daily ${money(d.amount)}`:'Rp0');return {event:{...r.event},attendance:{...r.attendance},incentiveLabel};});
+    return {reportId:reportId(),generatedAt:new Date().toISOString(),personName,dateRange:{mode:modeSelect.value,start:startInput.value||null,end:endInput.value||null,month:reportMonthSelect.value,year:reportYearSelect.value},periodLabel:getPeriodLabel(rows),attendanceRows,totalAttendance:rows.length,departureCount:dep,arrivalCount:arr,handlingDays:daily.length,expectedIncentive:expected,dailyBreakdown:daily};
+  }
+  async function generateReport(){
+    const person=$r('#reportPersonName').value.trim();const validation=$r('#reportValidation');validation.hidden=true;
+    if(!person){validation.textContent='Nama lengkap wajib diisi.';validation.hidden=false;return;}
+    const filtered=periodFilter(getAttendedRows());
+    if(filtered==='INVALID_RANGE'){validation.textContent='Tanggal mulai harus lebih kecil atau sama dengan tanggal akhir.';validation.hidden=false;return;}
+    if(!filtered.length){validation.textContent='Tidak ada data attendance pada periode yang dipilih.';validation.hidden=false;return;}
+    const snap=buildSnapshot(filtered,person);
+    const btn=$r('#generateReportPdf');btn.disabled=true;btn.classList.add('loading');const old=btn.textContent;btn.textContent='Membuat PDF…';
+    try{await buildPDF(snap);closeReport();toast('Report PDF berhasil diunduh');}catch(err){console.error(err);validation.textContent=err.message||'Gagal membuat PDF.';validation.hidden=false;}finally{btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="icon-slot" data-icon="file-down" aria-hidden="true"></span>Generate PDF';try{renderIcons();}catch(e){}}
+  }
+  $r('#reportBtn')?.addEventListener('click',openReport);$r('#quickReport')?.addEventListener('click',openReport);$r('#closeReportModal')?.addEventListener('click',closeReport);$r('#cancelReport')?.addEventListener('click',closeReport);backdrop.addEventListener('click',closeReport);modeSelect.addEventListener('change',setModeState);
+  window.CGKReport={open:openReport,close:closeReport,generate:generateReport};
+  $r('#generateReportPdf')?.addEventListener('click',generateReport);
 })();
 </script>
 

@@ -32,32 +32,19 @@ body.modal-open{overflow:hidden}
 /* v16: no external icon library dependency */
 .icon-slot{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;flex:none;line-height:1}.icon-slot svg{width:100%;height:100%;display:block}.brand-icon{overflow:hidden;padding:0;background:#086b42}.brand-icon img{width:100%;height:100%;display:block;object-fit:cover}.profile .icon-slot{margin-left:auto;width:15px;height:15px;color:#8d9994}.modal-backdrop{z-index:1000}.schedule-modal{z-index:1001}.schedule-modal .icon-btn,.schedule-modal .modal-foot .btn{position:relative;z-index:1002;pointer-events:auto;touch-action:manipulation}.schedule-modal .icon-btn{display:inline-flex;align-items:center;justify-content:center}.modal-x{font-size:26px;line-height:1;font-weight:500;padding-bottom:3px}.modal-backdrop.open{pointer-events:auto}.schedule-modal.open{pointer-events:auto}
 
+/* v17 modal hardening */
+#importBackdrop{display:block!important;visibility:visible!important;}
+#importBackdrop:not(.open){opacity:0!important;pointer-events:none!important;}
+#importModal{display:block!important;visibility:visible!important;}
+#importModal:not(.open){opacity:0!important;pointer-events:none!important;}
+#importModal.open{opacity:1!important;pointer-events:auto!important;}
+#importBtn{position:relative;z-index:5;pointer-events:auto!important;touch-action:manipulation;}
+
 [hidden]{display:none!important;}
 .modal-backdrop[hidden],.schedule-modal[hidden]{display:none!important;}
 .modal-backdrop{touch-action:none;}
 .schedule-modal{touch-action:auto;-webkit-overflow-scrolling:touch;}
 button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
-
-/* V23 modal initial-state hardening: closed layers must not exist in hit-testing or focus flow. */
-.modal-backdrop[hidden],
-.schedule-modal[hidden],
-.drawer-backdrop[hidden],
-.drawer[hidden]{
-  display:none !important;
-  visibility:hidden !important;
-  opacity:0 !important;
-  pointer-events:none !important;
-}
-.modal-backdrop:not(.open),
-.schedule-modal:not(.open),
-.drawer-backdrop:not(.open),
-.drawer:not(.open){
-  pointer-events:none !important;
-}
-.modal-backdrop:not(.open){display:none !important;visibility:hidden !important;opacity:0 !important;}
-.schedule-modal:not(.open){display:none !important;visibility:hidden !important;opacity:0 !important;}
-.drawer-backdrop:not(.open){display:none !important;visibility:hidden !important;opacity:0 !important;}
-.drawer:not(.open){visibility:hidden !important;pointer-events:none !important;}
 
 /* V19 modal hard reset: closed overlays must never intercept touch/click. */
 .modal-backdrop:not(.open){display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
