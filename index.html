@@ -7,13 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=21">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=21">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=21">
-  <link rel="icon" type="image/png" href="icon-192.png?rev=21">
-      <title>CGK Handling · Hamdan Tour · v21</title>
+  <link rel="manifest" href="manifest.webmanifest?v=22">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=22">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=22">
+  <link rel="icon" type="image/png" href="icon-192.png?rev=22">
+      <title>CGK Handling · Hamdan Tour · v22</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=21">
+  <link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
   <div class="app-shell">
@@ -36,6 +36,7 @@
         <button class="icon-btn" id="helpBtn" title="Help"><span class="icon-slot" data-icon="circle-help" aria-hidden="true"></span></button>
         <button class="icon-btn" id="themeBtn" title="Theme"><span class="icon-slot" data-icon="moon" aria-hidden="true"></span></button>
         <button class="icon-btn notify" id="notifyBtn" title="Notifications"><span class="icon-slot" data-icon="bell" aria-hidden="true"></span><span>6</span></button>
+        <div class="sync-indicator" id="syncStatus" title="Status sinkronisasi"><span class="sync-dot"></span><span class="sync-label">LOCAL</span></div>
         <button class="profile" id="profileBtn" title="Operator profile">
           <div class="avatar">R</div>
           <div><b>rasyid.hamdatour</b><small>Operator</small></div>
@@ -215,6 +216,82 @@
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
     if (window.caches) { const keys=await caches.keys(); await Promise.all(keys.map(k=>caches.delete(k))); }
   } catch(e) { console.warn('cache cleanup skipped',e); }
+})();
+</script>
+<script src="sync-config.js?v=22"></script>
+<script>
+/* Cross-device realtime sync adapter. Configure Supabase in sync-config.js. */
+(function(){
+  const cfg=window.CGK_SYNC_CONFIG||{};
+  const clientId=localStorage.getItem("cgk-client-id")||(crypto.randomUUID?crypto.randomUUID():"client-"+Date.now()+"-"+Math.random().toString(36).slice(2));
+  localStorage.setItem("cgk-client-id",clientId);
+  let supabaseClient=null,channel=null,initialized=false,remoteApplying=false,syncTimer=null;
+  let localUpdatedAt=Number(localStorage.getItem("cgk-local-updated-at")||0);
+  const setStatus=(mode,label)=>{const el=document.getElementById("syncStatus");if(!el)return;el.dataset.mode=mode;const lab=el.querySelector(".sync-label");if(lab)lab.textContent=label;};
+  function snapshot(){
+    const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||"");return v??f}catch{return f}};
+    return {customEvents:read("cgk-custom-events",[]),eventOverrides:read("cgk-event-overrides",{}),deletedEvents:read("cgk-deleted-events",[]),attendanceByEventId:read("cgk-attendance",{}),receivedIncentiveByMonth:read("cgk-received-incentive",{}),note:localStorage.getItem("cgk-note")||"",sourceVersion:"22"};
+  }
+  function markChanged(){localUpdatedAt=Date.now();localStorage.setItem("cgk-local-updated-at",String(localUpdatedAt));}
+  function writeLocal(state){
+    if(!state)return;
+    const nextCustom=Array.isArray(state.customEvents)?state.customEvents:[];
+    const nextOverrides=state.eventOverrides&&typeof state.eventOverrides==='object'?state.eventOverrides:{};
+    const nextDeleted=Array.isArray(state.deletedEvents)?state.deletedEvents:[];
+    const nextAttendance=state.attendanceByEventId&&typeof state.attendanceByEventId==='object'?state.attendanceByEventId:{};
+    const nextReceived=state.receivedIncentiveByMonth&&typeof state.receivedIncentiveByMonth==='object'?state.receivedIncentiveByMonth:{};
+    localStorage.setItem("cgk-custom-events",JSON.stringify(nextCustom));
+    localStorage.setItem("cgk-event-overrides",JSON.stringify(nextOverrides));
+    localStorage.setItem("cgk-deleted-events",JSON.stringify(nextDeleted));
+    localStorage.setItem("cgk-attendance",JSON.stringify(nextAttendance));
+    localStorage.setItem("cgk-received-incentive",JSON.stringify(nextReceived));
+    if(typeof state.note==='string') localStorage.setItem("cgk-note",state.note);
+  }
+  async function loadSDK(){
+    if(window.supabase?.createClient)return window.supabase;
+    await new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';sc.onload=resolve;sc.onerror=reject;document.head.appendChild(sc);});
+    return window.supabase;
+  }
+  async function saveRemote(){
+    if(!supabaseClient||remoteApplying)return;
+    markChanged();
+    const payload={id:cfg.rowId||'shared',state:snapshot(),updated_at:new Date().toISOString(),updated_by:clientId};
+    setStatus('syncing','SAVING');
+    const {error}=await supabaseClient.from(cfg.table||'cgk_handling_state').upsert(payload,{onConflict:'id'});
+    if(error){console.error('Realtime save failed',error);setStatus('error','OFFLINE');return;}
+    setStatus('online','SYNCED');
+  }
+  function queueSync(){markChanged();if(!initialized||!supabaseClient||remoteApplying)return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>saveRemote(),350);}
+  async function applyRemote(row){
+    if(!row?.state)return;
+    const remoteTs=Date.parse(row.updated_at||'')||0;
+    if(row.updated_by===clientId && remoteTs<=localUpdatedAt)return;
+    if(remoteTs && remoteTs<localUpdatedAt)return;
+    remoteApplying=true;
+    try{writeLocal(row.state);localUpdatedAt=remoteTs||Date.now();localStorage.setItem("cgk-local-updated-at",String(localUpdatedAt));window.dispatchEvent(new CustomEvent('cgk-remote-state',{detail:row.state}));setStatus('online','SYNCED');}finally{remoteApplying=false;}
+  }
+  async function init(){
+    if(!cfg.url||!cfg.anonKey){setStatus('local','LOCAL');return;}
+    try{
+      setStatus('syncing','CONNECT');
+      const sdk=await loadSDK();
+      supabaseClient=sdk.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:false,autoRefreshToken:false}});
+      const table=cfg.table||'cgk_handling_state',rowId=cfg.rowId||'shared';
+      const {data,error}=await supabaseClient.from(table).select('id,state,updated_at,updated_by').eq('id',rowId).maybeSingle();
+      if(error)throw error;
+      const remoteTs=Date.parse(data?.updated_at||'')||0;
+      if(data?.state){
+        if(remoteTs>localUpdatedAt) await applyRemote(data);
+        else if(localUpdatedAt>remoteTs) await saveRemote();
+      }else{
+        await saveRemote();
+      }
+      channel=supabaseClient.channel('cgk-handling-realtime').on('postgres_changes',{event:'*',schema:'public',table,filter:`id=eq.${rowId}`},payload=>{if(payload.new)applyRemote(payload.new)}).subscribe(status=>{if(status==='SUBSCRIBED')setStatus('online','LIVE');else if(status==='CHANNEL_ERROR')setStatus('error','OFFLINE')});
+      initialized=true;
+      setStatus('online','LIVE');
+    }catch(err){console.error('Realtime init failed',err);initialized=true;setStatus('error','LOCAL');}
+  }
+  window.CGKSync={init,queue:queueSync,isEnabled:()=>!!supabaseClient,status:()=>initialized?(supabaseClient?'online':'local'):'starting'};
 })();
 </script>
 <script>
@@ -20591,7 +20668,7 @@ const PERIODS=[
   {y:2026,m:11,label:"December 2026"},{y:2027,m:0,label:"January 2027"},
   {y:2027,m:1,label:"February 2027"},{y:2027,m:2,label:"March 2027"}
 ];
-const APP_VERSION="21";
+const APP_VERSION="22";
 let state={index:0,query:"",type:"all",airline:"all",highPax:false};
 let lastRenderedIndex=0;
 const $=s=>document.querySelector(s);
@@ -20602,20 +20679,30 @@ const handlingTime=e=>e.type==="ARRIVAL_CGK" ? (e.arrivalTime || e.time) : (e.de
 // Source data stays intact. Operator edits are stored as local overrides, while new schedules are stored separately.
 handlingEvents.forEach(e=>{ if(e.type==="ARRIVAL_CGK" && e.arrivalTime) e.time=e.arrivalTime; });
 function loadCustomEvents(){try{return JSON.parse(localStorage.getItem("cgk-custom-events")||"[]")}catch{return []}}
-function saveCustomEvents(){localStorage.setItem("cgk-custom-events",JSON.stringify(customEvents))}
+function saveCustomEvents(){localStorage.setItem("cgk-custom-events",JSON.stringify(customEvents));window.CGKSync?.queue()}
 function loadOverrides(){try{return JSON.parse(localStorage.getItem("cgk-event-overrides")||"{}")}catch{return {}}}
-function saveOverrides(){localStorage.setItem("cgk-event-overrides",JSON.stringify(eventOverrides))}
+function saveOverrides(){localStorage.setItem("cgk-event-overrides",JSON.stringify(eventOverrides));window.CGKSync?.queue()}
 function loadDeleted(){try{return JSON.parse(localStorage.getItem("cgk-deleted-events")||"[]")}catch{return []}}
-function saveDeleted(){localStorage.setItem("cgk-deleted-events",JSON.stringify(deletedEvents))}
+function saveDeleted(){localStorage.setItem("cgk-deleted-events",JSON.stringify(deletedEvents));window.CGKSync?.queue()}
 function loadAttendance(){try{return JSON.parse(localStorage.getItem("cgk-attendance")||"{}")}catch{return {}}}
-function saveAttendance(){localStorage.setItem("cgk-attendance",JSON.stringify(attendanceByEventId))}
+function saveAttendance(){localStorage.setItem("cgk-attendance",JSON.stringify(attendanceByEventId));window.CGKSync?.queue()}
 function loadReceived(){try{return JSON.parse(localStorage.getItem("cgk-received-incentive")||"{}")}catch{return {}}}
-function saveReceived(){localStorage.setItem("cgk-received-incentive",JSON.stringify(receivedIncentiveByMonth))}
+function saveReceived(){localStorage.setItem("cgk-received-incentive",JSON.stringify(receivedIncentiveByMonth));window.CGKSync?.queue()}
 let customEvents=loadCustomEvents();
 let eventOverrides=loadOverrides();
 let deletedEvents=loadDeleted();
 let attendanceByEventId=loadAttendance();
 let receivedIncentiveByMonth=loadReceived();
+window.addEventListener('cgk-remote-state',ev=>{
+  const state=ev.detail||{};
+  customEvents=Array.isArray(state.customEvents)?state.customEvents:[];
+  eventOverrides=state.eventOverrides&&typeof state.eventOverrides==='object'?state.eventOverrides:{};
+  deletedEvents=Array.isArray(state.deletedEvents)?state.deletedEvents:[];
+  attendanceByEventId=state.attendanceByEventId&&typeof state.attendanceByEventId==='object'?state.attendanceByEventId:{};
+  receivedIncentiveByMonth=state.receivedIncentiveByMonth&&typeof state.receivedIncentiveByMonth==='object'?state.receivedIncentiveByMonth:{};
+  showSavedNote();
+  safeRender();
+});
 function allEvents(){return handlingEvents.filter(e=>!deletedEvents.includes(String(e.id))).map(e=>eventOverrides[e.id]?{...e,...eventOverrides[e.id],id:e.id,custom:false,sourceEdited:true}:e).concat(customEvents)}
 
 function monthEvents(){
@@ -20707,25 +20794,47 @@ function toggleAttendance(id){
   else {attendanceByEventId[key]={checkedIn:true,checkedInAt:new Date().toISOString(),date:e.date};saveAttendance();toast("Absen masuk dicatat");}
   render();
 }
-function getIncentiveRate(date){ return String(date) >= "2026-11-01" ? 150000 : 50000; }
+function getIncentiveRule(date){
+  const key=String(date||"").slice(0,10);
+  if(key<"2026-11-01") return {legacy:true,departurePerAttendance:50000,arrivalPerAttendance:50000};
+  return {legacy:false};
+}
 function formatRp(n){return `Rp${Number(n||0).toLocaleString("id-ID")}`}
+function calculateDailyIncentive(date){
+  const attended=getAttendedEventsForDate(date);
+  const departures=attended.filter(e=>e.type==="DEPARTURE_CGK").length;
+  const arrivals=attended.filter(e=>e.type==="ARRIVAL_CGK").length;
+  if(!departures&&!arrivals) return {date,amount:0,status:"NO_ATTENDANCE",departures,arrivals,attended};
+  const rule=getIncentiveRule(date);
+  if(rule.legacy){return {date,amount:attended.length*50000,status:"DEFINED",departures,arrivals,attended};}
+  if(departures===1&&arrivals===0) return {date,amount:150000,status:"DEFINED",departures,arrivals,attended};
+  if(departures===2&&arrivals===0) return {date,amount:200000,status:"DEFINED",departures,arrivals,attended};
+  if(departures===0&&arrivals>=1) return {date,amount:75000,status:"DEFINED",departures,arrivals,attended};
+  if(departures===1&&arrivals===1) return {date,amount:200000,status:"DEFINED",departures,arrivals,attended};
+  return {date,amount:0,status:"NEEDS_VERIFICATION",departures,arrivals,attended};
+}
+function getAttendedEventsForDate(date){return allEvents().filter(e=>e.date===date&&attendanceByEventId[String(e.id)]?.checkedIn);}
 function calculateMonthlyIncentive(key){
   const ev=allEvents().filter(e=>e.date?.slice(0,7)===key);
   const attended=ev.filter(e=>attendanceByEventId[String(e.id)]?.checkedIn);
-  const expected=attended.reduce((sum,e)=>sum+getIncentiveRate(e.date),0);
-  const days={}; attended.forEach(e=>(days[e.date]??=[]).push(e));
-  const daily=Object.entries(days).sort((a,b)=>a[0].localeCompare(b[0])).map(([date,list])=>({date,count:list.length,rate:getIncentiveRate(list[0].date),total:list.reduce((sum,e)=>sum+getIncentiveRate(e.date),0)}));
-  return {events:ev,attended,expected,daily};
+  const dates=[...new Set(attended.map(e=>e.date))].sort();
+  const daily=dates.map(calculateDailyIncentive);
+  const expected=daily.reduce((sum,d)=>sum+d.amount,0);
+  const definedDays=daily.filter(d=>d.status==="DEFINED").length;
+  const verificationDays=daily.filter(d=>d.status==="NEEDS_VERIFICATION").length;
+  return {events:ev,attended,expected,daily,definedDays,verificationDays};
 }
 function renderIncentive(){
   const sel=$("#incentiveMonthSelect");if(!sel)return;
   if(!sel.options.length){PERIODS.forEach(p=>sel.insertAdjacentHTML("beforeend",`<option value="${monthKey(p)}">${p.label}</option>`));sel.value=monthKey(PERIODS[Math.max(0,state.index)]);}
   const key=sel.value||monthKey(PERIODS[state.index]);
   const r=calculateMonthlyIncentive(key),received=Number(receivedIncentiveByMonth[key]||0),diff=received-r.expected;
-  const rate=key>="2026-11"?150000:50000, attendanceRate=r.events.length?(r.attended.length/r.events.length*100):0;
-  $("#incentiveSummary").innerHTML=`<div class="incentive-stat"><span>Total Handling</span><b>${r.events.length}</b><small>${key}</small></div><div class="incentive-stat"><span>Total Absen</span><b>${r.attended.length}</b><small>${attendanceRate.toFixed(1)}% attendance</small></div><div class="incentive-stat"><span>Rate</span><b>${formatRp(rate)}</b><small>per attendance</small></div><div class="incentive-stat highlight"><span>Expected</span><b>${formatRp(r.expected)}</b><small>berdasarkan absen</small></div><div class="incentive-stat"><span>Received</span><b>${formatRp(received)}</b><small>input operator</small></div><div class="incentive-stat ${diff===0?"neutral":diff<0?"negative":"positive"}"><span>${diff===0?"Status":diff<0?"Kurang":"Lebih"}</span><b>${formatRp(Math.abs(diff))}</b><small>${diff===0?"Sesuai":"dari expected"}</small></div>`;
+  const attendanceRate=r.events.length?(r.attended.length/r.events.length*100):0;
+  const depDays=r.daily.filter(d=>d.departures>0).length,arrDays=r.daily.filter(d=>d.arrivals>0).length;
+  const ruleLabel=key>="2026-11"?"Daily combination rule":"Rp50.000 / attendance";
+  $("#incentiveSummary").innerHTML=`<div class="incentive-stat"><span>Total Handling</span><b>${r.events.length}</b><small>${key}</small></div><div class="incentive-stat"><span>Total Absen</span><b>${r.attended.length}</b><small>${attendanceRate.toFixed(1)}% attendance</small></div><div class="incentive-stat"><span>Handling Days</span><b>${r.daily.length}</b><small>${depDays} dep · ${arrDays} arr</small></div><div class="incentive-stat highlight"><span>Expected</span><b>${formatRp(r.expected)}</b><small>${ruleLabel}${r.verificationDays?` · ${r.verificationDays} perlu verifikasi`:""}</small></div><div class="incentive-stat"><span>Received</span><b>${formatRp(received)}</b><small>input operator</small></div><div class="incentive-stat ${diff===0?"neutral":diff<0?"negative":"positive"}"><span>${diff===0?"Status":diff<0?"Kurang":"Lebih"}</span><b>${formatRp(Math.abs(diff))}</b><small>${diff===0?"Sesuai":"dari expected"}</small></div>`;
   $("#receivedValue").textContent=formatRp(received);
-  $("#dailyBreakdown").innerHTML=`<div class="daily-head"><div><b>Daily breakdown</b><span>${r.attended.length} attendance · ${formatRp(r.expected)}</span></div></div>${r.daily.length?r.daily.map(d=>`<div class="daily-row"><div><b>${new Date(d.date+"T12:00:00").toLocaleDateString("id-ID",{day:"2-digit",month:"short"})}</b><span>${d.count} attendance × ${formatRp(d.rate)}</span></div><strong>${formatRp(d.total)}</strong></div>`).join(""):`<div class="daily-empty">Belum ada absensi pada bulan ini.</div>`}`;
+  $("#dailyBreakdown").innerHTML=`<div class="daily-head"><div><b>Daily breakdown</b><span>${r.attended.length} attendance · ${formatRp(r.expected)}</span></div></div>${r.daily.length?r.daily.map(d=>{const detail=d.status==="NEEDS_VERIFICATION"?`<span class="verify-badge">Perlu Verifikasi</span>`:`<span>${d.departures} dep · ${d.arrivals} arr</span>`;return `<div class="daily-row"><div><b>${new Date(d.date+"T12:00:00").toLocaleDateString("id-ID",{day:"2-digit",month:"short"})}</b>${detail}</div><strong>${d.amount?formatRp(d.amount):"—"}</strong></div>`}).join(""):`<div class="daily-empty">Belum ada absensi pada bulan ini.</div>`}`;
 }
 function inputReceivedIncentive(){
   const key=$("#incentiveMonthSelect").value,current=Number(receivedIncentiveByMonth[key]||0);
@@ -20875,7 +20984,7 @@ $("#prevBtn").onclick=()=>setIndex(state.index-1);$("#nextBtn").onclick=()=>setI
 $("#todayBtn").onclick=()=>{const d=new Date();const i=PERIODS.findIndex(p=>p.y===d.getFullYear()&&p.m===d.getMonth());setIndex(i>=0?i:0);toast(i>=0?"Beralih ke bulan hari ini":"Hari ini di luar periode kalender")};
 $("#exportBtn").onclick=$("#quickExport").onclick=exportCSV;
 $("#printBtn").onclick=$("#quickPrint").onclick=()=>window.print();
-const addNote=()=>{const n=prompt("Tambah catatan untuk operator",localStorage.getItem("cgk-note")||"");if(n!==null){localStorage.setItem("cgk-note",n.trim());showSavedNote();toast(n.trim()?"Catatan disimpan":"Catatan dihapus")}};
+const addNote=()=>{const n=prompt("Tambah catatan untuk operator",localStorage.getItem("cgk-note")||"");if(n!==null){localStorage.setItem("cgk-note",n.trim());window.CGKSync?.queue();showSavedNote();toast(n.trim()?"Catatan disimpan":"Catatan dihapus")}};
 $("#noteBtn").onclick=$("#quickNote").onclick=addNote;
 $("#filterBtn").onclick=$("#quickFilter").onclick=toggleFilter;$("#closeFilter").onclick=()=>$("#filterPanel").classList.remove("open");$("#clearFilters").onclick=()=>{state.type="all";state.airline="all";state.highPax=false;document.querySelectorAll(".chip").forEach(b=>b.classList.remove("active"));document.querySelector('[data-filter="all"]').classList.add("active");render();toast("Filter direset")};
 $("#search").addEventListener("input",e=>{state.query=e.target.value;render()});
@@ -20922,6 +21031,7 @@ window.addEventListener("DOMContentLoaded",()=>safeRender(),{once:false});
 window.addEventListener("load",()=>safeRender(),{once:false});
 showSavedNote();
 if(document.readyState!=="loading") safeRender();
+setTimeout(()=>window.CGKSync?.init(),0);
 
 </script>
 <script>
