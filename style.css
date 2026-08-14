@@ -86,3 +86,23 @@ body.modal-open{overflow:hidden!important;}
   .report-modal .report-wide{grid-column:auto;}
   .report-modal.schedule-modal{width:min(94vw,560px);max-height:84vh;padding:15px;}
 }
+
+/* V27 report modal isolation: dynamically mounted, no hidden overlay in DOM */
+.report-root{position:fixed;inset:0;z-index:3000;pointer-events:none;isolation:isolate}
+.report-root .report-backdrop{position:absolute;inset:0;background:rgba(8,24,17,.46);backdrop-filter:blur(2px);opacity:1;pointer-events:auto}
+.report-root .report-dialog{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(620px,calc(100vw - 28px));max-height:min(760px,calc(100vh - 28px));overflow:auto;background:#fff;border:1px solid #d7e2dc;border-radius:20px;box-shadow:0 28px 90px rgba(10,35,24,.28);padding:20px;pointer-events:auto;outline:none}
+.report-root .report-modal-head{margin-bottom:16px}
+.report-root .report-modal-head h3{font-size:20px;letter-spacing:-.3px}
+.report-root .report-form-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:12px}
+.report-root .report-field{display:flex;flex-direction:column;gap:6px;font-size:9px;color:#718079;font-weight:800}
+.report-root .report-field input,.report-root .report-field select{height:42px;border:1px solid #d7e2dc;border-radius:11px;padding:0 12px;background:#fff;color:#183126;outline:none}
+.report-root .report-field input:focus,.report-root .report-field select:focus{border-color:#6aa487;box-shadow:0 0 0 3px rgba(10,107,66,.1)}
+.report-root .report-note{display:flex;gap:8px;align-items:flex-start;margin:14px 0;padding:11px 12px;border:1px solid #d8e7de;background:#f5faf7;border-radius:11px;font-size:9px;color:#6c7d74}
+.report-root .report-validation{margin-top:10px;padding:8px 10px;border-radius:9px;background:#fff3f1;border:1px solid #efc1ba;color:#a53f31;font-size:9px;font-weight:700}
+.report-root .report-modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #e2e9e5}
+.report-root .report-dialog button,.report-root .report-dialog input,.report-root .report-dialog select{touch-action:manipulation}
+@media(max-width:760px){
+  .report-root .report-dialog{width:calc(100vw - 20px);max-height:calc(100vh - 20px);padding:16px;border-radius:18px}
+  .report-root .report-form-grid{grid-template-columns:1fr}
+  .report-root .report-wide{grid-column:auto}
+}

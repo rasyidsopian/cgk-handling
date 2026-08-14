@@ -1,15 +1,5 @@
-# CGK Handling PWA v26
+CGK Handling PWA v27
 
-V26 updates the report generator without changing `sync-config.js`.
+V27 fixes the first-open Generate Report overlay/input bug by mounting the report modal dynamically only when opened and removing it from the DOM on close. The PDF report layout was redesigned for a denser, more premium A4 document with dark-green table headers, compact daily incentive breakdown, controlled column widths, and safer route rendering (CGK - DOH).
 
-Changes:
-- Compact one-page-oriented PDF attendance report layout for normal 5–10 event reports.
-- Compact daily incentive table.
-- Higher-contrast professional dark-green table headers with subtle alternating rows.
-- Safer route rendering in PDF (`CGK - DOH`) to avoid broken arrow glyphs.
-- Smaller PDF fonts and tighter spacing to prevent text overlap.
-- Safer report modal lifecycle and initial hidden state.
-- Report modal uses a dedicated z-index layer and clean focus/lock cleanup.
-- Existing realtime sync configuration is preserved unchanged.
-
-Upload the contents of this folder directly to the GitHub Pages repository root.
+Sync configuration is unchanged from V26; sync-config.js was not modified.

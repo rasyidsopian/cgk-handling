@@ -130,25 +130,6 @@
   </aside>
 
 
-  <div class="report-backdrop modal-backdrop" id="reportBackdrop" hidden></div>
-  <div class="schedule-modal report-modal" id="reportModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="reportModalTitle" hidden>
-    <div class="modal-head">
-      <div><span class="eyebrow">DOCUMENT EXPORT</span><h3 id="reportModalTitle">Hamdan Tour Handling Report</h3></div>
-      <button class="icon-btn modal-x" id="closeReportModal" type="button" aria-label="Tutup">×</button>
-    </div>
-    <div class="report-form-grid">
-      <label class="report-field report-wide"><span>Nama Lengkap</span><input id="reportPersonName" type="text" maxlength="180" placeholder="Contoh: Muhammad Rasyid Dwi Sopian" autocomplete="off"></label>
-      <label class="report-field"><span>Periode</span><select id="reportPeriodMode"><option value="all">Semua attendance</option><option value="range">Custom date range</option><option value="month">Bulan tertentu</option><option value="year">Tahun tertentu</option></select></label>
-      <label class="report-field"><span>Bulan</span><select id="reportMonthSelect"></select></label>
-      <label class="report-field"><span>Tahun</span><select id="reportYearSelect"></select></label>
-      <label class="report-field"><span>Tanggal Mulai</span><input id="reportStartDate" type="date"></label>
-      <label class="report-field"><span>Tanggal Akhir</span><input id="reportEndDate" type="date"></label>
-    </div>
-    <div class="report-note"><span class="icon-slot" data-icon="info" aria-hidden="true"></span><div>Report hanya mengambil jadwal yang sudah <b>ABSEN MASUK</b>. Tanggal yang digunakan adalah tanggal handling event.</div></div>
-    <div id="reportValidation" class="report-validation" hidden></div>
-    <div class="modal-foot"><button class="btn ghost" id="cancelReport" type="button">Batal</button><button class="btn primary" id="generateReportPdf" type="button"><span class="icon-slot" data-icon="file-down" aria-hidden="true"></span>Generate PDF</button></div>
-  </div>
-
   <div class="modal-backdrop" id="importBackdrop" hidden></div>
   <div class="schedule-modal" id="importModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="importModalTitle" hidden>
     <div class="modal-head">
@@ -21077,97 +21058,132 @@ setTimeout(()=>window.CGKSync?.init(),0);
 
 /* ========================= CGK HANDLING REPORT GENERATOR ========================= */
 (function initReportGenerator(){
-  const $r=(s)=>document.querySelector(s);
-  const modal=$r('#reportModal'), backdrop=$r('#reportBackdrop');
-  if(!modal||!backdrop)return;
-  lockReport(false);
-  const periods = Array.isArray(window.PERIODS) ? window.PERIODS : (typeof PERIODS!=='undefined'?PERIODS:[]);
-  const reportMonthSelect=$r('#reportMonthSelect'), reportYearSelect=$r('#reportYearSelect');
-  const modeSelect=$r('#reportPeriodMode'), startInput=$r('#reportStartDate'), endInput=$r('#reportEndDate');
-  function lockReport(open){
-    if(open){
-      // close stale report state before opening
-      modal.hidden=false;
-      backdrop.hidden=false;
-      modal.setAttribute('aria-hidden','false');
-      backdrop.setAttribute('aria-hidden','false');
-      modal.removeAttribute('inert');
-      backdrop.setAttribute('inert','');
-      modal.style.display='flex';
-      backdrop.style.display='block';
-      modal.style.visibility='visible';
-      backdrop.style.visibility='visible';
-      modal.style.opacity='1';
-      backdrop.style.opacity='1';
-      modal.style.pointerEvents='auto';
-      backdrop.style.pointerEvents='auto';
-      modal.classList.add('open');
-      backdrop.classList.add('open');
-      document.body.classList.add('modal-open');
-      document.body.style.overflow='hidden';
-      document.body.style.touchAction='none';
-    }else{
+  const $r=(s,root=document)=>root.querySelector(s);
+  const PERIOD_MONTHS=[['01','Januari'],['02','Februari'],['03','Maret'],['04','April'],['05','Mei'],['06','Juni'],['07','Juli'],['08','Agustus'],['09','September'],['10','Oktober'],['11','November'],['12','Desember']];
+  const YEARS=[2026,2027];
+  let activeRoot=null;
+  let triggerEl=null;
+  let previousOverflow='';
+
+  function esc(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+  function lockPage(){
+    previousOverflow=document.body.style.overflow;
+    document.body.style.overflow='hidden';
+  }
+  function unlockPage(){
+    document.body.style.overflow=previousOverflow;
+    previousOverflow='';
+  }
+  function closeReport(focusBack=true){
+    const root=activeRoot;
+    activeRoot=null;
+    if(root){
       const active=document.activeElement;
-      if(active && modal.contains(active) && typeof active.blur==='function') active.blur();
-      modal.classList.remove('open');
-      backdrop.classList.remove('open');
-      modal.hidden=true;
-      backdrop.hidden=true;
-      modal.setAttribute('aria-hidden','true');
-      backdrop.setAttribute('aria-hidden','true');
-      modal.setAttribute('inert','');
-      backdrop.setAttribute('inert','');
-      modal.style.display='none';
-      backdrop.style.display='none';
-      modal.style.visibility='hidden';
-      backdrop.style.visibility='hidden';
-      modal.style.opacity='0';
-      backdrop.style.opacity='0';
-      modal.style.pointerEvents='none';
-      backdrop.style.pointerEvents='none';
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('overflow');
-      document.body.style.removeProperty('touch-action');
+      if(active && root.contains(active) && typeof active.blur==='function') active.blur();
+      root.remove();
+    }
+    unlockPage();
+    if(focusBack && triggerEl && document.contains(triggerEl)){
+      try{triggerEl.focus({preventScroll:true});}catch(e){try{triggerEl.focus();}catch(_){}}
+    }
+    triggerEl=null;
+  }
+  function buildReportModal(){
+    closeReport(false);
+    triggerEl=document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const root=document.createElement('div');
+    root.id='cgkReportRoot';
+    root.className='report-root';
+    root.innerHTML=`
+      <div class="report-backdrop" data-report-backdrop></div>
+      <section class="report-dialog" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+        <div class="modal-head report-modal-head">
+          <div><span class="eyebrow">DOCUMENT EXPORT</span><h3 id="reportModalTitle">Hamdan Tour Handling Report</h3></div>
+          <button class="icon-btn report-close" type="button" aria-label="Tutup">×</button>
+        </div>
+        <div class="report-form-grid">
+          <label class="report-field report-wide"><span>Nama Lengkap</span><input id="reportPersonName" type="text" maxlength="180" placeholder="Contoh: Muhammad Rasyid Dwi Sopian" autocomplete="off"></label>
+          <label class="report-field"><span>Periode</span><select id="reportPeriodMode"><option value="all">Semua attendance</option><option value="range">Custom date range</option><option value="month">Bulan tertentu</option><option value="year">Tahun tertentu</option></select></label>
+          <label class="report-field"><span>Bulan</span><select id="reportMonthSelect"><option value="all">Semua bulan</option></select></label>
+          <label class="report-field"><span>Tahun</span><select id="reportYearSelect"><option value="all">Semua tahun</option></select></label>
+          <label class="report-field"><span>Tanggal Mulai</span><input id="reportStartDate" type="date"></label>
+          <label class="report-field"><span>Tanggal Akhir</span><input id="reportEndDate" type="date"></label>
+        </div>
+        <div class="report-note"><span class="icon-slot" data-icon="info" aria-hidden="true"></span><div>Report hanya mengambil jadwal yang sudah <b>ABSEN MASUK</b>. Tanggal yang digunakan adalah tanggal handling event.</div></div>
+        <div class="report-validation" hidden></div>
+        <div class="modal-foot report-modal-foot"><button class="btn ghost report-cancel" type="button">Batal</button><button class="btn primary report-generate" type="button"><span class="icon-slot" data-icon="file-down" aria-hidden="true"></span>Generate PDF</button></div>
+      </section>`;
+    document.body.appendChild(root);
+    activeRoot=root;
+    lockPage();
+    renderIcons(root);
+    const modal=$r('.report-dialog',root), backdrop=$r('[data-report-backdrop]',root), modeSelect=$r('#reportPeriodMode',root), monthSelect=$r('#reportMonthSelect',root), yearSelect=$r('#reportYearSelect',root), startInput=$r('#reportStartDate',root), endInput=$r('#reportEndDate',root);
+    const input=$r('#reportPersonName',root);
+    const fillSelectors=()=>{
+      monthSelect.innerHTML='<option value="all">Semua bulan</option>'+PERIOD_MONTHS.map(([n,l])=>`<option value="${n}">${l}</option>`).join('');
+      yearSelect.innerHTML='<option value="all">Semua tahun</option>'+YEARS.map(y=>`<option value="${y}">${y}</option>`).join('');
+      setModeState();
+    };
+    const setModeState=()=>{
+      const m=modeSelect.value;
+      monthSelect.disabled=m!=='month';
+      yearSelect.disabled=(m!=='month'&&m!=='year');
+      startInput.disabled=m!=='range';
+      endInput.disabled=m!=='range';
+    };
+    fillSelectors();
+    modeSelect.addEventListener('change',setModeState);
+    $r('.report-close',root).addEventListener('click',e=>{e.preventDefault();closeReport(true);});
+    $r('.report-cancel',root).addEventListener('click',e=>{e.preventDefault();closeReport(true);});
+    backdrop.addEventListener('click',e=>{if(e.target===backdrop)closeReport(true);});
+    document.addEventListener('keydown',reportKeydown,true);
+    root._cleanup=()=>document.removeEventListener('keydown',reportKeydown,true);
+    const originalClose=closeReport;
+    // replace removal cleanup by wrapping function locally through root metadata
+    root._input=input; root._modal=modal; root._close=()=>{root._cleanup?.(); originalClose(true);};
+    // ensure global close uses cleanup when root is active
+    input.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();root._close();}});
+    $r('.report-generate',root).addEventListener('click',()=>generateReport(root));
+    requestAnimationFrame(()=>{try{modal.focus({preventScroll:true});}catch(e){} try{input.focus({preventScroll:true});}catch(e){}});
+    return root;
+  }
+  function reportKeydown(e){
+    if(!activeRoot)return;
+    if(e.key==='Escape'){e.preventDefault();activeRoot?._close?.();}
+    else if(e.key==='Tab'){
+      const modal=activeRoot.querySelector('.report-dialog');
+      const els=[...modal.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled])')].filter(el=>el.offsetParent!==null);
+      if(!els.length)return;
+      const first=els[0], last=els[els.length-1];
+      if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
     }
   }
-  function fillPeriodSelectors(){
-    const monthNames=[['01','Januari'],['02','Februari'],['03','Maret'],['04','April'],['05','Mei'],['06','Juni'],['07','Juli'],['08','Agustus'],['09','September'],['10','Oktober'],['11','November'],['12','Desember']];
-    const years=[2026,2027];
-    reportMonthSelect.innerHTML='<option value="all">Semua bulan</option>'+monthNames.map(([n,l])=>`<option value="${n}">${l}</option>`).join('');
-    reportYearSelect.innerHTML='<option value="all">Semua tahun</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
-    setModeState();
-  }
-  function setModeState(){
-    const m=modeSelect.value;
-    const monthDisabled=m!=='month'; const yearDisabled=m!=='year'; const rangeDisabled=m!=='range';
-    reportMonthSelect.disabled=monthDisabled; reportYearSelect.disabled=(m!=='month'&&m!=='year'); startInput.disabled=rangeDisabled; endInput.disabled=rangeDisabled;
-  }
-  function openReport(){
-    fillPeriodSelectors();
-    $r('#reportPersonName').value=''; $r('#reportValidation').hidden=true;
-    modeSelect.value='all'; setModeState(); lockReport(true);
-    requestAnimationFrame(()=>{ const input=$r('#reportPersonName'); if(input){input.focus({preventScroll:true});} });
-  }
-  function closeReport(){lockReport(false);}
+  // Override closeReport so dynamic root cleanup is guaranteed.
+  const _baseClose=closeReport;
+  closeReport=function(focusBack=true){
+    const root=activeRoot;
+    if(root?. _cleanup) root._cleanup();
+    _baseClose(focusBack);
+  };
+  function openReport(){buildReportModal();}
   function getLiveEvents(){return typeof allEvents==='function'?allEvents():[];}
   function getLiveAttendance(){return typeof attendanceByEventId!=='undefined'?attendanceByEventId:{};}
-  function getAttendedRows(){
-    const events=getLiveEvents();const attendance=getLiveAttendance();
-    return events.filter(e=>attendance[String(e.id)]?.checkedIn).map(e=>({event:{...e}, attendance:{...attendance[String(e.id)]}}));
-  }
-  function periodFilter(rows){
-    const mode=modeSelect.value;
+  function getAttendedRows(){const events=getLiveEvents();const attendance=getLiveAttendance();return events.filter(e=>attendance[String(e.id)]?.checkedIn).map(e=>({event:{...e},attendance:{...attendance[String(e.id)]}}));}
+  function periodFilter(rows,root){
+    const mode=$r('#reportPeriodMode',root).value;
     if(mode==='all')return rows;
     if(mode==='range'){
-      const start=startInput.value,end=endInput.value;if(!start||!end)return null;if(start>end)return 'INVALID_RANGE';
+      const start=$r('#reportStartDate',root).value,end=$r('#reportEndDate',root).value;
+      if(!start||!end)return null;if(start>end)return 'INVALID_RANGE';
       return rows.filter(r=>r.event.date>=start&&r.event.date<=end);
     }
     if(mode==='month'){
-      const month=reportMonthSelect.value, year=reportYearSelect.value;
-      return rows.filter(r=>{const mk=r.event.date?.slice(5,7), y=r.event.date?.slice(0,4); return (month==='all'||mk===month) && (year==='all'||y===year);});
+      const month=$r('#reportMonthSelect',root).value,year=$r('#reportYearSelect',root).value;
+      return rows.filter(r=>{const mk=r.event.date?.slice(5,7),y=r.event.date?.slice(0,4);return (month==='all'||mk===month)&&(year==='all'||y===year);});
     }
     if(mode==='year'){
-      const year=reportYearSelect.value; if(year==='all')return rows; return rows.filter(r=>r.event.date?.slice(0,4)===year);
+      const year=$r('#reportYearSelect',root).value;if(year==='all')return rows;return rows.filter(r=>r.event.date?.slice(0,4)===year);
     }
     return rows;
   }
@@ -21176,133 +21192,82 @@ setTimeout(()=>window.CGKSync?.init(),0);
     const dayRows=rows.filter(r=>r.event.date===date);
     const departures=dayRows.filter(r=>r.event.type==='DEPARTURE_CGK').length;
     const arrivals=dayRows.filter(r=>r.event.type==='ARRIVAL_CGK').length;
-    if(typeof calculateDailyIncentive==='function'){
-      const base=calculateDailyIncentive(date);
-      return {date,rows:dayRows,attended:dayRows,departures,arrivals,amount:Number(base.amount||0),status:base.status||'DEFINED'};
-    }
-    let amount=0,status='DEFINED';
-    const key=date.slice(0,7);
-    if(key<'2026-11') amount=dayRows.length*50000;
-    else if(departures===1&&arrivals===0) amount=150000;
-    else if(departures===2&&arrivals===0) amount=200000;
-    else if(departures===0&&arrivals>=1) amount=75000;
-    else if(departures===1&&arrivals===1) amount=200000;
-    else {amount=0;status='NEEDS_VERIFICATION';}
-    return {date,rows:dayRows,attended:dayRows,departures,arrivals,amount,status};
+    if(typeof calculateDailyIncentive==='function'){const base=calculateDailyIncentive(date);return{date,rows:dayRows,attended:dayRows,departures,arrivals,amount:Number(base.amount||0),status:base.status||'DEFINED'};}
+    let amount=0,status='DEFINED';const key=date.slice(0,7);
+    if(key<'2026-11')amount=dayRows.length*50000;else if(departures===1&&arrivals===0)amount=150000;else if(departures===2&&arrivals===0)amount=200000;else if(departures===0&&arrivals>=1)amount=75000;else if(departures===1&&arrivals===1)amount=200000;else{amount=0;status='NEEDS_VERIFICATION';}
+    return{date,rows:dayRows,attended:dayRows,departures,arrivals,amount,status};
   }
-  function getPeriodLabel(rows){
-    if(!rows.length)return 'Tidak ada data';
-    const dates=daysBetweenRows(rows);const first=dates[0],last=dates[dates.length-1];
-    const monthNames=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-    if(first===last)return new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
-    return `${new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})} — ${new Date(last+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}`;
-  }
-  function reportId(){return `HTR-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${String(Date.now()).slice(-6)}`;}
+  function getPeriodLabel(rows){if(!rows.length)return'Tidak ada data';const dates=daysBetweenRows(rows),first=dates[0],last=dates[dates.length-1];if(first===last)return new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});return `${new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})} — ${new Date(last+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}`;}
+  function reportId(){return`HTR-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${String(Date.now()).slice(-6)}`;}
   function sanitizeFileName(s){return String(s).trim().replace(/[^a-zA-Z0-9-_]+/g,'_').replace(/^_+|_+$/g,'')||'Report';}
   function money(n){return typeof formatRp==='function'?formatRp(n):`Rp${Number(n||0).toLocaleString('id-ID')}`;}
-  async function loadJsPDF(){
-    if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;
-    return await new Promise((resolve,reject)=>{const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';const existing=document.querySelector('script[data-jspdf]');if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF));existing.addEventListener('error',reject);return;}const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('jsPDF tidak tersedia'));s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));document.head.appendChild(s);});
-  }
+  async function loadJsPDF(){if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;return await new Promise((resolve,reject)=>{const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';const existing=document.querySelector('script[data-jspdf]');if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF));existing.addEventListener('error',reject);return;}const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('jsPDF tidak tersedia'));s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));document.head.appendChild(s);});}
   function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d');ctx.drawImage(img,0,0);try{resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
   function wrap(doc,text,maxWidth,fontSize){doc.setFontSize(fontSize);return doc.splitTextToSize(String(text??'-'),maxWidth);}
+  function routeText(route){return String(route||'-').replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').trim();}
   async function buildPDF(snapshot){
     const jsPDF=await loadJsPDF();
     const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
-    const W=210, H=297, margin=12;
-    const green=[10,107,66], dark=[22,58,45], muted=[102,117,109], line=[207,220,212], pale=[242,248,244], white=[255,255,255], soft=[249,252,250];
-    let y=12; let page=1;
-    const logo=await imageToDataURL('brand-icon.png?report='+Date.now()).catch(()=>null);
-    const footerY=289;
-    const addFooter=()=>{
-      doc.setDrawColor(...line); doc.setLineWidth(0.25); doc.line(margin,footerY-4,W-margin,footerY-4);
-      doc.setFont('helvetica','normal'); doc.setFontSize(6.8); doc.setTextColor(...muted);
-      doc.text('Hamdan Tour · CGK Handling Operations · Confidential Operational Report',margin,footerY);
-      doc.text(`Page ${page}`,W-margin,footerY,{align:'right'});
-    };
-    const newPage=(title)=>{
-      addFooter(); doc.addPage(); page++; y=14;
-      doc.setTextColor(...green); doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.text(title,margin,y); y+=5;
-    };
-    // Header
-    if(logo) doc.addImage(logo,'PNG',margin,9,15,15);
-    doc.setTextColor(...dark); doc.setFont('helvetica','bold'); doc.setFontSize(14.5); doc.text('HAMDAN TOUR HANDLING REPORT',31,14.5);
-    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...muted); doc.text('Operational Attendance & Handling Incentive Report',31,20);
-    doc.setDrawColor(...green); doc.setLineWidth(0.7); doc.line(margin,27,W-margin,27);
-    y=33;
-    // Report information 3-col grid
-    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...green); doc.text('REPORT INFORMATION',margin,y); y+=5;
-    const infoX=[margin,78,137]; const labels=['Prepared For','Report Period','Generated'];
-    const values=[snapshot.personName,snapshot.periodLabel,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})];
-    labels.forEach((lab,i)=>{ doc.setFont('helvetica','normal'); doc.setFontSize(6.6); doc.setTextColor(...muted); doc.text(lab,infoX[i],y); doc.setFont('helvetica','bold'); doc.setFontSize(i===0?7.5:7.2); doc.setTextColor(...dark); const lines=wrap(doc,values[i],i===0?58:55,i===0?7.5:7.2); doc.text(lines.slice(0,2),infoX[i],y+4); });
-    doc.setFont('helvetica','normal'); doc.setFontSize(6.2); doc.setTextColor(...muted); doc.text(`Report ID ${snapshot.reportId}`,137,y+10);
-    y+=17;
-    // Summary band
-    doc.setFillColor(...pale); doc.roundedRect(margin,y,W-2*margin,22,2.5,2.5,'F');
-    const stats=[['Total Attendance',snapshot.totalAttendance],['Departure',snapshot.departureCount],['Arrival',snapshot.arrivalCount],['Handling Days',snapshot.handlingDays],['Expected Incentive',money(snapshot.expectedIncentive)]];
-    const cols=[margin+4,50,83,115,145];
-    stats.forEach((st,i)=>{doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.setTextColor(...muted);doc.text(st[0],cols[i],y+7);doc.setFont('helvetica','bold');doc.setFontSize(i===4?9:10);doc.setTextColor(...dark);doc.text(String(st[1]),cols[i],y+15);});
-    y+=29;
-    // Attendance detail compact table
-    doc.setFont('helvetica','bold'); doc.setFontSize(8.7); doc.setTextColor(...green); doc.text('ATTENDANCE DETAIL',margin,y); y+=4.5;
+    const W=210,H=297,margin=11;
+    const green=[5,105,63], deep=[16,44,34], muted=[104,117,111], line=[214,224,218], pale=[240,247,243], alt=[248,251,249], white=[255,255,255], gold=[183,137,56];
+    let page=1,y=11;
+    const logo=await imageToDataURL('brand-icon.png?pdf='+Date.now()).catch(()=>null);
+    const footer=()=>{doc.setDrawColor(...line);doc.setLineWidth(.25);doc.line(margin,286,W-margin,286);doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(...muted);doc.text('Hamdan Tour · CGK Handling Operations · Confidential Operational Report',margin,291);doc.text(`Page ${page}`,W-margin,291,{align:'right'});};
+    const addPage=(section)=>{footer();doc.addPage();page++;y=13;doc.setFont('helvetica','bold');doc.setFontSize(8.2);doc.setTextColor(...green);doc.text(section,margin,y);y+=6;};
+    // premium header
+    doc.setFillColor(...green);doc.roundedRect(margin,9,W-2*margin,31,4,4,'F');
+    if(logo)doc.addImage(logo,'PNG',margin+5,14,20,20);
+    doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(15.5);doc.text('HAMDAN TOUR HANDLING REPORT',42,20);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.4);doc.setTextColor(229,244,237);doc.text('Operational Attendance & Handling Incentive Report',42,26);
+    doc.setFont('helvetica','bold');doc.setFontSize(6.8);doc.setTextColor(215,236,226);doc.text('CGK HANDLING OPERATIONS',42,32);
+    y=47;
+    // info cards
+    const infoW=(W-2*margin-8)/3, infoX=[margin,margin+infoW+4,margin+(infoW+4)*2];
+    const labels=['PREPARED FOR','REPORT PERIOD','GENERATED'];
+    const vals=[snapshot.personName,snapshot.periodLabel,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})];
+    labels.forEach((lab,i)=>{doc.setFillColor(...pale);doc.setDrawColor(...line);doc.roundedRect(infoX[i],y,infoW,18,2.5,2.5,'FD');doc.setTextColor(...muted);doc.setFont('helvetica','bold');doc.setFontSize(6.1);doc.text(lab,infoX[i]+4,y+5);doc.setTextColor(...deep);doc.setFont('helvetica','bold');doc.setFontSize(i===0?7.2:6.8);doc.text(wrap(doc,vals[i],infoW-8,i===0?7.2:6.8).slice(0,2),infoX[i]+4,y+10);});
+    y+=23;
+    doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.setTextColor(...muted);doc.text(`REPORT ID  ${snapshot.reportId}`,margin,y);y+=5;
+    // summary cards
+    const stats=[['TOTAL ATTENDANCE',snapshot.totalAttendance],['DEPARTURE',snapshot.departureCount],['ARRIVAL',snapshot.arrivalCount],['HANDLING DAYS',snapshot.handlingDays],['EXPECTED INCENTIVE',money(snapshot.expectedIncentive)]];
+    const sw=(W-2*margin-8)/5;
+    stats.forEach((st,i)=>{const x=margin+i*(sw+2);doc.setFillColor(i===4?green:white);doc.setDrawColor(i===4?green:line);doc.roundedRect(x,y,sw,19,2.5,2.5,'FD');doc.setFont('helvetica','bold');doc.setFontSize(5.4);doc.setTextColor(...(i===4?white:muted));doc.text(st[0],x+3,y+5.5);doc.setFontSize(i===4?8.6:9.2);doc.setTextColor(...(i===4?white:deep));doc.text(String(st[1]),x+3,y+13.5);});
+    y+=26;
+    // attendance title
+    const sectionTitle=(title,sub)=>{doc.setFont('helvetica','bold');doc.setFontSize(8.4);doc.setTextColor(...green);doc.text(title,margin,y);if(sub){doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(...muted);doc.text(sub,margin+62,y);}y+=5;};
+    sectionTitle('ATTENDANCE DETAIL','Attendance yang sudah berstatus CHECKED IN');
     const headers=['NO','DATE','TYPE','TIME','FLIGHT','ROUTE','PAX','STATUS','INCENTIVE'];
-    const widths=[7,24,20,15,19,38,11,25,28];
-    const tableX=margin;
-    const drawHeader=()=>{ let x=tableX; doc.setFillColor(...green); doc.setTextColor(...white); doc.setFont('helvetica','bold'); doc.setFontSize(6.2); headers.forEach((h,i)=>{doc.rect(x,y,widths[i],6.5,'F'); doc.text(h,x+1.6,y+4.3); x+=widths[i];}); y+=6.5; };
-    drawHeader();
-    snapshot.attendanceRows.forEach((r,idx)=>{
-      if(y>266){ newPage('ATTENDANCE DETAIL — CONTINUED'); drawHeader(); }
-      const route=String(r.event.route||'-').replaceAll('→','-').replaceAll('↔','-').replace(/[!‘’]/g,'');
-      const row=[String(idx+1),new Date(r.event.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA',handlingTime(r.event),r.event.flight||'-',route,String(r.event.pax??'-'),'CHECKED IN',r.incentiveLabel];
-      const h=8.2; let x=tableX; const fill=idx%2?white:soft;
-      row.forEach((val,i)=>{doc.setFillColor(...fill);doc.setDrawColor(...line);doc.rect(x,y,widths[i],h,'FD');doc.setTextColor(...dark);doc.setFont('helvetica',i===8?'bold':'normal');doc.setFontSize(5.8); const lines=wrap(doc,val,widths[i]-3.2,5.8); doc.text(lines.slice(0,2),x+1.6,y+3.1); x+=widths[i];});
-      y+=h;
-    });
-    y+=5;
-    // Compact daily breakdown table
-    if(y>258) newPage('DAILY INCENTIVE BREAKDOWN');
-    doc.setFont('helvetica','bold'); doc.setFontSize(8.7); doc.setTextColor(...green); doc.text('DAILY INCENTIVE BREAKDOWN',margin,y); y+=4.5;
-    const dHeaders=['DATE','ATTEND.','DEPARTURE','ARRIVAL','DAILY INCENTIVE'];
-    const dWidths=[38,28,35,27,58];
-    let dx=tableX; doc.setFillColor(...green); doc.setTextColor(...white); doc.setFont('helvetica','bold'); doc.setFontSize(6.2);
-    dHeaders.forEach((h,i)=>{doc.rect(dx,y,dWidths[i],6.5,'F');doc.text(h,dx+1.8,y+4.3);dx+=dWidths[i];}); y+=6.5;
-    snapshot.dailyBreakdown.forEach((d,idx)=>{
-      if(y>277) { newPage('DAILY INCENTIVE BREAKDOWN — CONTINUED'); let tx=tableX; doc.setFillColor(...green); doc.setTextColor(...white); doc.setFont('helvetica','bold'); doc.setFontSize(6.2); dHeaders.forEach((h,i)=>{doc.rect(tx,y,dWidths[i],6.5,'F');doc.text(h,tx+1.8,y+4.3);tx+=dWidths[i];}); y+=6.5; }
-      const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
-      const dailyLabel=d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount);
-      const vals=[label,String(d.attended.length),String(d.departures),String(d.arrivals),dailyLabel];
-      let tx=tableX; const fill=idx%2?white:soft;
-      vals.forEach((v,i)=>{doc.setFillColor(...fill);doc.setDrawColor(...line);doc.rect(tx,y,dWidths[i],6.8,'FD');doc.setTextColor(...dark);doc.setFont('helvetica',i===4?'bold':'normal');doc.setFontSize(5.8);doc.text(v,tx+(i===4?dWidths[i]-1.8:1.8),y+4.4,{align:i===4?'right':'left'});tx+=dWidths[i];});
-      y+=6.8;
-    });
-    y+=5;
-    if(y>269) newPage('REPORT NOTES');
-    doc.setFont('helvetica','bold'); doc.setFontSize(8.7); doc.setTextColor(...green); doc.text('REPORT NOTES',margin,y); y+=5;
-    doc.setFont('helvetica','normal'); doc.setFontSize(6.6); doc.setTextColor(...muted);
-    const notes=['Report dibuat sebagai snapshot dari attendance saat tombol Generate PDF ditekan.','Jadwal yang belum berstatus ABSEN MASUK tidak dimasukkan ke attendance detail.','Expected incentive mengikuti incentive engine aplikasi dan tanggal handling event.','Keterangan kombinasi harian digunakan untuk menjelaskan nilai insentif per tanggal.'];
-    notes.forEach(n=>{ const lines=wrap(doc,n,W-2*margin-4,6.6); doc.text('• '+lines[0],margin,y); if(lines.length>1)doc.text(lines.slice(1),margin+3,y+3.2); y+=4.2+Math.max(0,lines.length-1)*3.2; });
-    addFooter();
-    const safeName=sanitizeFileName(snapshot.personName); const safePeriod=sanitizeFileName(snapshot.periodLabel.replaceAll(' ','_')); doc.save(`Hamdan_Tour_Handling_Report_${safeName}_${safePeriod}.pdf`);
+    const widths=[7,24,19,14,18,37,10,24,34];
+    const tableX=margin; const drawTableHeader=()=>{let x=tableX;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(5.9);headers.forEach((h,i)=>{doc.rect(x,y,widths[i],7,'F');doc.text(h,x+1.4,y+4.6);x+=widths[i];});y+=7;};
+    drawTableHeader();
+    snapshot.attendanceRows.forEach((r,idx)=>{if(y>270){addPage('ATTENDANCE DETAIL — CONTINUED');drawTableHeader();}const route=routeText(r.event.route);const row=[String(idx+1),new Date(r.event.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA',handlingTime(r.event),r.event.flight||'-',route,String(r.event.pax??'-'),'CHECKED IN',r.incentiveLabel];let x=tableX;const rh=7.4;row.forEach((v,i)=>{const fill=idx%2?white:alt;doc.setFillColor(...fill);doc.setDrawColor(...line);doc.rect(x,y,widths[i],rh,'FD');doc.setTextColor(...deep);doc.setFont('helvetica',i===8?'bold':'normal');doc.setFontSize(5.7);const lines=wrap(doc,v,widths[i]-3,5.7).slice(0,2);doc.text(lines,x+1.4,y+3.1);x+=widths[i];});y+=rh;});
+    y+=6;
+    sectionTitle('DAILY INCENTIVE','Per tanggal · mengikuti incentive engine aplikasi');
+    const dh=['DATE','ATTEND.','DEPARTURE','ARRIVAL','DAILY INCENTIVE'];
+    const dw=[39,28,35,27,48];
+    let dx=tableX;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(5.9);dh.forEach((h,i)=>{doc.rect(dx,y,dw[i],7,'F');doc.text(h,dx+1.5,y+4.6);dx+=dw[i];});y+=7;
+    snapshot.dailyBreakdown.forEach((d,idx)=>{if(y>272){addPage('DAILY INCENTIVE — CONTINUED');let tx=tableX;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(5.9);dh.forEach((h,i)=>{doc.rect(tx,y,dw[i],7,'F');doc.text(h,tx+1.5,y+4.6);tx+=dw[i];});y+=7;}const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});const vals=[label,String(d.attended.length),String(d.departures),String(d.arrivals),d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount)];let tx=tableX;const rh=7;vals.forEach((v,i)=>{doc.setFillColor(idx%2?white:alt);doc.setDrawColor(...line);doc.rect(tx,y,dw[i],rh,'FD');doc.setTextColor(...deep);doc.setFont('helvetica',i===4?'bold':'normal');doc.setFontSize(5.7);doc.text(v,tx+(i===4?dw[i]-1.5:1.5),y+4.5,{align:i===4?'right':'left'});tx+=dw[i];});y+=rh;});
+    y+=6;
+    if(y>269)addPage('REPORT NOTES');
+    doc.setFillColor(...pale);doc.setDrawColor(...line);doc.roundedRect(margin,y,W-2*margin,13,2.5,2.5,'FD');
+    doc.setFont('helvetica','bold');doc.setFontSize(6.2);doc.setTextColor(...green);doc.text('REPORT NOTES',margin+4,y+4.5);
+    doc.setFont('helvetica','normal');doc.setTextColor(...muted);doc.setFontSize(5.8);doc.text('Snapshot attendance pada saat report dibuat · Jadwal belum CHECKED IN tidak termasuk · Expected incentive mengikuti tanggal dan aturan handling aplikasi.',margin+4,y+9.2);
+    footer();
+    const safeName=sanitizeFileName(snapshot.personName),safePeriod=sanitizeFileName(snapshot.periodLabel.replaceAll(' ','_'));doc.save(`Hamdan_Tour_Handling_Report_${safeName}_${safePeriod}.pdf`);
   }
-  function buildSnapshot(rows,personName){
-    const daily=daysBetweenRows(rows).map(d=>dailyReport(rows,d));
-    const expected=daily.reduce((s,d)=>s+d.amount,0);const dep=rows.filter(r=>r.event.type==='DEPARTURE_CGK').length;const arr=rows.filter(r=>r.event.type==='ARRIVAL_CGK').length;
-    const attendanceRows=rows.map(r=>{const d=daily.find(x=>x.date===r.event.date);let incentiveLabel=d?.status==='NEEDS_VERIFICATION'?'Perlu Verifikasi':(d?.amount?`Daily ${money(d.amount)}`:'Rp0');return {event:{...r.event},attendance:{...r.attendance},incentiveLabel};});
-    return {reportId:reportId(),generatedAt:new Date().toISOString(),personName,dateRange:{mode:modeSelect.value,start:startInput.value||null,end:endInput.value||null,month:reportMonthSelect.value,year:reportYearSelect.value},periodLabel:getPeriodLabel(rows),attendanceRows,totalAttendance:rows.length,departureCount:dep,arrivalCount:arr,handlingDays:daily.length,expectedIncentive:expected,dailyBreakdown:daily};
-  }
-  async function generateReport(){
-    const person=$r('#reportPersonName').value.trim();const validation=$r('#reportValidation');validation.hidden=true;
+  function buildSnapshot(rows,personName){const daily=daysBetweenRows(rows).map(d=>dailyReport(rows,d));const expected=daily.reduce((s,d)=>s+d.amount,0);const dep=rows.filter(r=>r.event.type==='DEPARTURE_CGK').length;const arr=rows.filter(r=>r.event.type==='ARRIVAL_CGK').length;const attendanceRows=rows.map(r=>{const d=daily.find(x=>x.date===r.event.date);let incentiveLabel=d?.status==='NEEDS_VERIFICATION'?'Perlu Verifikasi':(d?.amount?`Daily ${money(d.amount)}`:'Rp0');return{event:{...r.event},attendance:{...r.attendance},incentiveLabel};});return{reportId:reportId(),generatedAt:new Date().toISOString(),personName,dateRange:{mode:$r('#reportPeriodMode',activeRoot).value,start:$r('#reportStartDate',activeRoot).value||null,end:$r('#reportEndDate',activeRoot).value||null,month:$r('#reportMonthSelect',activeRoot).value,year:$r('#reportYearSelect',activeRoot).value},periodLabel:getPeriodLabel(rows),attendanceRows,totalAttendance:rows.length,departureCount:dep,arrivalCount:arr,handlingDays:daily.length,expectedIncentive:expected,dailyBreakdown:daily};}
+  async function generateReport(root){
+    const person=$r('#reportPersonName',root).value.trim();const validation=$r('.report-validation',root);validation.hidden=true;
     if(!person){validation.textContent='Nama lengkap wajib diisi.';validation.hidden=false;return;}
-    const filtered=periodFilter(getAttendedRows());
+    const filtered=periodFilter(getAttendedRows(),root);
     if(filtered==='INVALID_RANGE'){validation.textContent='Tanggal mulai harus lebih kecil atau sama dengan tanggal akhir.';validation.hidden=false;return;}
-    if(!filtered.length){validation.textContent='Tidak ada data attendance pada periode yang dipilih.';validation.hidden=false;return;}
-    const snap=buildSnapshot(filtered,person);
-    const btn=$r('#generateReportPdf');btn.disabled=true;btn.classList.add('loading');const old=btn.textContent;btn.textContent='Membuat PDF…';
-    try{await buildPDF(snap);closeReport();toast('Report PDF berhasil diunduh');}catch(err){console.error(err);validation.textContent=err.message||'Gagal membuat PDF.';validation.hidden=false;}finally{btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="icon-slot" data-icon="file-down" aria-hidden="true"></span>Generate PDF';try{renderIcons();}catch(e){}}
+    if(!filtered?.length){validation.textContent='Tidak ada data attendance pada periode yang dipilih.';validation.hidden=false;return;}
+    const snap=buildSnapshot(filtered,person);const btn=$r('.report-generate',root);btn.disabled=true;btn.textContent='Membuat PDF…';
+    try{await buildPDF(snap);closeReport(true);toast('Report PDF berhasil diunduh');}
+    catch(err){console.error(err);validation.textContent=err.message||'Gagal membuat PDF.';validation.hidden=false;btn.disabled=false;btn.innerHTML='<span class="icon-slot" data-icon="file-down" aria-hidden="true"></span>Generate PDF';renderIcons(root);}
   }
-  $r('#reportBtn')?.addEventListener('click',openReport);$r('#topReportBtn')?.addEventListener('click',openReport);$r('#quickReport')?.addEventListener('click',openReport);$r('#closeReportModal')?.addEventListener('click',closeReport);$r('#cancelReport')?.addEventListener('click',closeReport);backdrop.addEventListener('click',closeReport);modeSelect.addEventListener('change',setModeState);
-  window.CGKReport={open:openReport,close:closeReport,generate:generateReport};
-  $r('#generateReportPdf')?.addEventListener('click',generateReport);
+  [$r('#reportBtn'),$r('#topReportBtn'),$r('#quickReport')].forEach(btn=>{if(btn)btn.addEventListener('click',openReport);});
+  window.CGKReport={open:openReport,close:closeReport};
 })();
 </script>
 
