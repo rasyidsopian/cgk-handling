@@ -21206,159 +21206,174 @@ setTimeout(()=>window.CGKSync?.init(),0);
   }
   function getPeriodLabel(rows){if(!rows.length)return'Tidak ada data';const dates=daysBetweenRows(rows),first=dates[0],last=dates[dates.length-1];if(first===last)return new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});return `${new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})} — ${new Date(last+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}`;}
   function reportId(){return`HTR-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${String(Date.now()).slice(-6)}`;}
-  function sanitizeFileName(s){return String(s).trim().replace(/[^a-zA-Z0-9-_]+/g,'_').replace(/^_+|_+$/g,'')||'Report';}
-  function money(n){return typeof formatRp==='function'?formatRp(n):`Rp${Number(n||0).toLocaleString('id-ID')}`;}
-  async function loadJsPDF(){if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;return await new Promise((resolve,reject)=>{const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';const existing=document.querySelector('script[data-jspdf]');if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF));existing.addEventListener('error',reject);return;}const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('jsPDF tidak tersedia'));s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));document.head.appendChild(s);});}
-  function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d');ctx.drawImage(img,0,0);try{resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
-  function wrap(doc,text,maxWidth,fontSize){doc.setFontSize(fontSize);return doc.splitTextToSize(String(text??'-'),maxWidth);}
-  function routeText(route){return String(route||'-').replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').trim();}
-  function pdfNum(v,fallback=0){const n=Number(v);return Number.isFinite(n)?n:fallback;}
-  function pdfText(v,fallback='-'){const s=String(v??'').trim();return s?s:fallback;}
-  function pdfLines(doc,text,maxWidth,size,maxLines=2){doc.setFontSize(pdfNum(size,7));const out=doc.splitTextToSize(pdfText(text),Math.max(1,pdfNum(maxWidth,10)));return Array.isArray(out)?out.map(x=>String(x)).slice(0,maxLines):[pdfText(text)];}
-  function safePdfText(doc,text,x,y,opts={}){const xx=pdfNum(x),yy=pdfNum(y);try{doc.text(pdfText(text),xx,yy,opts||{});}catch(e){console.warn('PDF text fallback',e);doc.text(String(pdfText(text)),xx,yy);}}
-  function safePdfLines(doc,lines,x,y,opts={}){const xx=pdfNum(x),yy=pdfNum(y);const arr=Array.isArray(lines)?lines.map(v=>String(v)):[String(lines)];try{doc.text(arr,xx,yy,opts||{});}catch(e){safePdfText(doc,arr.join(' '),xx,yy,opts);}}
-  function safeRect(doc,x,y,w,h,style='FD',radius=0){const xx=pdfNum(x),yy=pdfNum(y),ww=Math.max(0,pdfNum(w)),hh=Math.max(0,pdfNum(h));try{if(radius>0)doc.roundedRect(xx,yy,ww,hh,pdfNum(radius),pdfNum(radius),style);else doc.rect(xx,yy,ww,hh,style);}catch(e){try{doc.rect(xx,yy,ww,hh,style);}catch(_){}}}
-  async function loadJsPDF(){
-    if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;
-    return await new Promise((resolve,reject)=>{
-      const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      const existing=document.querySelector('script[data-jspdf]');
-      if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF),{once:true});existing.addEventListener('error',reject,{once:true});return;}
-      const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';
-      s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('Library PDF tidak tersedia.'));
-      s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));
-      document.head.appendChild(s);
-    });
+  function sanitizeFileName(s){return String(s).trim().replace(/[\\/:*?"<>|]+/g,' ').replace(/\s+/g,' ').replace(/^[.\s]+|[.\s]+$/g,'')||'Report';}
+  function reportFileName(snapshot){
+    const words=String(snapshot.personName||'Report').trim().split(/\s+/).filter(Boolean).slice(0,2);
+    const shortName=sanitizeFileName(words.join(' '))||'Report';
+    let monthName='Report';
+    const monthMap=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    let dateStr=snapshot?.dateRange?.start || snapshot?.attendanceRows?.[0]?.event?.date || '';
+    if(!dateStr && snapshot?.dateRange?.month && snapshot.dateRange.month!=='all'){
+      const m=Number(snapshot.dateRange.month); if(m>=1&&m<=12) monthName=monthMap[m-1];
+    }
+    if(dateStr){const m=Number(String(dateStr).slice(5,7)); if(m>=1&&m<=12) monthName=monthMap[m-1];}
+    if(monthName==='Report'){
+      const lbl=String(snapshot.periodLabel||'');
+      const hit=monthMap.findIndex(m=>lbl.toLowerCase().includes(m.toLowerCase()));
+      if(hit>=0) monthName=monthMap[hit];
+    }
+    return `HTR_${shortName}_${monthName}.pdf`;
   }
+  function money(n){return typeof formatRp==='function'?formatRp(n):`Rp${Number(n||0).toLocaleString('id-ID')}`;}
+  async function loadJsPDF(){if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;return await new Promise((resolve,reject)=>{const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';const existing=document.querySelector('script[data-jspdf]');if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF),{once:true});existing.addEventListener('error',reject,{once:true});return;}const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('Library PDF tidak tersedia.'));s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));document.head.appendChild(s);});}
   function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{try{const c=document.createElement('canvas');c.width=Math.max(1,img.naturalWidth);c.height=Math.max(1,img.naturalHeight);const ctx=c.getContext('2d');ctx.drawImage(img,0,0);resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
   function routeText(route){return pdfText(route).replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').replace(/\s+/g,' ').trim();}
-  function safeRoundRect(doc,x,y,w,h,radius=0,style='FD'){ return safeRect(doc,x,y,w,h,style,radius); }
+  function safeRoundRect(doc,x,y,w,h,radius=0,style='FD'){return safeRect(doc,x,y,w,h,style,radius);}
+  function drawSectionTitle(doc,title,x,y,green,olive){
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);safePdfText(doc,title,x,y);
+    const tw=Math.max(28,doc.getTextWidth(title));
+    doc.setDrawColor(...olive);doc.setLineWidth(.35);doc.line(x+tw+5,y-1.2,x+tw+20,y-1.2);
+  }
+  function drawFooterBand(doc,page,total,W,H,bg,muted,white){
+    doc.setFillColor(...bg);safeRect(doc,0,H-9,W,9,'F');
+    doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(...white);
+    safePdfText(doc,'Hamdan Tour · CGK Handling Operations · Confidential Operational Report',12,H-3.8);
+    safePdfText(doc,`Page ${page} of ${total}`,W-12,H-3.8,{align:'right'});
+  }
   async function buildPDF(snapshot){
     const jsPDF=await loadJsPDF();
     const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
-    const W=210,H=297,margin=16;
-    const green=[10,107,66], dark=[22,58,45], muted=[102,117,109], line=[221,231,225], pale=[245,249,246], white=[255,255,255], alt=[250,252,251];
-    let y=16, page=1;
+    const W=210,H=297,margin=9,contentW=W-(margin*2);
+    const bg=[244,243,235],green=[22,58,45],dark=[26,52,42],muted=[99,113,105],line=[205,212,202],white=[255,255,255],softGreen=[224,235,226],softOlive=[221,221,198],olive=[145,145,79],cream=[250,248,239],alt=[239,243,237];
+    let y=12;
     let logo=null;
     try{logo=await imageToDataURL('brand-icon.png?report='+Date.now());}catch(_){logo=null;}
 
-    const addFooter=()=>{
-      doc.setDrawColor(...line);doc.setLineWidth(.3);doc.line(pdfNum(margin),284,pdfNum(W-margin),284);
-      doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...muted);
-      safePdfText(doc,'Hamdan Tour · CGK Handling Operations · Confidential Operational Report',margin,289);
-      safePdfText(doc,`Page ${page}`,W-margin,289,{align:'right'});
-    };
-    const newPage=(section)=>{
-      addFooter();doc.addPage();page++;y=18;
-      doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(...green);
-      safePdfText(doc,section,margin,y);y+=6;
-    };
+    // Page background
+    doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');
 
-    // PREMIUM HEADER — based on original V25 report design
-    if(logo){try{doc.addImage(logo,'PNG',margin,11,16,16,undefined,'FAST');}catch(_){}}
-    doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(17);
-    safePdfText(doc,'HAMDAN TOUR HANDLING REPORT',38,18);
-    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...muted);
-    safePdfText(doc,'Operational Attendance & Handling Incentive Report',38,24);
-    doc.setDrawColor(...green);doc.setLineWidth(.8);doc.line(pdfNum(margin),31,pdfNum(W-margin),31);
-    y=40;
+    // Decorative circles, subtle and cropped at upper-right like the reference.
+    try{
+      doc.setDrawColor(...olive);doc.setLineWidth(.22);
+      [11,17,23,29].forEach(r=>doc.circle(194,12,r,'S'));
+      doc.line(177,0,194,12);doc.line(194,12,210,0);
+      doc.line(194,12,210,24);
+    }catch(_){ }
 
-    // REPORT INFORMATION
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);
-    safePdfText(doc,'REPORT INFORMATION',margin,y);y+=7;
-    doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...muted);
-    safePdfText(doc,'Prepared For',margin,y);
-    safePdfText(doc,'Report Period',78,y);
-    safePdfText(doc,'Generated',137,y);
-    y+=5;
-    doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(...dark);
-    safePdfText(doc,pdfText(snapshot.personName),margin,y);
-    safePdfLines(doc,pdfLines(doc,pdfText(snapshot.periodLabel),48,9.5,2),78,y);
-    doc.setFontSize(8);
-    safePdfLines(doc,pdfLines(doc,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),57,8,2),137,y);
-    y+=6;
-    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(...muted);
-    safePdfText(doc,`Report ID ${pdfText(snapshot.reportId)}`,137,y);y+=9;
+    // Header
+    if(logo){try{doc.addImage(logo,'PNG',margin,8,16,16,undefined,'FAST');}catch(_){} }
+    doc.setTextColor(...green);doc.setFont('times','bold');doc.setFontSize(21.5);
+    safePdfText(doc,'HAMDAN TOUR HANDLING REPORT',35,15.5);
+    doc.setFont('helvetica','normal');doc.setFontSize(8.8);doc.setTextColor(...muted);
+    safePdfText(doc,'Operational Attendance & Handling Incentive Report',35,21.5);
 
-    // COMPACT PREMIUM SUMMARY — same V25 visual language, slightly safer sizing
-    doc.setFillColor(...pale);doc.setDrawColor(...line);safeRect(doc,margin,y,W-2*margin,30,'FD',3);
-    const stats=[['Total Attendance',snapshot.totalAttendance],['Departure',snapshot.departureCount],['Arrival',snapshot.arrivalCount],['Handling Days',snapshot.handlingDays],['Expected Incentive',money(snapshot.expectedIncentive)]];
-    const cols=[margin+5,margin+38,margin+67,margin+95,margin+126];
-    stats.forEach((s,i)=>{
-      doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(...muted);safePdfText(doc,s[0],cols[i],y+8);
-      doc.setFont('helvetica','bold');doc.setFontSize(i===4?9.2:11);doc.setTextColor(...dark);safePdfText(doc,pdfText(s[1]),cols[i],y+16);
+    doc.setFont('helvetica','bold');doc.setFontSize(6.9);doc.setTextColor(...green);
+    safePdfText(doc,'REPORT GENERATED',145,12.2);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.6);doc.setTextColor(...dark);
+    safePdfText(doc,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),145,17.3);
+    doc.setFont('helvetica','bold');doc.setFontSize(6.9);doc.setTextColor(...green);safePdfText(doc,'REPORT ID',145,22.2);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(...dark);safePdfText(doc,pdfText(snapshot.reportId),145,26.9);
+    doc.setDrawColor(...olive);doc.setLineWidth(.55);doc.line(margin,32,W-margin,32);
+    y=38;
+
+    // Report information
+    drawSectionTitle(doc,'REPORT INFORMATION',margin,y,green,olive); y+=6;
+    const infoXs=[margin,69,136];
+    const infoLabels=['PREPARED FOR','REPORT PERIOD','REPORT GENERATED'];
+    const infoVals=[pdfText(snapshot.personName),pdfText(snapshot.periodLabel),new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})];
+    infoLabels.forEach((label,i)=>{
+      doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(...muted);safePdfText(doc,label,infoXs[i],y);
+      doc.setFont('helvetica','bold');doc.setFontSize(i===0?9.0:8.4);doc.setTextColor(...dark);
+      const lines=pdfLines(doc,infoVals[i],i===0?48:55,i===0?9.0:8.4,2);
+      safePdfLines(doc,lines,infoXs[i],y+6,{maxWidth:i===0?48:55});
     });
-    y+=40;
+    y+=19;
 
-    // ATTENDANCE DETAIL — original V25 layout, with V28-safe drawing helpers
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);
-    safePdfText(doc,'ATTENDANCE DETAIL',margin,y);y+=6;
-    const headers=['No','Date','Type','Time','Flight','Route','PAX','Attendance','Incentive'];
-    const widths=[8,23,21,17,19,37,12,27,28];
+    // Summary strip
+    const sumH=24;
+    doc.setFillColor(...green);safeRoundRect(doc,margin,y,contentW,sumH,3,'F');
+    const statXs=[margin+5,margin+40,margin+69,margin+98];
+    const statLabels=[['TOTAL ATTENDANCE',snapshot.totalAttendance],['DEPARTURE',snapshot.departureCount],['ARRIVAL',snapshot.arrivalCount],['HANDLING DAYS',snapshot.handlingDays]];
+    statLabels.forEach((s,i)=>{
+      doc.setFont('helvetica','bold');doc.setFontSize(6.2);doc.setTextColor(171,195,181);safePdfText(doc,s[0],statXs[i],y+8);
+      doc.setFont('times','bold');doc.setFontSize(15.5);doc.setTextColor(...white);safePdfText(doc,pdfText(s[1]),statXs[i],y+16.5);
+    });
+    const expX=142, expW=58, expY=y+3.5, expH=17;
+    doc.setFillColor(...cream);safeRoundRect(doc,expX,expY,expW,expH,3,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(6.3);doc.setTextColor(...green);safePdfText(doc,'EXPECTED INCENTIVE',expX+4,expY+5.2);
+    doc.setFont('times','bold');doc.setFontSize(14.2);doc.setTextColor(...dark);safePdfText(doc,money(snapshot.expectedIncentive),expX+4,expY+12.5);
+    doc.setDrawColor(...olive);doc.setLineWidth(.6);doc.line(expX+4,expY+14.6,expX+25,expY+14.6);
+    y+=31;
+
+    // Attendance detail
+    drawSectionTitle(doc,'ATTENDANCE DETAIL',margin,y,green,olive); y+=5.5;
+    const headers=['NO','DATE','TYPE','TIME','FLIGHT','ROUTE','PAX','ATTENDANCE','INCENTIVE'];
+    const widths=[7,20,19,14,16,35,10,29,28];
+    const totalW=widths.reduce((a,b)=>a+b,0);
+    const x0=margin + Math.max(0,(contentW-totalW)/2);
     const drawTableHeader=()=>{
-      let x=margin;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(6.8);
-      headers.forEach((h,i)=>{safeRect(doc,x,y,widths[i],8,'F');safePdfText(doc,h,x+2,y+5);x+=widths[i];});
-      y+=8;
+      let x=x0;doc.setFillColor(...dark);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(6.4);
+      headers.forEach((h,i)=>{safeRoundRect(doc,x,y,widths[i],7.2,i===0||i===headers.length-1?0.8:0.0,'F');safePdfText(doc,h,x+2,y+4.7);x+=widths[i];});
+      y+=7.2;
     };
     drawTableHeader();
     snapshot.attendanceRows.forEach((r,idx)=>{
-      if(y>270){newPage('ATTENDANCE DETAIL (continued)');drawTableHeader();}
-      const d=r.event.date;
-      const row=[
-        String(idx+1),
-        new Date(d+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),
-        r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA',
-        pdfText(handlingTime(r.event)),
-        pdfText(r.event.flight||'-'),
-        routeText(r.event.route),
-        pdfText(r.event.pax??'-'),
-        'CHECKED IN',
-        pdfText(r.incentiveLabel)
-      ];
-      const h=11;let x=margin;
+      if(y>257){addFooterBand(doc,doc.getNumberOfPages(),doc.getNumberOfPages(),W,H,dark,muted,white);doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;drawSectionTitle(doc,'ATTENDANCE DETAIL (CONTINUED)',margin,y,green,olive);y+=5.5;drawTableHeader();}
+      const type=r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA';
+      const row=[String(idx+1),new Date(r.event.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),type,pdfText(handlingTime(r.event)),pdfText(r.event.flight||'-'),routeText(r.event.route),pdfText(r.event.pax??'-'),'CHECKED IN',pdfText(r.incentiveLabel)];
+      const rowH=8.2;let x=x0;
       row.forEach((val,i)=>{
-        doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,widths[i],h,'FD');
-        doc.setTextColor(...dark);doc.setFont('helvetica',i===8?'bold':'normal');doc.setFontSize(6.25);
-        const lines=pdfLines(doc,val,widths[i]-4,6.25,2);
-        safePdfLines(doc,lines,x+2,y+4.2,{align:i===6?'center':'left'});
+        doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,widths[i],rowH,'FD');
+        doc.setTextColor(...dark);doc.setFont('helvetica',i===1||i===4||i===8?'bold':'normal');doc.setFontSize(6.15);
+        if(i===2){
+          const badgeW=widths[i]-5,badgeX=x+2.5,badgeY=y+1.7;const badgeFill=type==='TIBA'?softOlive:softGreen;
+          doc.setFillColor(...badgeFill);safeRoundRect(doc,badgeX,badgeY,badgeW,4.8,2.1,'F');doc.setFont('helvetica','bold');doc.setFontSize(5.7);doc.setTextColor(...green);safePdfText(doc,val,badgeX+badgeW/2,badgeY+3.25,{align:'center'});
+        } else if(i===7){
+          const badgeW=Math.min(widths[i]-4,23),badgeX=x+(widths[i]-badgeW)/2,badgeY=y+1.7;doc.setFillColor(...cream);safeRoundRect(doc,badgeX,badgeY,badgeW,4.8,2.1,'F');doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(...green);safePdfText(doc,val,badgeX+badgeW/2,badgeY+3.25,{align:'center'});
+        } else {
+          const align=i===0||i===3||i===6?'center':'left';safePdfText(doc,val,align==='center'?x+widths[i]/2:x+2.2,y+5.1,{align});
+        }
         x+=widths[i];
       });
-      y+=h;
+      y+=rowH;
     });
 
-    if(y>255){newPage('DAILY INCENTIVE BREAKDOWN');}
-    else y+=8;
-
-    // DAILY INCENTIVE — keep original V25 card-like treatment, but compact enough for one page
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);
-    safePdfText(doc,'DAILY INCENTIVE BREAKDOWN',margin,y);y+=6;
-    snapshot.dailyBreakdown.forEach((d)=>{
-      if(y>270){newPage('DAILY INCENTIVE BREAKDOWN (continued)');}
-      const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
-      doc.setFillColor(...pale);doc.setDrawColor(...line);safeRect(doc,margin,y,W-2*margin,17,'FD',2.5);
-      doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(8.5);safePdfText(doc,label,margin+4,y+5.8);
-      doc.setFont('helvetica','normal');doc.setFontSize(7.0);doc.setTextColor(...muted);
-      safePdfText(doc,`${d.attended.length} attendance · Departure ${d.departures} · Arrival ${d.arrivals}`,margin+4,y+11.8);
-      doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(...dark);
-      safePdfText(doc,d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount),W-margin-4,y+9.5,{align:'right'});
-      y+=20;
+    y+=5.5;
+    drawSectionTitle(doc,'DAILY INCENTIVE BREAKDOWN',margin,y,green,olive); y+=5.5;
+    // Compact daily table
+    const dHeaders=['DATE','ATTENDANCE','DEPARTURE','ARRIVAL','DAILY INCENTIVE'];
+    const dWidths=[44,35,30,26,43];
+    const dTotal=dWidths.reduce((a,b)=>a+b,0);const dx0=margin+(contentW-dTotal)/2;
+    let x=dx0;doc.setFillColor(...dark);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(6.2);
+    dHeaders.forEach((h,i)=>{safeRect(doc,x,y,dWidths[i],6.8,'F');safePdfText(doc,h,x+2,y+4.4);x+=dWidths[i];});y+=6.8;
+    snapshot.dailyBreakdown.forEach((d,idx)=>{
+      if(y>270){doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;drawSectionTitle(doc,'DAILY INCENTIVE BREAKDOWN (CONTINUED)',margin,y,green,olive);y+=5.5;x=dx0;doc.setFillColor(...dark);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(6.2);dHeaders.forEach((h,i)=>{safeRect(doc,x,y,dWidths[i],6.8,'F');safePdfText(doc,h,x+2,y+4.4);x+=dWidths[i];});y+=6.8;}
+      const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+      const vals=[label,String(d.attended.length),String(d.departures),String(d.arrivals),d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount)];
+      x=dx0;vals.forEach((val,i)=>{doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,dWidths[i],6.8,'FD');doc.setFont('helvetica',i===4?'bold':'normal');doc.setFontSize(6.1);doc.setTextColor(...dark);safePdfText(doc,val,i===0?x+2:x+dWidths[i]/2,y+4.35,{align:i===0?'left':'center'});x+=dWidths[i];});y+=6.8;
     });
 
-    if(y>268)newPage('REPORT NOTES'); else y+=3;
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);safePdfText(doc,'REPORT NOTES',margin,y);y+=6;
-    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(...muted);
+    y+=5.5;
+    if(y>274){doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;}
+    drawSectionTitle(doc,'REPORT NOTES',margin,y,green,olive); y+=5.2;
+    doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(...muted);
     const notes=[
       'Report dibuat sebagai snapshot dari attendance saat tombol Generate PDF ditekan.',
       'Jadwal yang belum berstatus ABSEN MASUK tidak dimasukkan ke attendance detail.',
       'Expected incentive mengikuti incentive engine aplikasi dan tanggal handling event.',
       'Keterangan kombinasi harian digunakan untuk menjelaskan nilai insentif per tanggal.'
     ];
-    notes.forEach(n=>{safePdfLines(doc,pdfLines(doc,`• ${pdfText(n)}`,W-2*margin,7.2,2),margin,y);y+=4.6;});
+    notes.forEach(n=>{safePdfText(doc,'•',margin,y);safePdfLines(doc,pdfLines(doc,n,contentW-7,6.8,1),margin+4,y);y+=4.1;});
 
-    addFooter();
-    const safeName=sanitizeFileName(snapshot.personName);
-    const safePeriod=sanitizeFileName(snapshot.periodLabel.replaceAll(' ','_'));
-    doc.save(`Hamdan_Tour_Handling_Report_${safeName}_${safePeriod}.pdf`);
+    // Final footer on every page after page count is known.
+    const totalPages=doc.getNumberOfPages();
+    for(let i=1;i<=totalPages;i++){
+      doc.setPage(i);
+      drawFooterBand(doc,i,totalPages,W,H,dark,muted,white);
+    }
+
+    const fileName=reportFileName(snapshot);
+    doc.save(fileName);
   }
   function buildSnapshot(rows,personName){const daily=daysBetweenRows(rows).map(d=>dailyReport(rows,d));const expected=daily.reduce((s,d)=>s+d.amount,0);const dep=rows.filter(r=>r.event.type==='DEPARTURE_CGK').length;const arr=rows.filter(r=>r.event.type==='ARRIVAL_CGK').length;const attendanceRows=rows.map(r=>{const d=daily.find(x=>x.date===r.event.date);let incentiveLabel=d?.status==='NEEDS_VERIFICATION'?'Perlu Verifikasi':(d?.amount?`Daily ${money(d.amount)}`:'Rp0');return{event:{...r.event},attendance:{...r.attendance},incentiveLabel};});return{reportId:reportId(),generatedAt:new Date().toISOString(),personName,dateRange:{mode:$r('#reportPeriodMode',activeRoot).value,start:$r('#reportStartDate',activeRoot).value||null,end:$r('#reportEndDate',activeRoot).value||null,month:$r('#reportMonthSelect',activeRoot).value,year:$r('#reportYearSelect',activeRoot).value},periodLabel:getPeriodLabel(rows),attendanceRows,totalAttendance:rows.length,departureCount:dep,arrivalCount:arr,handlingDays:daily.length,expectedIncentive:expected,dailyBreakdown:daily};}
   async function generateReport(root){
