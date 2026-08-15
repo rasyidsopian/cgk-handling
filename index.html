@@ -238,7 +238,7 @@
   const setStatus=(mode,label)=>{const el=document.getElementById("syncStatus");if(!el)return;el.dataset.mode=mode;const lab=el.querySelector(".sync-label");if(lab)lab.textContent=label;};
   function snapshot(){
     const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||"");return v??f}catch{return f}};
-    return {customEvents:read("cgk-custom-events",[]),eventOverrides:read("cgk-event-overrides",{}),deletedEvents:read("cgk-deleted-events",[]),attendanceByEventId:read("cgk-attendance",{}),receivedIncentiveByMonth:read("cgk-received-incentive",{}),note:localStorage.getItem("cgk-note")||"",sourceVersion:"22"};
+    return {customEvents:read("cgk-custom-events",[]),eventOverrides:read("cgk-event-overrides",{}),deletedEvents:read("cgk-deleted-events",[]),attendanceByEventId:read("cgk-attendance",{}),receivedIncentiveByMonth:read("cgk-received-incentive",{}),checklistsByEventId:read("cgk-checklists",{}),note:localStorage.getItem("cgk-note")||"",sourceVersion:"37"};
   }
   function markChanged(){localUpdatedAt=Date.now();localStorage.setItem("cgk-local-updated-at",String(localUpdatedAt));}
   function writeLocal(state){
@@ -248,11 +248,13 @@
     const nextDeleted=Array.isArray(state.deletedEvents)?state.deletedEvents:[];
     const nextAttendance=state.attendanceByEventId&&typeof state.attendanceByEventId==='object'?state.attendanceByEventId:{};
     const nextReceived=state.receivedIncentiveByMonth&&typeof state.receivedIncentiveByMonth==='object'?state.receivedIncentiveByMonth:{};
+    const nextChecklists=state.checklistsByEventId&&typeof state.checklistsByEventId==='object'?state.checklistsByEventId:{};
     localStorage.setItem("cgk-custom-events",JSON.stringify(nextCustom));
     localStorage.setItem("cgk-event-overrides",JSON.stringify(nextOverrides));
     localStorage.setItem("cgk-deleted-events",JSON.stringify(nextDeleted));
     localStorage.setItem("cgk-attendance",JSON.stringify(nextAttendance));
     localStorage.setItem("cgk-received-incentive",JSON.stringify(nextReceived));
+    localStorage.setItem("cgk-checklists",JSON.stringify(nextChecklists));
     if(typeof state.note==='string') localStorage.setItem("cgk-note",state.note);
   }
   async function loadSDK(){
@@ -20683,6 +20685,19 @@ const $=s=>document.querySelector(s);
 const monthKey=p=>`${p.y}-${String(p.m+1).padStart(2,"0")}`;
 const fmtDate=s=>new Date(`${s}T12:00:00`).toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"});
 const handlingTime=e=>e.type==="ARRIVAL_CGK" ? (e.arrivalTime || e.time) : (e.departureTime || e.time);
+const OFFICE_DEPARTURE_OFFSET_MINUTES=420;
+const RETURN_DEPARTURE_OFFSET_MINUTES=120;
+function shiftDateTime(date,time,deltaMinutes){
+  const m=String(time||"00:00").match(/^(\d{1,2}):(\d{2})$/);
+  if(!m||!/^(\d{4})-(\d{2})-(\d{2})$/.test(String(date||""))) return null;
+  const dt=new Date(`${date}T${m[1].padStart(2,"0")}:${m[2]}:00`);
+  if(Number.isNaN(dt.getTime())) return null;
+  dt.setMinutes(dt.getMinutes()+deltaMinutes);
+  return {date:`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`,time:`${String(dt.getHours()).padStart(2,"0")}:${String(dt.getMinutes()).padStart(2,"0")}`};
+}
+function getOfficeDeparture(e){return e&&e.type==="DEPARTURE_CGK"?shiftDateTime(e.date,handlingTime(e),-OFFICE_DEPARTURE_OFFSET_MINUTES):null;}
+function getReturnDeparture(e){return e&&e.type==="ARRIVAL_CGK"?shiftDateTime(e.date,handlingTime(e),-RETURN_DEPARTURE_OFFSET_MINUTES):null;}
+function auxiliaryTimeLabel(e){const a=e?.type==="DEPARTURE_CGK"?getOfficeDeparture(e):getReturnDeparture(e);if(!a)return "";return `${a.time}${a.date!==e.date?` · ${fmtDate(a.date)}`:""}`;}
 
 // Source data stays intact. Operator edits are stored as local overrides, while new schedules are stored separately.
 handlingEvents.forEach(e=>{ if(e.type==="ARRIVAL_CGK" && e.arrivalTime) e.time=e.arrivalTime; });
@@ -20701,6 +20716,7 @@ let eventOverrides=loadOverrides();
 let deletedEvents=loadDeleted();
 let attendanceByEventId=loadAttendance();
 let receivedIncentiveByMonth=loadReceived();
+let checklistsByEventId={};
 window.addEventListener('cgk-remote-state',ev=>{
   const state=ev.detail||{};
   customEvents=Array.isArray(state.customEvents)?state.customEvents:[];
@@ -20708,6 +20724,7 @@ window.addEventListener('cgk-remote-state',ev=>{
   deletedEvents=Array.isArray(state.deletedEvents)?state.deletedEvents:[];
   attendanceByEventId=state.attendanceByEventId&&typeof state.attendanceByEventId==='object'?state.attendanceByEventId:{};
   receivedIncentiveByMonth=state.receivedIncentiveByMonth&&typeof state.receivedIncentiveByMonth==='object'?state.receivedIncentiveByMonth:{};
+  checklistsByEventId=state.checklistsByEventId&&typeof state.checklistsByEventId==='object'?state.checklistsByEventId:{};
   showSavedNote();
   safeRender();
 });
@@ -20742,13 +20759,13 @@ function renderYear(){
   $("#yearOverview").innerHTML=PERIODS.map(p=>{const k=monthKey(p),n=allEvents().filter(e=>e.date.slice(0,7)===k).length;return `<div class="year-item"><span>${p.label}</span><b>${n}</b><small>CGK events</small></div>`;}).join("");
 }
 function eventCard(e){
-  const dep=e.type==="DEPARTURE_CGK",cls=dep?"dep":"arr",time=handlingTime(e),custom=e.custom===true;
-  const attended=!!attendanceByEventId[String(e.id)]?.checkedIn;
+  const dep=e.type==="DEPARTURE_CGK",cls=dep?"dep":"arr",time=handlingTime(e),custom=e.custom===true,aux=auxiliaryTimeLabel(e);
+  const attended=!!attendanceByEventId[String(e.id)]?.checkedIn,check=getChecklistSummary(checklistsByEventId[String(e.id)]);
   const header=dep
     ?`<div class="event-top"><div><div class="type">BERANGKAT</div><div class="time">${time}</div></div>${custom?`<span class="custom-badge">CUSTOM</span>`:""}</div>`
     :`<div class="event-top"><div><div class="type">TIBA</div><div class="time right-time">${time}</div></div></div>`;
   const attendBtn=`<button class="event-attendance ${attended?"checked":""}" data-attend-id="${e.id}" type="button">${attended?"✓ ABSEN MASUK":"○ ABSEN MASUK"}</button>`;
-  return `<div class="event ${cls} ${custom?"custom-event":""} ${attended?"is-attended":""}" data-id="${e.id}">${header}<div class="flight">${e.flight||"CUSTOM"}</div><div class="route">${e.route||"-"}</div><div class="pax">${e.pax?`${e.pax} PAX`:"PAX —"}</div>${attendBtn}</div>`;
+  return `<div class="event ${cls} ${custom?"custom-event":""} ${attended?"is-attended":""}" data-id="${e.id}">${header}<div class="flight">${e.flight||"CUSTOM"}</div><div class="route">${e.route||"-"}</div><div class="pax">${e.pax?`${e.pax} PAX`:"PAX —"}</div>${aux?`<div class="aux-time"><span>${dep?"KANTOR":"HANDLING"}</span><b>${aux}</b></div>`:""}${dep&&check.total?`<div class="check-mini">✓ Checklist ${check.percent}%</div>`:""}${attendBtn}</div>`;
 }
 function renderCalendar(){
   const p=PERIODS[state.index],events=monthEvents();
@@ -20775,17 +20792,19 @@ function isCustomEvent(id){return customEvents.some(e=>String(e.id)===String(id)
 function isSourceEvent(id){return handlingEvents.some(e=>String(e.id)===String(id))}
 function openDrawer(id){
   const e=findEvent(id);if(!e)return;
-  const dep=e.type==="DEPARTURE_CGK",time=handlingTime(e),custom=e.custom===true,edited=e.sourceEdited===true,attended=!!attendanceByEventId[String(e.id)]?.checkedIn;
+  const dep=e.type==="DEPARTURE_CGK",time=handlingTime(e),custom=e.custom===true,edited=e.sourceEdited===true,attended=!!attendanceByEventId[String(e.id)]?.checkedIn,aux=dep?getOfficeDeparture(e):getReturnDeparture(e),check=checklistsByEventId[String(e.id)],checkSummary=getChecklistSummary(check);
   $("#drawerTitle").textContent=e.flight||"Custom Schedule";
   const legs=(e.scheduleLegs||[]).map(x=>`<div class="leg-row"><span>${x.date}</span><b>${x.dep} → ${x.arr}</b><span>${x.route}</span><span>${x.flight}${x.arrivalNextDay?" (+1)":""}</span></div>`).join("");
   const actions=`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>${custom?"Edit":"Edit isi"}</button>${!custom&&edited?`<button class="btn ghost" id="resetEventBtn"><span class="icon-slot" data-icon="rotate-ccw" aria-hidden="true"></span>Reset asli</button>`:""}<button class="btn danger" id="deleteEventBtn"><span class="icon-slot" data-icon="trash-2" aria-hidden="true"></span>Hapus</button>`;
   const attendanceBox=`<div class="attendance-panel ${attended?"checked":""}"><div><span class="eyebrow">ATTENDANCE</span><strong>${attended?"✓ Sudah Absen":"Belum Absen"}</strong>${attended?`<small>${new Date(attendanceByEventId[String(e.id)].checkedInAt).toLocaleString("id-ID",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</small>`:""}</div><button class="btn ${attended?"ghost":"primary"} small" id="attendanceDrawerBtn" type="button">${attended?"Batalkan Absen":"✓ Absen Masuk"}</button></div>`;
-  $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div><div class="drawer-actions">${actions}</div>${attendanceBox}<div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div><div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div><div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
+  const checklistBox=dep?`<div class="checklist-panel ${checkSummary.status==="COMPLETE"?"complete":""}"><div><span class="eyebrow">CHECKLIST KEBERANGKATAN</span><strong>${checkSummary.total?`${checkSummary.completed} / ${checkSummary.total} · ${checkSummary.percent}%`:'Belum Diisi'}</strong>${checkSummary.total?`<small>${checkSummary.statusLabel}</small>`:""}</div><button class="btn ghost small" id="openChecklistBtn" type="button">${checkSummary.total?"Edit Checklist":"Checklist Keberangkatan"}</button></div>`:"";
+  $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div><div class="drawer-actions">${actions}</div>${attendanceBox}${checklistBox}<div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div><div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div><div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
   $("#drawer").classList.add("open");$("#backdrop").classList.add("open");renderIcons();
   $("#editEventBtn").onclick=()=>{closeDrawer();openEditModal(e.id)};
   $("#attendanceDrawerBtn").onclick=()=>{toggleAttendance(e.id);openDrawer(e.id)};
   $("#deleteEventBtn").onclick=()=>deleteSchedule(e.id);
   if(edited&&$("#resetEventBtn")) $("#resetEventBtn").onclick=()=>resetSourceOverride(e.id);
+  if(dep && $("#openChecklistBtn")) $("#openChecklistBtn").onclick=()=>openChecklistModal(e.id);
 }
 function closeDrawer(){$("#drawer").classList.remove("open");$("#backdrop").classList.remove("open")}
 function deleteSchedule(id){
@@ -20794,7 +20813,7 @@ function deleteSchedule(id){
   if(!confirm(`Hapus jadwal ini?\n\n${label}`))return;
   if(e.custom===true){customEvents=customEvents.filter(x=>String(x.id)!==String(id));saveCustomEvents();}
   else {if(!deletedEvents.includes(String(id)))deletedEvents.push(String(id));saveDeleted();delete eventOverrides[id];saveOverrides();}
-  delete attendanceByEventId[String(id)];saveAttendance();closeDrawer();render();toast("Jadwal dihapus");
+  delete attendanceByEventId[String(id)];saveAttendance(); delete checklistsByEventId[String(id)]; saveChecklists(); closeDrawer();render();toast("Jadwal dihapus");
 }
 function toggleAttendance(id){
   const key=String(id),e=findEvent(id);if(!e)return;
@@ -20856,12 +20875,52 @@ function populateForm(e,date){
   $("#scheduleAirline").value=e?.airline||"";$("#scheduleAirlineName").value=e?.airlineName||"";$("#scheduleFlight").value=e?.flight||"";$("#scheduleRoute").value=e?.route||"";
   $("#schedulePackage").value=e?.package||"";$("#schedulePnr").value=e?.pnr||"";$("#schedulePax").value=e?.pax??"";$("#scheduleRooms").value=e?.rooms??"";$("#scheduleHotel").value=e?.hotel||"";$("#scheduleVendor").value=e?.vendor||"";$("#scheduleStatus").value=e?.status||"";$("#scheduleNote").value=e?.note||"";
 }
+const CHECKLIST_ITEMS=[
+  "SPANDUK KEBERANGKATAN","ID CARD + LANYARD","ROOMLIST 3 LEMBAR","MANIFEST JAMAAH 3 LEMBAR","TAS SERUT, SYAL, VITAMIN","KAIN IHRAM, SYAL, MUKENA, TAS SLEMPANG DLL","TEAM HANDLING (5 ORG)","OBAT-OBATAN P3K (2 TAS)","PASSPORT + BUKU KUNING (MENINGITIS) + CADANGAN","PRINT VISA","PRINT TIKET","PENGENAL KOPER (TAG & STIKER)","STIKER ZAMZAM","SARUNG KOPER","MENU MAKAN LOUNGE","CABLE TIE (TAG KOPER)","PLASTIK TAG KOPER (1 BUNGKUS)","UANG BENSIN + ETOL","HT 5 + SPEAKER TL + TITIK KUMPUL","TAS PRENTEL-PRENTEL & THUMBLER","PERLENGKAPAN DITERIMA DI BANDARA"
+];
+function loadChecklists(){try{return JSON.parse(localStorage.getItem("cgk-checklists")||"{}")}catch{return {}}}
+checklistsByEventId=loadChecklists();
+function saveChecklists(){localStorage.setItem("cgk-checklists",JSON.stringify(checklistsByEventId));window.CGKSync?.queue()}
+function getChecklistSummary(data){
+  if(!data||!data.items)return {total:0,completed:0,percent:0,status:"EMPTY",statusLabel:"Belum diisi",missing:CHECKLIST_ITEMS.slice()};
+  let completed=0;
+  const missing=[];
+  CHECKLIST_ITEMS.forEach(item=>{let ok=!!data.items[item];if(item===CHECKLIST_ITEMS[8]) ok=!!data.items[item]&&Number(data.passportCount)>0;if(ok)completed++;else missing.push(item);});
+  const percent=Math.round((completed/CHECKLIST_ITEMS.length)*100);
+  const status=percent===100?"COMPLETE":percent===0?"EMPTY":"IN_PROGRESS";
+  return {total:CHECKLIST_ITEMS.length,completed,percent,status,statusLabel:status==="COMPLETE"?"LENGKAP":status==="IN_PROGRESS"?"IN PROGRESS":"Belum diisi",missing};
+}
+function ensureChecklistModal(){
+  let back=document.getElementById("checklistBackdrop"),modal=document.getElementById("checklistModal");
+  if(back&&modal)return {back,modal};
+  back=document.createElement("div");back.id="checklistBackdrop";back.className="modal-backdrop";back.hidden=true;back.setAttribute("aria-hidden","true");
+  modal=document.createElement("div");modal.id="checklistModal";modal.className="schedule-modal checklist-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-hidden","true");modal.setAttribute("inert","");
+  document.body.append(back,modal);
+  back.addEventListener("click",closeChecklistModal);
+  return {back,modal};
+}
+function openChecklistModal(eventId){
+  const e=findEvent(eventId);if(!e||e.type!=="DEPARTURE_CGK")return;
+  forceCloseAllModals();
+  const {back,modal}=ensureChecklistModal();
+  const d=checklistsByEventId[String(eventId)]||{items:{},passportCount:"",note:""};
+  const sum=getChecklistSummary(d);
+  modal.innerHTML=`<div class="modal-head"><div><span class="eyebrow">PRE-DEPARTURE OPERATIONS</span><h3>Checklist Keberangkatan</h3><div class="checklist-event-meta">${e.flight||"CUSTOM"} · ${e.route||"-"} · ${handlingTime(e)}</div></div><button class="icon-btn modal-x" id="closeChecklist" type="button">×</button></div><div class="check-progress"><div><span>Kelengkapan Perlengkapan</span><b id="checkPercent">${sum.percent}%</b></div><div class="progress-track"><i id="checkProgressBar" style="width:${sum.percent}%"></i></div></div><div class="checklist-list">${CHECKLIST_ITEMS.map((item,i)=>{const isPass=i===8;return `<label class="check-item ${isPass?"passport-item":""}"><input type="checkbox" data-check-item="${encodeURIComponent(item)}" ${d.items[item]?"checked":""}><span class="check-mark"></span><span class="check-label">${item}</span>${isPass?`<span class="passport-count-wrap"><small>Jumlah Paspor Diterima</small><input id="passportCount" type="number" min="0" inputmode="numeric" value="${Number(d.passportCount)||""}" placeholder="0"></span>`:""}</label>`}).join("")}</div><div class="check-missing" id="checkMissing">${sum.missing.length?`<b>Belum Lengkap</b><span>${sum.missing.join(" · ")}</span>`:"<b>✓ Checklist Lengkap</b>"}</div><label class="check-note">Catatan<textarea id="checkNote" rows="3" placeholder="Tambahkan catatan operasional..."></textarea></label><div class="modal-foot"><button class="btn ghost" id="cancelChecklist" type="button">Batal</button><button class="btn primary" id="saveChecklist" type="button">Simpan Checklist</button></div>`;
+  modal.querySelector("#checkNote").value=d.note||"";
+  modalManager.open("checklist");
+  const updatePreview=()=>{const items={};modal.querySelectorAll("[data-check-item]").forEach(cb=>items[decodeURIComponent(cb.dataset.checkItem)]=cb.checked);const preview=getChecklistSummary({items,passportCount:modal.querySelector("#passportCount")?.value||""});modal.querySelector("#checkPercent").textContent=preview.percent+"%";modal.querySelector("#checkProgressBar").style.width=preview.percent+"%";modal.querySelector("#checkMissing").innerHTML=preview.missing.length?`<b>Belum Lengkap</b><span>${preview.missing.join(" · ")}</span>`:`<b>✓ Checklist Lengkap</b>`;};
+  modal.querySelectorAll("[data-check-item],#passportCount").forEach(el=>el.addEventListener("input",updatePreview));
+  modal.querySelector("#closeChecklist").onclick=closeChecklistModal;modal.querySelector("#cancelChecklist").onclick=closeChecklistModal;modal.querySelector("#saveChecklist").onclick=()=>saveChecklist(eventId);
+  requestAnimationFrame(()=>modal.querySelector("[data-check-item]")?.focus());
+}
+function saveChecklist(eventId){const {modal}=ensureChecklistModal();const items={};modal.querySelectorAll("[data-check-item]").forEach(cb=>items[decodeURIComponent(cb.dataset.checkItem)]=cb.checked);const passportCount=Number(modal.querySelector("#passportCount")?.value||0);if(items[CHECKLIST_ITEMS[8]]&&passportCount<=0){toast("Jumlah paspor diterima wajib diisi");return;}const note=modal.querySelector("#checkNote")?.value||"";const summary=getChecklistSummary({items,passportCount});checklistsByEventId[String(eventId)]={items,passportCount,note,completedCount:summary.completed,totalItems:summary.total,percentage:summary.percent,status:summary.status,updatedAt:new Date().toISOString()};saveChecklists();closeChecklistModal();render();const e=findEvent(eventId);if(e)openDrawer(eventId);toast("Checklist disimpan");}
+function closeChecklistModal(){if(document.getElementById("checklistModal")) modalManager.close();}
 const modalManager=(()=>{
  let activeModal=null,suppressUntil=0;
- const refs={import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")}};
+ const refs={import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")},checklist:{modal:()=>$("#checklistModal"),backdrop:()=>$("#checklistBackdrop")}};
  function hide(el){if(!el)return;el.classList.remove("open");el.hidden=true;el.setAttribute("aria-hidden","true");el.setAttribute("inert","");el.style.display="none";el.style.visibility="hidden";el.style.opacity="0";el.style.pointerEvents="none";}
  function forceCloseAll(){clearTimeout(window.__importCloseTimer);clearTimeout(window.__scheduleCloseTimer);Object.values(refs).forEach(p=>{hide(p.modal());hide(p.backdrop())});document.querySelectorAll('[data-modal-layer="stale"]').forEach(el=>el.remove());activeModal=null;document.body.classList.remove("modal-open");document.body.style.removeProperty("overflow");document.body.style.removeProperty("touch-action");document.documentElement.style.removeProperty("overflow");}
- function open(type){if(type!=="import"&&type!=="schedule")return false;forceCloseAll();const modal=refs[type].modal(),back=refs[type].backdrop();if(!modal||!back)return false;activeModal=type;document.body.classList.add("modal-open");document.body.style.overflow="hidden";document.body.style.touchAction="none";[back,modal].forEach(el=>{el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";el.classList.add("open")});return true;}
+ function open(type){if(type!=="import"&&type!=="schedule"&&type!=="checklist")return false;forceCloseAll();const modal=refs[type].modal(),back=refs[type].backdrop();if(!modal||!back)return false;activeModal=type;document.body.classList.add("modal-open");document.body.style.overflow="hidden";document.body.style.touchAction="none";[back,modal].forEach(el=>{el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";el.classList.add("open")});return true;}
  function close(){suppressUntil=Date.now()+120;forceCloseAll();}
  return{open,close,forceCloseAll,get active(){return activeModal},get suppressUntil(){return suppressUntil}};
 })();
@@ -20877,7 +20936,7 @@ function syncModalLock(){if(!modalManager.active)document.body.classList.remove(
   function sanitize(){
     if(userInteracted) return;
     try{
-      ['importModal','scheduleModal','importBackdrop','scheduleBackdrop'].forEach(id=>{
+      ['importModal','scheduleModal','importBackdrop','scheduleBackdrop','checklistModal','checklistBackdrop'].forEach(id=>{
         const el=document.getElementById(id); if(!el)return;
         el.classList.remove('open');
         el.hidden=true;
@@ -21390,8 +21449,9 @@ setTimeout(()=>window.CGKSync?.init(),0);
     snapshot.attendanceRows.forEach((r,idx)=>{
       if(y>257){addFooterBand(doc,doc.getNumberOfPages(),doc.getNumberOfPages(),W,H,dark,muted,white);doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;drawSectionTitle(doc,'ATTENDANCE DETAIL (CONTINUED)',margin,y,green,olive);y+=5.5;drawTableHeader();}
       const type=r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA';
-      const row=[String(idx+1),new Date(r.event.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),type,pdfText(handlingTime(r.event)),pdfText(r.event.flight||'-'),routeText(r.event.route),pdfText(r.event.pax??'-'),'CHECKED IN',pdfText(r.incentiveLabel)];
-      const rowH=8.2;let x=x0;
+      const aux=r.event.type==='DEPARTURE_CGK'?getOfficeDeparture(r.event):getReturnDeparture(r.event); const mainTime=pdfText(handlingTime(r.event)); const auxTime=aux?`${aux.time}${aux.date!==r.event.date?`\n${fmtDate(aux.date)}`:""}`:"";
+      const row=[String(idx+1),new Date(r.event.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),type,mainTime,pdfText(r.event.flight||'-'),routeText(r.event.route),pdfText(r.event.pax??'-'),'CHECKED IN',pdfText(r.incentiveLabel)];
+      const rowH=9.2;let x=x0;
       row.forEach((val,i)=>{
         doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,widths[i],rowH,'FD');
         doc.setTextColor(...dark);doc.setFont('helvetica',i===1||i===4||i===8?'bold':'normal');doc.setFontSize(6.15);
@@ -21401,7 +21461,9 @@ setTimeout(()=>window.CGKSync?.init(),0);
         } else if(i===7){
           const badgeW=Math.min(widths[i]-4,23),badgeX=x+(widths[i]-badgeW)/2,badgeY=y+1.7;doc.setFillColor(...cream);safeRoundRect(doc,badgeX,badgeY,badgeW,4.8,2.1,'F');doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(...green);safePdfText(doc,val,badgeX+badgeW/2,badgeY+3.25,{align:'center'});
         } else {
-          const align=i===0||i===3||i===6?'center':'left';safePdfText(doc,val,align==='center'?x+widths[i]/2:x+2.2,y+5.1,{align});
+          const align=i===0||i===3||i===6?'center':'left';
+          if(i===3 && auxTime){ safePdfText(doc,val,x+widths[i]/2,y+3.9,{align:'center'}); doc.setFontSize(4.8); doc.setTextColor(...muted); safePdfText(doc,(r.event.type==='DEPARTURE_CGK'?'Kantor ':'Handling ')+auxTime.replace(/\n/g,' · '),x+widths[i]/2,y+7.0,{align:'center'}); }
+          else { safePdfText(doc,val,align==='center'?x+widths[i]/2:x+2.2,y+5.1,{align}); }
         }
         x+=widths[i];
       });
