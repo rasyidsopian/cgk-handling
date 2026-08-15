@@ -21268,19 +21268,26 @@ setTimeout(()=>window.CGKSync?.init(),0);
       doc.line(194,12,210,24);
     }catch(_){ }
 
-    // Header
+    // Header — keep the title inside a fixed left column so it can never collide with report metadata.
     if(logo){try{doc.addImage(logo,'PNG',margin,8,16,16,undefined,'FAST');}catch(_){} }
-    doc.setTextColor(...green);doc.setFont('times','bold');doc.setFontSize(21.5);
-    safePdfText(doc,'HAMDAN TOUR HANDLING REPORT',35,15.5);
-    doc.setFont('helvetica','normal');doc.setFontSize(8.8);doc.setTextColor(...muted);
-    safePdfText(doc,'Operational Attendance & Handling Incentive Report',35,21.5);
+    const titleX=35, titleMaxW=105, metaX=148;
+    doc.setTextColor(...green);doc.setFont('times','bold');
+    let titleSize=21.5;
+    while(titleSize>15.5){
+      doc.setFontSize(titleSize);
+      if(doc.getTextWidth('HAMDAN TOUR HANDLING REPORT')<=titleMaxW) break;
+      titleSize-=0.5;
+    }
+    safePdfText(doc,'HAMDAN TOUR HANDLING REPORT',titleX,15.5);
+    doc.setFont('helvetica','normal');doc.setFontSize(8.2);doc.setTextColor(...muted);
+    safePdfText(doc,'Operational Attendance & Handling Incentive Report',titleX,21.5);
 
     doc.setFont('helvetica','bold');doc.setFontSize(6.9);doc.setTextColor(...green);
-    safePdfText(doc,'REPORT GENERATED',145,12.2);
+    safePdfText(doc,'REPORT GENERATED',metaX,12.2);
     doc.setFont('helvetica','normal');doc.setFontSize(7.6);doc.setTextColor(...dark);
-    safePdfText(doc,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),145,17.3);
-    doc.setFont('helvetica','bold');doc.setFontSize(6.9);doc.setTextColor(...green);safePdfText(doc,'REPORT ID',145,22.2);
-    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(...dark);safePdfText(doc,pdfText(snapshot.reportId),145,26.9);
+    safePdfText(doc,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),metaX,17.3);
+    doc.setFont('helvetica','bold');doc.setFontSize(6.9);doc.setTextColor(...green);safePdfText(doc,'REPORT ID',metaX,22.2);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(...dark);safePdfText(doc,pdfText(snapshot.reportId),metaX,26.9);
     doc.setDrawColor(...olive);doc.setLineWidth(.55);doc.line(margin,32,W-margin,32);
     y=38;
 
