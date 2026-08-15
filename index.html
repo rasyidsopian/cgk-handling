@@ -21235,6 +21235,8 @@ setTimeout(()=>window.CGKSync?.init(),0);
   function safeRect(doc,x,y,w,h,style='FD',radius=0){const xx=pdfNum(x),yy=pdfNum(y),ww=Math.max(0,pdfNum(w)),hh=Math.max(0,pdfNum(h));try{if(radius>0)doc.roundedRect(xx,yy,ww,hh,pdfNum(radius),pdfNum(radius),style);else doc.rect(xx,yy,ww,hh,style);}catch(e){try{doc.rect(xx,yy,ww,hh,style);}catch(_){}}}
     function routeText(route){return pdfText(route).replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').replace(/\s+/g,' ').trim();}
   function safeRoundRect(doc,x,y,w,h,radius=0,style='FD'){return safeRect(doc,x,y,w,h,style,radius);}
+  // PDF helper preflight: these helpers must exist before any PDF rendering starts.
+  if(typeof safeRect!=='function' || typeof safeRoundRect!=='function') throw new Error('PDF geometry helpers unavailable');
   function drawSectionTitle(doc,title,x,y,green,olive){
     doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);safePdfText(doc,title,x,y);
     const tw=Math.max(28,doc.getTextWidth(title));
@@ -21318,9 +21320,20 @@ setTimeout(()=>window.CGKSync?.init(),0);
     const totalW=widths.reduce((a,b)=>a+b,0);
     const x0=margin + Math.max(0,(contentW-totalW)/2);
     const drawTableHeader=()=>{
-      let x=x0;doc.setFillColor(...dark);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(6.4);
-      headers.forEach((h,i)=>{safeRoundRect(doc,x,y,widths[i],7.2,i===0||i===headers.length-1?0.8:0.0,'F');safePdfText(doc,h,x+2,y+4.7);x+=widths[i];});
-      y+=7.2;
+      const headerH=7.2;
+      // Draw ONE continuous dark-green background across the entire header row.
+      doc.setFillColor(...dark);
+      safeRect(doc,x0,y,totalW,headerH,'F');
+      let x=x0;
+      doc.setTextColor(...white);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(6.4);
+      headers.forEach((h,i)=>{
+        const align=(i===0||i===3||i===6)?'center':'left';
+        safePdfText(doc,h,align==='center'?x+widths[i]/2:x+2,y+4.7,{align});
+        x+=widths[i];
+      });
+      y+=headerH;
     };
     drawTableHeader();
     snapshot.attendanceRows.forEach((r,idx)=>{
@@ -21350,10 +21363,27 @@ setTimeout(()=>window.CGKSync?.init(),0);
     const dHeaders=['DATE','ATTENDANCE','DEPARTURE','ARRIVAL','DAILY INCENTIVE'];
     const dWidths=[44,35,30,26,43];
     const dTotal=dWidths.reduce((a,b)=>a+b,0);const dx0=margin+(contentW-dTotal)/2;
-    let x=dx0;doc.setFillColor(...dark);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(6.2);
-    dHeaders.forEach((h,i)=>{safeRect(doc,x,y,dWidths[i],6.8,'F');safePdfText(doc,h,x+2,y+4.4);x+=dWidths[i];});y+=6.8;
+    let x=dx0;
+    const dailyHeaderH=6.8;
+    doc.setFillColor(...dark);
+    safeRect(doc,dx0,y,dTotal,dailyHeaderH,'F');
+    doc.setTextColor(...white);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(6.2);
+    dHeaders.forEach((h,i)=>{
+      safePdfText(doc,h,i===0?x+2:x+dWidths[i]/2,y+4.4,{align:i===0?'left':'center'});
+      x+=dWidths[i];
+    });
+    y+=dailyHeaderH;
     snapshot.dailyBreakdown.forEach((d,idx)=>{
-      if(y>270){doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;drawSectionTitle(doc,'DAILY INCENTIVE BREAKDOWN (CONTINUED)',margin,y,green,olive);y+=5.5;x=dx0;doc.setFillColor(...dark);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(6.2);dHeaders.forEach((h,i)=>{safeRect(doc,x,y,dWidths[i],6.8,'F');safePdfText(doc,h,x+2,y+4.4);x+=dWidths[i];});y+=6.8;}
+      if(y>270){doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;drawSectionTitle(doc,'DAILY INCENTIVE BREAKDOWN (CONTINUED)',margin,y,green,olive);y+=5.5;x=dx0;
+        doc.setFillColor(...dark);
+        safeRect(doc,dx0,y,dTotal,dailyHeaderH,'F');
+        doc.setTextColor(...white);
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(6.2);
+        dHeaders.forEach((h,i)=>{safePdfText(doc,h,i===0?x+2:x+dWidths[i]/2,y+4.4,{align:i===0?'left':'center'});x+=dWidths[i];});
+        y+=dailyHeaderH;}
       const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
       const vals=[label,String(d.attended.length),String(d.departures),String(d.arrivals),d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount)];
       x=dx0;vals.forEach((val,i)=>{doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,dWidths[i],6.8,'FD');doc.setFont('helvetica',i===4?'bold':'normal');doc.setFontSize(6.1);doc.setTextColor(...dark);safePdfText(doc,val,i===0?x+2:x+dWidths[i]/2,y+4.35,{align:i===0?'left':'center'});x+=dWidths[i];});y+=6.8;
