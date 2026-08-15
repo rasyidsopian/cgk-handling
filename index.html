@@ -20866,6 +20866,41 @@ const modalManager=(()=>{
  return{open,close,forceCloseAll,get active(){return activeModal},get suppressUntil(){return suppressUntil}};
 })();
 function syncModalLock(){if(!modalManager.active)document.body.classList.remove("modal-open");}
+
+/* V36 iOS/PWA initial UI sanitizer. Runs only before first user interaction. */
+(function hardenInitialUiState(){
+  let userInteracted=false;
+  const markInteraction=()=>{ userInteracted=true; };
+  window.addEventListener('pointerdown',markInteraction,{once:true,passive:true});
+  window.addEventListener('touchstart',markInteraction,{once:true,passive:true});
+  window.addEventListener('keydown',markInteraction,{once:true,passive:true});
+  function sanitize(){
+    if(userInteracted) return;
+    try{
+      ['importModal','scheduleModal','importBackdrop','scheduleBackdrop'].forEach(id=>{
+        const el=document.getElementById(id); if(!el)return;
+        el.classList.remove('open');
+        el.hidden=true;
+        el.setAttribute('aria-hidden','true');
+        el.setAttribute('inert','');
+        el.style.setProperty('display','none','important');
+        el.style.setProperty('visibility','hidden','important');
+        el.style.setProperty('opacity','0','important');
+        el.style.setProperty('pointer-events','none','important');
+        try{el.blur?.();}catch(_){}
+      });
+      document.querySelectorAll('.report-root').forEach(el=>el.remove());
+      document.body.classList.remove('modal-open','report-modal-open','drawer-open','overlay-open','body-locked','scroll-locked');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('touch-action');
+      document.documentElement.style.removeProperty('overflow');
+      const ae=document.activeElement;
+      if(ae && ae!==document.body && ['INPUT','TEXTAREA','SELECT','BUTTON'].includes(ae.tagName)) { try{ae.blur?.();}catch(_){} }
+    }catch(err){ console.warn('[CGK] initial UI sanitize skipped',err); }
+  }
+  const boot=()=>{ sanitize(); setTimeout(sanitize,250); setTimeout(sanitize,800); };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
+})();
 function forceCloseAllModals(){modalManager.forceCloseAll();}
 function prepareModal(){}
 function resetModalElement(){modalManager.forceCloseAll();}
@@ -21173,7 +21208,16 @@ setTimeout(()=>window.CGKSync?.init(),0);
     if(root?. _cleanup) root._cleanup();
     _baseClose(focusBack);
   };
-  function openReport(){buildReportModal();}
+  function openReport(){
+  try{
+    forceCloseAllModals();
+    document.querySelectorAll('.report-root').forEach(el=>el.remove());
+    buildReportModal();
+  }catch(err){
+    console.error('[CGK] openReport failed',err);
+    try{toast('Gagal membuka report.');}catch(_){}
+  }
+}
   function getLiveEvents(){return typeof allEvents==='function'?allEvents():[];}
   function getLiveAttendance(){return typeof attendanceByEventId!=='undefined'?attendanceByEventId:{};}
   function getAttendedRows(){const events=getLiveEvents();const attendance=getLiveAttendance();return events.filter(e=>attendance[String(e.id)]?.checkedIn).map(e=>({event:{...e},attendance:{...attendance[String(e.id)]}}));}
@@ -21434,5 +21478,22 @@ setTimeout(()=>window.CGKSync?.init(),0);
 })();
 </script>
 
+<script>
+window.addEventListener('pageshow',()=>{
+  try{
+    document.querySelectorAll('#importModal,#scheduleModal,#importBackdrop,#scheduleBackdrop').forEach(el=>{
+      if(!el.classList.contains('open')){
+        el.hidden=true;
+        el.setAttribute('aria-hidden','true');
+        el.setAttribute('inert','');
+        el.style.setProperty('display','none','important');
+        el.style.setProperty('pointer-events','none','important');
+        el.style.setProperty('visibility','hidden','important');
+        el.style.setProperty('opacity','0','important');
+      }
+    });
+  }catch(_){}
+},{once:true});
+</script>
 </body>
 </html>
