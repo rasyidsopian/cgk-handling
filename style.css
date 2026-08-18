@@ -129,3 +129,7 @@ body.operation-lock{overflow:hidden!important;touch-action:none;}
 #staffPoster .poster-actions{position:static;flex:none;background:#fff}
 #staffPoster .poster-actions .poster-close{position:static}
 @media(max-width:760px){.poster-preview-card{width:94vw;max-height:90vh}.poster-preview-stage{padding:10px}.poster-preview-head{padding:13px 14px}.poster-preview-stage img{width:100%}}
+
+/* V35 — Excel-backed group metadata */
+.event .group-name{font-size:7px;margin-top:4px;font-weight:850;letter-spacing:.22px;line-height:1.25;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail-hero .group-line{display:block;margin-top:7px;color:#d7eadf;font-size:9px;font-weight:800;letter-spacing:.45px;line-height:1.35}

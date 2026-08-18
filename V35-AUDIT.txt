@@ -1,0 +1,13 @@
+CGK Handling V35 — Excel Group Metadata Update
+
+Base: V34.
+Source data: Table Jadwal PIC Group Umroh-1.xlsx (JUL 26 through MAR 27).
+
+Changes:
+- Adds group name format DD MMM YY + 2-letter airline code (example: 05 AUG 26 QR).
+- Adds group departure date to both departure and arrival handling details.
+- Applies Excel PAX when Excel provides a value; combined same-flight groups are aggregated.
+- Adds group name to calendar event cards.
+- Adds group name / departure date / PAX / package summary to Staff Handling JPG preview.
+- Existing event handling date/time/route/flight logic is unchanged.
+- sync-config.js unchanged.
