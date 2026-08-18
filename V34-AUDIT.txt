@@ -1,0 +1,24 @@
+CGK Handling V34 - Staff Modal / JPG Preview Stability Fix
+
+ROOT CAUSE FIXED
+- Removed duplicated legacy + v33 implementations of staff/checklist modal functions and keyboard/click handlers.
+- Replaced them with one operationUI lifecycle for checklist/staff/staff management/member dialogs.
+- Closed operation layers now use hidden + inert + aria-hidden + display:none + visibility:hidden + pointer-events:none + opacity:0.
+- Body overflow/touch locks are released by the same cleanup path.
+- Staff JPG preview uses an isolated Canvas-generated image preview; no html2canvas/CDN dependency and no second staff selector flow.
+- One handler per staff/checklist/poster control.
+
+STATIC QA
+- Inline JavaScript syntax: PASS
+- Duplicate HTML IDs: NONE
+- One openStaffModal implementation: PASS
+- One openStaffPoster implementation: PASS
+- One closeStaffModal implementation: PASS
+- sync-config.js: unchanged from V33
+
+Manual browser acceptance to verify after deployment:
+1. Detail -> Petugas Handling -> X -> drawer remains clickable.
+2. Reopen Petugas Handling -> no duplicate backdrop.
+3. Detail -> Tampilkan Petugas Handling -> image preview opens directly.
+4. Download JPG -> downloads Jadwal_Handling_DATE_FLIGHT.jpg.
+5. Close poster -> drawer/buttons clickable, no invisible overlay/textbox.

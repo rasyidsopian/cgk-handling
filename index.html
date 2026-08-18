@@ -22,7 +22,8 @@
 .staff-manage-tools{display:flex;justify-content:flex-end;padding:12px 20px;border-bottom:1px solid #e6eee8;background:#fbfdfc}.staff-manage-list{padding:12px 20px 16px;overflow:auto;display:grid;gap:8px;max-height:48vh}.staff-manage-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid #e0e9e3;border-radius:12px;background:#fff}.staff-manage-row.is-inactive{opacity:.6;background:#f6f8f7}.staff-manage-name{font-size:12px;font-weight:750;color:#193f30}.staff-manage-status{font-size:9px;color:#76857e;margin-top:3px}.staff-manage-actions{display:flex;gap:6px;flex-wrap:wrap}.staff-manage-modal{max-width:620px}.staff-member-modal{max-width:460px}.form-error{color:#b33d2e;background:#fff2ef;border:1px solid #f2c0b8;border-radius:10px;padding:8px 10px;font-size:10px}.staff-chip-btn.selected{background:#0a6b42;color:#fff;border-color:#0a6b42;box-shadow:0 2px 8px rgba(10,107,66,.14)}.poster-visual{width:540px;height:675px;padding:28px 28px 22px;background:#fff;color:#183a2d;box-sizing:border-box;display:flex;flex-direction:column}.poster-visual .poster-top{display:flex;align-items:center;gap:12px}.poster-visual .poster-top img{width:58px;height:58px;border-radius:16px;object-fit:cover}.poster-visual .poster-top h3{font-size:25px;margin:4px 0 0;line-height:1.1}.poster-subline{margin-top:10px;font-size:18px;font-weight:800;color:#0a6b42;letter-spacing:.02em}.poster-flight-band{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px;background:#0a6b42;color:#fff;border-radius:16px;padding:15px}.poster-flight-band span{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.74}.poster-flight-band b{display:block;margin-top:4px;font-size:18px}.poster-route{margin-top:12px;padding:10px 12px;border-radius:12px;background:#eef7f0;color:#0a6b42;font-size:15px;font-weight:850;letter-spacing:.04em}.poster-package{margin-top:14px;padding:12px 14px;border:1px solid #dce8e0;border-radius:14px;background:#fbfdfc}.poster-package b{display:block;margin-top:6px;font-size:12px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.poster-staff-wrap{padding:16px 0 0}.poster-staff-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.poster-staff-item{padding:10px 11px;border:1px solid #dfe9e3;border-radius:12px;background:#f7faf8;color:#1e4434;font-size:11px;font-weight:750}.poster-footer{margin-top:auto;padding-top:14px;border-top:1px solid #e5ece7;color:#87958e;font-size:9px}.poster-actions{position:relative}.poster-actions .poster-close{position:absolute;right:10px;top:10px}.staff-poster{align-items:center;justify-content:center}.staff-poster .poster-card{max-width:96vw;max-height:94vh;overflow:auto}@media(max-width:760px){.staff-manage-row{align-items:flex-start;flex-direction:column}.staff-manage-actions{width:100%}.poster-visual{width:90vw;height:auto;min-height:112.5vw;max-height:78vh;padding:22px}.poster-visual .poster-top h3{font-size:20px}.poster-flight-band{grid-template-columns:1fr 1fr 1fr}.poster-flight-band b{font-size:15px}.poster-staff-list{grid-template-columns:1fr 1fr}.poster-actions{justify-content:flex-end}.poster-actions .poster-close{display:none}}
 </style>
 <style id="ops-feature-styles">
-.operation-modal-backdrop{position:fixed;inset:0;background:rgba(8,24,17,.34);z-index:1100;opacity:0;pointer-events:none;transition:opacity .16s}.operation-modal-backdrop.open{opacity:1;pointer-events:auto}.operation-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,92vw);max-height:min(82vh,760px);background:#fff;border:1px solid #dfe9e3;border-radius:18px;box-shadow:0 30px 90px rgba(10,37,27,.2);z-index:1101;display:flex;flex-direction:column;overflow:hidden}.operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{display:none!important}.operation-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid #e4ebe6;flex:none}.operation-modal-head h3{margin:4px 0 0;font-size:18px;color:#173c2d}.checklist-summary{padding:13px 20px 12px;border-bottom:1px solid #e9efeb;background:#fbfdfc;display:grid;grid-template-columns:130px 1fr 95px;gap:12px;align-items:center;flex:none}.checklist-summary strong{display:block;margin-top:3px;font-size:20px;color:#0a6b42}.checklist-summary small{font-size:9px;color:#7a8881;text-align:right}.progress-track{height:8px;background:#e5eee8;border-radius:999px;overflow:hidden}.progress-track span{display:block;height:100%;width:0;background:#0a6b42;border-radius:999px;transition:width .18s}.checklist-scroll{padding:12px 20px 16px;overflow-y:auto;min-height:0;flex:1}.checklist-group{margin-bottom:12px}.checklist-group:last-child{margin-bottom:0}.checklist-group-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 7px;color:#6f7d76;font-size:9px;letter-spacing:.08em;font-weight:800}.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid #e1eae4;background:#fff;border-radius:11px;margin-top:6px;cursor:pointer;transition:.14s}.checklist-item:hover{border-color:#9ac9ad;background:#f7fbf9}.checklist-item.checked{border-color:#b9dfc7;background:#eef8f1}.checklist-item input{width:17px;height:17px;accent-color:#0a6b42;flex:none}.checklist-item label{font-size:11px;color:#274438;font-weight:650;cursor:pointer;flex:1}.checklist-item .checkmark{font-size:9px;font-weight:800;color:#0a6b42}.operation-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e4ebe6;background:#fff;flex:none}.operation-hint{margin:0;padding:0 20px 12px;color:#74817b;font-size:10px;line-height:1.5}.staff-modal{max-width:560px}.staff-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:4px 20px 16px;overflow:auto;min-height:0}.staff-chip-btn{border:1px solid #dfe8e3;background:#fff;color:#28473a;border-radius:11px;min-height:44px;padding:8px 10px;font:700 11px Inter,system-ui,sans-serif;cursor:pointer;transition:.14s}.staff-chip-btn.selected{background:#0a6b42;color:#fff;border-color:#0a6b42;box-shadow:0 5px 14px rgba(10,107,66,.13)}.staff-chip-btn.selected::before{content:'✓ ';font-weight:900}.operation-card{margin:12px 0 0;padding:13px;border:1px solid #e3ebe6;background:#fbfdfc;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.operation-card>div:first-child{min-width:0}.operation-card strong{display:block;margin-top:4px;font-size:12px;color:#193f30}.operation-card small{display:block;margin-top:3px;color:#77857e;font-size:9px}.checklist-card{background:#f7fbf8}.staff-card{background:#fff}.staff-chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.staff-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#eaf5ee;color:#0a6b42;font-size:8px;font-weight:800;border:1px solid #cde5d5}.empty-inline{font-size:9px;color:#84918b}.operation-actions{display:flex;gap:6px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}.staff-poster{position:fixed;inset:0;z-index:1200;background:rgba(8,24,17,.42);display:flex;align-items:center;justify-content:center;padding:20px}.poster-card{width:min(540px,94vw);background:#fff;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden;border:1px solid #dce8e1}.poster-top{display:grid;grid-template-columns:54px 1fr 40px;align-items:center;gap:12px;padding:18px 20px;background:#0a6b42;color:#fff}.poster-top img{width:54px;height:54px;border-radius:15px;background:#fff;object-fit:cover}.poster-top .eyebrow{color:#b9d8ca}.poster-top h3{margin:4px 0 0;font-size:20px;letter-spacing:.02em}.poster-top .icon-btn{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}.poster-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 20px;border-bottom:1px solid #e5ece7}.poster-meta-item{padding:10px;border:1px solid #e4ece7;border-radius:12px;background:#fbfdfc}.poster-meta-item span{display:block;color:#7a8881;font-size:8px;text-transform:uppercase;letter-spacing:.08em}.poster-meta-item b{display:block;margin-top:4px;color:#1b4132;font-size:11px}.poster-staff-wrap{padding:16px 20px}.poster-staff-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.poster-staff-item{padding:11px 12px;border:1px solid #dfe9e3;border-radius:12px;background:#f7faf8;color:#1e4434;font-size:11px;font-weight:750}.poster-actions{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e5ece7;background:#fbfdfc}@media(max-width:760px){.operation-modal{width:94vw;max-height:82vh}.checklist-summary{grid-template-columns:95px 1fr 80px}.staff-selector{grid-template-columns:1fr 1fr}.operation-card{align-items:flex-start;flex-direction:column}.operation-actions{width:100%;justify-content:flex-start}.poster-card{width:96vw}.poster-meta{grid-template-columns:1fr 1fr}.poster-staff-list{grid-template-columns:1fr}.poster-top h3{font-size:16px}}
+.operation-modal-backdrop{position:fixed;inset:0;background:rgba(8,24,17,.34);z-index:1100;opacity:0;pointer-events:none;transition:opacity .16s}.operation-modal-backdrop.open{opacity:1;pointer-events:auto}.operation-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,92vw);max-height:min(82vh,760px);background:#fff;border:1px solid #dfe9e3;border-radius:18px;box-shadow:0 30px 90px rgba(10,37,27,.2);z-index:1101;display:flex;flex-direction:column;overflow:hidden}.operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{display:none!important}
+.operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{visibility:hidden!important;pointer-events:none!important;opacity:0!important} body.operation-lock{overflow:hidden!important}.operation-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid #e4ebe6;flex:none}.operation-modal-head h3{margin:4px 0 0;font-size:18px;color:#173c2d}.checklist-summary{padding:13px 20px 12px;border-bottom:1px solid #e9efeb;background:#fbfdfc;display:grid;grid-template-columns:130px 1fr 95px;gap:12px;align-items:center;flex:none}.checklist-summary strong{display:block;margin-top:3px;font-size:20px;color:#0a6b42}.checklist-summary small{font-size:9px;color:#7a8881;text-align:right}.progress-track{height:8px;background:#e5eee8;border-radius:999px;overflow:hidden}.progress-track span{display:block;height:100%;width:0;background:#0a6b42;border-radius:999px;transition:width .18s}.checklist-scroll{padding:12px 20px 16px;overflow-y:auto;min-height:0;flex:1}.checklist-group{margin-bottom:12px}.checklist-group:last-child{margin-bottom:0}.checklist-group-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 7px;color:#6f7d76;font-size:9px;letter-spacing:.08em;font-weight:800}.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid #e1eae4;background:#fff;border-radius:11px;margin-top:6px;cursor:pointer;transition:.14s}.checklist-item:hover{border-color:#9ac9ad;background:#f7fbf9}.checklist-item.checked{border-color:#b9dfc7;background:#eef8f1}.checklist-item input{width:17px;height:17px;accent-color:#0a6b42;flex:none}.checklist-item label{font-size:11px;color:#274438;font-weight:650;cursor:pointer;flex:1}.checklist-item .checkmark{font-size:9px;font-weight:800;color:#0a6b42}.operation-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e4ebe6;background:#fff;flex:none}.operation-hint{margin:0;padding:0 20px 12px;color:#74817b;font-size:10px;line-height:1.5}.staff-modal{max-width:560px}.staff-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:4px 20px 16px;overflow:auto;min-height:0}.staff-chip-btn{border:1px solid #dfe8e3;background:#fff;color:#28473a;border-radius:11px;min-height:44px;padding:8px 10px;font:700 11px Inter,system-ui,sans-serif;cursor:pointer;transition:.14s}.staff-chip-btn.selected{background:#0a6b42;color:#fff;border-color:#0a6b42;box-shadow:0 5px 14px rgba(10,107,66,.13)}.staff-chip-btn.selected::before{content:'✓ ';font-weight:900}.operation-card{margin:12px 0 0;padding:13px;border:1px solid #e3ebe6;background:#fbfdfc;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.operation-card>div:first-child{min-width:0}.operation-card strong{display:block;margin-top:4px;font-size:12px;color:#193f30}.operation-card small{display:block;margin-top:3px;color:#77857e;font-size:9px}.checklist-card{background:#f7fbf8}.staff-card{background:#fff}.staff-chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.staff-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#eaf5ee;color:#0a6b42;font-size:8px;font-weight:800;border:1px solid #cde5d5}.empty-inline{font-size:9px;color:#84918b}.operation-actions{display:flex;gap:6px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}.staff-poster{position:fixed;inset:0;z-index:1200;background:rgba(8,24,17,.42);display:flex;align-items:center;justify-content:center;padding:20px}.poster-card{width:min(540px,94vw);background:#fff;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden;border:1px solid #dce8e1}.poster-top{display:grid;grid-template-columns:54px 1fr 40px;align-items:center;gap:12px;padding:18px 20px;background:#0a6b42;color:#fff}.poster-top img{width:54px;height:54px;border-radius:15px;background:#fff;object-fit:cover}.poster-top .eyebrow{color:#b9d8ca}.poster-top h3{margin:4px 0 0;font-size:20px;letter-spacing:.02em}.poster-top .icon-btn{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}.poster-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 20px;border-bottom:1px solid #e5ece7}.poster-meta-item{padding:10px;border:1px solid #e4ece7;border-radius:12px;background:#fbfdfc}.poster-meta-item span{display:block;color:#7a8881;font-size:8px;text-transform:uppercase;letter-spacing:.08em}.poster-meta-item b{display:block;margin-top:4px;color:#1b4132;font-size:11px}.poster-staff-wrap{padding:16px 20px}.poster-staff-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.poster-staff-item{padding:11px 12px;border:1px solid #dfe9e3;border-radius:12px;background:#f7faf8;color:#1e4434;font-size:11px;font-weight:750}.poster-actions{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e5ece7;background:#fbfdfc}@media(max-width:760px){.operation-modal{width:94vw;max-height:82vh}.checklist-summary{grid-template-columns:95px 1fr 80px}.staff-selector{grid-template-columns:1fr 1fr}.operation-card{align-items:flex-start;flex-direction:column}.operation-actions{width:100%;justify-content:flex-start}.poster-card{width:96vw}.poster-meta{grid-template-columns:1fr 1fr}.poster-staff-list{grid-template-columns:1fr}.poster-top h3{font-size:16px}}
 </style>
 </head>
 <body>
@@ -261,7 +262,7 @@
 
 
 <script>
-/* CGK Handling v33 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
+/* CGK Handling v34 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
 (async function(){
   try {
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
@@ -21186,162 +21187,127 @@ const CHECKLIST_DEFINITION=[
     ['perlengkapan_bandara','Perlengkapan diterima di bandara']
   ]}
 ];
-function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function defaultChecklist(){const o={};CHECKLIST_DEFINITION.forEach(g=>g.items.forEach(([id])=>o[id]=false));return o;}
-function getChecklistState(eventId){
-  const saved=checklistByEventId[String(eventId)]||{};const state={...defaultChecklist(),...(saved||{})};
-  const total=Object.keys(state).length;const checked=Object.values(state).filter(Boolean).length;const percent=total?Math.round(checked/total*100):0;
-  return {state,total,checked,percent};
-}
-function openChecklistModal(eventId){
-  const e=findEvent(eventId);if(!e)return;
-  const modal=$("#checklistModal"),back=$("#operationBackdrop");
-  window.__checklistEditing={eventId:String(eventId),original:getChecklistState(eventId).state,draft:{...getChecklistState(eventId).state}};
-  $("#checklistModalTitle").textContent=`Checklist ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;
-  renderChecklistDraft();
-  modal.hidden=false;back.hidden=false;modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');modal.classList.add('open');back.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
-  requestAnimationFrame(()=>{const first=modal.querySelector('input');first?.focus({preventScroll:true});});
-}
-function renderChecklistDraft(){
-  const ctx=window.__checklistEditing;if(!ctx)return;const body=$("#checklistBody");
-  body.innerHTML=CHECKLIST_DEFINITION.map(g=>`<section class="checklist-group"><div class="checklist-group-title"><span>${escapeHTML(g.group)}</span><span>${g.items.filter(([id])=>ctx.draft[id]).length}/${g.items.length}</span></div>${g.items.map(([id,label])=>{const checked=!!ctx.draft[id];return `<label class="checklist-item ${checked?'checked':''}"><input type="checkbox" data-check-id="${id}" ${checked?'checked':''}><span class="check-label">${escapeHTML(label)}</span><span class="checkmark">${checked?'SELESAI':'BELUM'}</span></label>`}).join('')}</section>`).join('');
-  const total=Object.keys(ctx.draft).length,checked=Object.values(ctx.draft).filter(Boolean).length,pct=total?Math.round(checked/total*100):0;
-  $("#checklistProgressText").textContent=`${pct}%`;$("#checklistProgressBar").style.width=`${pct}%`;$("#checklistProgressMeta").textContent=`${checked}/${total} item selesai${pct===100?' · Checklist Lengkap':''}`;
-  body.querySelectorAll('[data-check-id]').forEach(inp=>inp.addEventListener('change',()=>{ctx.draft[inp.dataset.checkId]=inp.checked;renderChecklistDraft();}));
-}
-function closeChecklistModal(save=false){
-  const modal=$("#checklistModal"),back=$("#operationBackdrop");
-  if(save){const ctx=window.__checklistEditing;if(ctx){checklistByEventId[ctx.eventId]={...ctx.draft};saveChecklist();}}
-  modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__checklistEditing=null;render();
-}
-function renderStaffSelector(eventId,selected){
-  const box=$("#staffSelector");
-  const members=activeStaffMembers();
-  box.innerHTML=members.length?members.map(m=>`<button type="button" class="staff-chip-btn ${selected.has(m.id)?'selected':''}" data-staff-id="${escapeHTML(m.id)}"><span>${escapeHTML(m.name)}</span>${selected.has(m.id)?'<span class="staff-check">✓</span>':''}</button>`).join(''):'<div class="empty-inline" style="padding:12px 20px">Belum ada anggota handling aktif.</div>';
-  box.querySelectorAll('[data-staff-id]').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.dataset.staffId;if(selected.has(id))selected.delete(id);else selected.add(id);renderStaffSelector(eventId,selected);}));
-}
-function openStaffModal(eventId){
-  const e=findEvent(eventId);if(!e)return;
-  window.__checklistEditing=null;
-  const key=String(eventId);
-  const selected=new Set(Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[]);
-  window.__staffEditing={eventId:key,selected};
-  $("#staffModalTitle").textContent=`Petugas ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;
-  renderStaffSelector(key,selected);
-  const modal=$("#staffModal"),back=$("#operationBackdrop");
-  if(window.__checklistEditing)closeChecklistModal(false);
-  modal.hidden=false;back.hidden=false;modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');modal.classList.add('open');back.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
-}
-function closeStaffModal(save=false){
-  const modal=$("#staffModal"),back=$("#operationBackdrop"),ctx=window.__staffEditing;
-  if(save&&ctx){assignedHandlingStaff[ctx.eventId]=Array.from(ctx.selected);saveAssignedStaff();}
-  modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__staffEditing=null;
-  const id=ctx?.eventId;if(id&&document.getElementById('drawer')?.classList.contains('open'))openDrawer(id);else render();
-}
-function openStaffManage(){
-  if(window.__checklistEditing)closeChecklistModal(false);
-  if(window.__staffEditing)closeStaffModal(false);
-  renderStaffManageList();
-  const modal=$("#staffManageModal"),back=$("#operationBackdrop");modal.hidden=false;back.hidden=false;modal.classList.add('open');back.classList.add('open');modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
-}
-function closeStaffManage(){const modal=$("#staffManageModal"),back=$("#operationBackdrop");modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();}
-function renderStaffManageList(){
-  const box=$("#staffManageList");
-  box.innerHTML=handlingStaffMembers.map(m=>`<div class="staff-manage-row ${m.active?'':'is-inactive'}"><div><div class="staff-manage-name">${escapeHTML(m.name)}</div><div class="staff-manage-status">${m.active?'Aktif':'Nonaktif'}</div></div><div class="staff-manage-actions"><button class="btn ghost small" type="button" data-edit-staff="${escapeHTML(m.id)}">Edit</button>${m.active?`<button class="btn danger small" type="button" data-toggle-staff="${escapeHTML(m.id)}">Nonaktifkan</button>`:`<button class="btn primary small" type="button" data-toggle-staff="${escapeHTML(m.id)}">Aktifkan</button>`}</div></div>`).join('');
-  box.querySelectorAll('[data-edit-staff]').forEach(btn=>btn.addEventListener('click',()=>openStaffMemberModal(btn.dataset.editStaff)));
-  box.querySelectorAll('[data-toggle-staff]').forEach(btn=>btn.addEventListener('click',()=>toggleStaffMember(btn.dataset.toggleStaff)));
-}
-function toggleStaffMember(id){const m=handlingStaffMembers.find(x=>String(x.id)===String(id));if(!m)return;m.active=!m.active;saveStaffMembers();renderStaffManageList();toast(`${m.name} ${m.active?'diaktifkan':'dinonaktifkan'}`);}
-function openStaffMemberModal(id=null){
-  window.__editingStaffMemberId=id?String(id):null;
-  const m=id?handlingStaffMembers.find(x=>String(x.id)===String(id)):null;
-  $("#staffMemberModalTitle").textContent=m?'Edit Anggota Handling':'Tambah Anggota Handling';
-  $("#staffMemberNameInput").value=m?.name||'';$("#staffMemberError").hidden=true;
-  const modal=$("#staffMemberModal");modal.hidden=false;modal.setAttribute('aria-hidden','false');modal.classList.add('open');
-  setTimeout(()=>$("#staffMemberNameInput")?.focus(),0);
-}
-function closeStaffMember(){const modal=$("#staffMemberModal");modal.classList.remove('open');modal.hidden=true;modal.setAttribute('aria-hidden','true');$("#staffMemberError").hidden=true;document.activeElement?.blur?.();window.__editingStaffMemberId=null;}
-function saveStaffMemberForm(){
-  const input=$("#staffMemberNameInput"),err=$("#staffMemberError"),name=String(input.value||'').trim();
-  if(!name){err.textContent='Nama anggota wajib diisi.';err.hidden=false;return;}
-  const duplicate=handlingStaffMembers.find(m=>m.name.toLowerCase()===name.toLowerCase() && String(m.id)!==String(window.__editingStaffMemberId||''));
-  if(duplicate){err.textContent='Nama anggota sudah terdaftar.';err.hidden=false;return;}
-  if(window.__editingStaffMemberId){const m=handlingStaffMembers.find(x=>String(x.id)===String(window.__editingStaffMemberId));if(m)m.name=name;}
-  else handlingStaffMembers.push({id:makeStaffId(),name,active:true});
-  saveStaffMembers();closeStaffMember();renderStaffManageList();toast('Data anggota handling disimpan');
-}
-function openStaffPoster(eventId){
-  const e=findEvent(eventId);if(!e)return;
-  const key=String(eventId),ids=Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[];
-  const names=staffLabels(ids);
-  const modal=$("#staffPoster"),list=$("#posterStaffList");
-  const date=new Date(e.date+'T12:00:00');
-  const dateLabel=date.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
-  $("#posterTitle").textContent='JADWAL HANDLING';
-  $("#posterDateLine").textContent=dateLabel;
-  $("#posterFlight").textContent=e.flight||'-';
-  $("#posterHandling").textContent=e.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA';
-  $("#posterTime").textContent=handlingTime(e);
-  $("#posterRoute").textContent=String(e.route||'-').replaceAll('→',' - ');
-  $("#posterPackage").textContent=String(e.package||'-').replace(/\s+/g,' ').trim();
-  list.innerHTML=names.length?names.map((n,i)=>`<div class="poster-staff-item"><span>${String(i+1).padStart(2,'0')}</span>${escapeHTML(n)}</div>`).join(''):'<div class="poster-staff-item">Belum ada petugas handling yang dipilih.</div>';
-  window.__staffPosterEventId=String(eventId);
-  modal.hidden=false;modal.setAttribute('aria-hidden','false');modal.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
-}
-function closeStaffPoster(){const m=$("#staffPoster");m.classList.remove('open');m.hidden=true;m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__staffPosterEventId=null;}
-async function loadHtml2Canvas(){if(window.html2canvas)return window.html2canvas;return new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';sc.onload=()=>resolve(window.html2canvas);sc.onerror=reject;document.head.appendChild(sc);});}
-async function downloadStaffPosterImage(){
-  try{
-    const html2canvas=await loadHtml2Canvas();
-    const node=$("#staffPosterVisual");
-    const canvas=await html2canvas(node,{backgroundColor:'#ffffff',scale:2,useCORS:true,logging:false,width:540,height:675,windowWidth:540,windowHeight:675});
-    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.94));
-    if(!blob)throw new Error('Gagal membuat JPG');
-    const e=findEvent(window.__staffPosterEventId||'');
-    const a=document.createElement('a');a.download=`Jadwal_Handling_${e?.date||'schedule'}_${e?.flight||'event'}.jpg`;a.href=URL.createObjectURL(blob);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  }catch(err){console.error(err);toast('Gagal membuat JPG petugas handling');}
-}
-window.openChecklistModal=openChecklistModal;window.openStaffModal=openStaffModal;window.openStaffPoster=(id)=>openStaffPoster(id);window.openStaffManage=openStaffManage;
-$("#closeChecklist").onclick=()=>closeChecklistModal(false);$("#cancelChecklist").onclick=()=>closeChecklistModal(false);$("#saveChecklistBtn").onclick=()=>closeChecklistModal(true);
-$("#closeStaff").onclick=()=>closeStaffModal(false);$("#cancelStaff").onclick=()=>closeStaffModal(false);$("#saveStaffBtn").onclick=()=>closeStaffModal(true);
-$("#closeStaffPoster").onclick=closeStaffPoster;$("#posterCloseBtn").onclick=closeStaffPoster;$("#downloadStaffPoster").onclick=downloadStaffPosterImage;
-$("#closeStaffManage").onclick=closeStaffManage;$("#cancelStaffManage").onclick=closeStaffManage;$("#addStaffMemberBtn").onclick=()=>openStaffMemberModal();
-$("#closeStaffMember").onclick=closeStaffMember;$("#cancelStaffMember").onclick=closeStaffMember;$("#saveStaffMember").onclick=saveStaffMemberForm;
-$("#quickStaff").onclick=openStaffManage;
-$("#operationBackdrop").onclick=()=>{if(window.__checklistEditing)closeChecklistModal(false);else if(window.__staffEditing)closeStaffModal(false);else if(!$("#staffManageModal").hidden)closeStaffManage();};
-window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(window.__checklistEditing){e.preventDefault();closeChecklistModal(false);}else if(window.__staffEditing){e.preventDefault();closeStaffModal(false);}else if(!$("#staffMemberModal").hidden){e.preventDefault();closeStaffMember();}else if(!$("#staffManageModal").hidden){e.preventDefault();closeStaffManage();}else if(!$("#staffPoster").hidden){e.preventDefault();closeStaffPoster();}}});
-window.addEventListener('cgk-remote-state',()=>{if(window.__checklistEditing){const cur=getChecklistState(window.__checklistEditing.eventId).state;window.__checklistEditing.draft={...cur,...window.__checklistEditing.draft};renderChecklistDraft();}});
 
-/* v33: single lifecycle for operation modals + isolated JPG preview */
+function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function defaultChecklist(){const out={};CHECKLIST_DEFINITION.forEach(g=>g.items.forEach(([id])=>out[id]=false));return out;}
+function getChecklistState(eventId){
+  const saved=checklistByEventId[String(eventId)]||{};
+  const state={...defaultChecklist(),...(saved&&typeof saved==='object'?saved:{})};
+  const ids=CHECKLIST_DEFINITION.flatMap(g=>g.items.map(([id])=>id));
+  const checked=ids.filter(id=>state[id]===true).length;
+  const total=ids.length;
+  return {state,total,checked,percent:total?Math.round((checked/total)*100):0};
+}
+
+/* v34: ONE operation-modal lifecycle. The v31/v32/v33 duplicate modal handlers are intentionally removed. */
 const operationUI=(()=>{
   const modalIds=['checklistModal','staffModal','staffManageModal','staffMemberModal'];
+  const backId='operationBackdrop';
   let active=null;
   let lastTrigger=null;
-  function el(id){return document.getElementById(id)}
-  function hardHide(node){if(!node)return;node.classList.remove('open');node.hidden=true;node.setAttribute('aria-hidden','true');node.setAttribute('inert','');node.style.removeProperty('display');node.style.removeProperty('visibility');node.style.removeProperty('opacity');node.style.removeProperty('pointer-events');}
-  function hardShow(node){if(!node)return;node.hidden=false;node.removeAttribute('inert');node.setAttribute('aria-hidden','false');node.classList.add('open');node.style.removeProperty('display');node.style.removeProperty('visibility');node.style.removeProperty('opacity');node.style.removeProperty('pointer-events');}
-  function unlockBody(){document.body.classList.remove('operation-lock');if(!document.body.classList.contains('report-modal-open')&&!document.body.classList.contains('modal-open'))document.body.style.removeProperty('overflow');document.body.style.removeProperty('touch-action');}
-  function lockBody(){document.body.classList.add('operation-lock');document.body.style.overflow='hidden';}
+  const byId=id=>document.getElementById(id);
+
+  function hideNode(node){
+    if(!node)return;
+    if(node.contains(document.activeElement)) document.activeElement.blur?.();
+    node.classList.remove('open');
+    node.hidden=true;
+    node.setAttribute('aria-hidden','true');
+    node.setAttribute('inert','');
+    node.style.display='none';
+    node.style.visibility='hidden';
+    node.style.pointerEvents='none';
+    node.style.opacity='0';
+  }
+  function showNode(node,display='flex'){
+    if(!node)return;
+    node.hidden=false;
+    node.removeAttribute('inert');
+    node.setAttribute('aria-hidden','false');
+    node.style.display=display;
+    node.style.visibility='visible';
+    node.style.pointerEvents='auto';
+    node.style.opacity='1';
+    node.classList.add('open');
+  }
+  function bodyLockedByOtherUI(){
+    return document.body.classList.contains('report-modal-open') || document.body.classList.contains('modal-open');
+  }
+  function lockBody(){
+    document.body.classList.add('operation-lock');
+    document.body.style.overflow='hidden';
+    document.body.style.touchAction='none';
+  }
+  function unlockBody(){
+    document.body.classList.remove('operation-lock');
+    if(!bodyLockedByOtherUI()) document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('touch-action');
+  }
   function cleanup({restoreFocus=false}={}){
-    const focused=document.activeElement;
-    if(focused && modalIds.some(id=>el(id)?.contains(focused))) focused.blur?.();
-    modalIds.forEach(id=>hardHide(el(id)));
-    hardHide(el('operationBackdrop'));
+    const focusTarget=lastTrigger;
+    modalIds.forEach(id=>hideNode(byId(id)));
+    hideNode(byId(backId));
     active=null;
     unlockBody();
-    document.querySelectorAll('.operation-modal-backdrop.open').forEach(n=>{if(n.id!=='operationBackdrop'){n.classList.remove('open');n.hidden=true;n.setAttribute('aria-hidden','true');n.setAttribute('inert','')}});
-    if(restoreFocus && lastTrigger && document.contains(lastTrigger)){try{lastTrigger.focus({preventScroll:true})}catch(_){}}
+    if(restoreFocus && focusTarget && document.contains(focusTarget)){
+      try{focusTarget.focus({preventScroll:true});}catch(_){/* no-op */}
+    }
   }
-  function open(id,trigger=null){cleanup();const modal=el(id),back=el('operationBackdrop');if(!modal||!back)return false;active=id;lastTrigger=trigger||document.activeElement;hardShow(back);hardShow(modal);lockBody();return true;}
-  function close(id,{restoreFocus=true}={}){if(id && active && active!==id){hardHide(el(id));return;}cleanup({restoreFocus});}
-  return {open,close,cleanup,get active(){return active}};
+  function open(id,trigger=null){
+    cleanup({restoreFocus:false});
+    const modal=byId(id),back=byId(backId);
+    if(!modal||!back)return false;
+    active=id;
+    lastTrigger=trigger&&document.contains(trigger)?trigger:document.activeElement;
+    showNode(back,'block');
+    showNode(modal,'flex');
+    lockBody();
+    return true;
+  }
+  function close(id,{restoreFocus=true}={}){
+    if(id && active && active!==id){hideNode(byId(id));return;}
+    cleanup({restoreFocus});
+  }
+  function hardReset(){
+    cleanup({restoreFocus:false});
+    lastTrigger=null;
+    window.__checklistEditing=null;
+    window.__staffEditing=null;
+    window.__editingStaffMemberId=null;
+    window.__staffMemberReturnToManage=false;
+  }
+  return {open,close,cleanup:hardReset,hardReset,get active(){return active;}};
 })();
 
+function renderChecklistDraft(){
+  const ctx=window.__checklistEditing;if(!ctx)return;
+  const body=document.getElementById('checklistBody');if(!body)return;
+  body.innerHTML=CHECKLIST_DEFINITION.map(group=>{
+    const done=group.items.filter(([id])=>ctx.draft[id]===true).length;
+    const rows=group.items.map(([id,label])=>{
+      const checked=ctx.draft[id]===true;
+      return `<label class="checklist-item ${checked?'checked':''}"><input type="checkbox" data-check-id="${escapeHTML(id)}" ${checked?'checked':''}><span class="check-label">${escapeHTML(label)}</span><span class="checkmark">${checked?'SELESAI':'BELUM'}</span></label>`;
+    }).join('');
+    return `<section class="checklist-group"><div class="checklist-group-title"><span>${escapeHTML(group.group)}</span><span>${done}/${group.items.length}</span></div>${rows}</section>`;
+  }).join('');
+  const ids=CHECKLIST_DEFINITION.flatMap(g=>g.items.map(([id])=>id));
+  const checked=ids.filter(id=>ctx.draft[id]===true).length,total=ids.length,pct=total?Math.round(checked/total*100):0;
+  document.getElementById('checklistProgressText').textContent=`${pct}%`;
+  document.getElementById('checklistProgressBar').style.width=`${pct}%`;
+  document.getElementById('checklistProgressMeta').textContent=`${checked}/${total} item selesai${pct===100?' · Checklist Lengkap':''}`;
+  body.querySelectorAll('[data-check-id]').forEach(input=>{
+    input.addEventListener('change',()=>{
+      if(!window.__checklistEditing)return;
+      window.__checklistEditing.draft[input.dataset.checkId]=!!input.checked;
+      renderChecklistDraft();
+    },{once:true});
+  });
+}
 function openChecklistModal(eventId){
-  const e=findEvent(eventId);if(!e)return;
-  window.__staffEditing=null;
-  window.__checklistEditing={eventId:String(eventId),original:getChecklistState(eventId).state,draft:{...getChecklistState(eventId).state}};
-  $("#checklistModalTitle").textContent=`Checklist ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;
+  const event=findEvent(eventId);if(!event)return;
+  const current=getChecklistState(eventId).state;
+  window.__checklistEditing={eventId:String(eventId),original:{...current},draft:{...current}};
+  document.getElementById('checklistModalTitle').textContent=`Checklist ${event.flight||'Jadwal'} · ${fmtDate(event.date)}`;
   renderChecklistDraft();
   operationUI.open('checklistModal',document.activeElement);
 }
@@ -21352,12 +21318,23 @@ function closeChecklistModal(save=false){
   operationUI.close('checklistModal');
   render();
 }
+
+function renderStaffSelector(eventId,selected){
+  const box=document.getElementById('staffSelector');if(!box)return;
+  const members=activeStaffMembers();
+  box.innerHTML=members.length?members.map(member=>`<button type="button" class="staff-chip-btn ${selected.has(member.id)?'selected':''}" data-staff-id="${escapeHTML(member.id)}"><span>${escapeHTML(member.name)}</span></button>`).join(''):'<div class="empty-inline" style="padding:12px 20px">Belum ada anggota handling aktif.</div>';
+  box.querySelectorAll('[data-staff-id]').forEach(button=>button.addEventListener('click',()=>{
+    const id=button.dataset.staffId;
+    if(selected.has(id))selected.delete(id);else selected.add(id);
+    renderStaffSelector(eventId,selected);
+  }));
+}
 function openStaffModal(eventId){
-  const e=findEvent(eventId);if(!e)return;
-  window.__checklistEditing=null;
-  const key=String(eventId),selected=new Set(Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[]);
+  const event=findEvent(eventId);if(!event)return;
+  const key=String(eventId);
+  const selected=new Set(Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[]);
   window.__staffEditing={eventId:key,selected};
-  $("#staffModalTitle").textContent=`Petugas ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;
+  document.getElementById('staffModalTitle').textContent=`Petugas ${event.flight||'Jadwal'} · ${fmtDate(event.date)}`;
   renderStaffSelector(key,selected);
   operationUI.open('staffModal',document.activeElement);
 }
@@ -21369,109 +21346,228 @@ function closeStaffModal(save=false){
   const id=ctx?.eventId;
   if(id&&document.getElementById('drawer')?.classList.contains('open'))openDrawer(id);else render();
 }
-function openStaffManage(){window.__checklistEditing=null;window.__staffEditing=null;renderStaffManageList();operationUI.open('staffManageModal',document.activeElement);}
+
+function renderStaffManageList(){
+  const box=document.getElementById('staffManageList');if(!box)return;
+  box.innerHTML=handlingStaffMembers.map(m=>`<div class="staff-manage-row ${m.active?'':'is-inactive'}"><div><div class="staff-manage-name">${escapeHTML(m.name)}</div><div class="staff-manage-status">${m.active?'Aktif':'Nonaktif'}</div></div><div class="staff-manage-actions"><button class="btn ghost small" type="button" data-edit-staff="${escapeHTML(m.id)}">Edit</button>${m.active?`<button class="btn danger small" type="button" data-toggle-staff="${escapeHTML(m.id)}">Nonaktifkan</button>`:`<button class="btn primary small" type="button" data-toggle-staff="${escapeHTML(m.id)}">Aktifkan</button>`}</div></div>`).join('');
+  box.querySelectorAll('[data-edit-staff]').forEach(btn=>btn.addEventListener('click',()=>openStaffMemberModal(btn.dataset.editStaff)));
+  box.querySelectorAll('[data-toggle-staff]').forEach(btn=>btn.addEventListener('click',()=>toggleStaffMember(btn.dataset.toggleStaff)));
+}
+function toggleStaffMember(id){
+  const member=handlingStaffMembers.find(x=>String(x.id)===String(id));if(!member)return;
+  member.active=!member.active;saveStaffMembers();renderStaffManageList();toast(`${member.name} ${member.active?'diaktifkan':'dinonaktifkan'}`);
+}
+function openStaffManage(){renderStaffManageList();operationUI.open('staffManageModal',document.activeElement);}
 function closeStaffManage(){operationUI.close('staffManageModal');}
 function openStaffMemberModal(id=null){
+  const returning=operationUI.active==='staffManageModal';
+  const trigger=document.activeElement;
+  window.__staffMemberReturnToManage=returning;
   window.__editingStaffMemberId=id?String(id):null;
-  window.__staffMemberReturnToManage=!document.getElementById('staffManageModal')?.hidden;
-  const m=id?handlingStaffMembers.find(x=>String(x.id)===String(id)):null;
-  $("#staffMemberModalTitle").textContent=m?'Edit Anggota Handling':'Tambah Anggota Handling';
-  $("#staffMemberNameInput").value=m?.name||'';$("#staffMemberError").hidden=true;
-  operationUI.open('staffMemberModal',document.activeElement);
-  requestAnimationFrame(()=>$("#staffMemberNameInput")?.focus({preventScroll:true}));
+  const member=id?handlingStaffMembers.find(x=>String(x.id)===String(id)):null;
+  document.getElementById('staffMemberModalTitle').textContent=member?'Edit Anggota Handling':'Tambah Anggota Handling';
+  document.getElementById('staffMemberNameInput').value=member?.name||'';
+  document.getElementById('staffMemberError').hidden=true;
+  operationUI.open('staffMemberModal',trigger);
+  requestAnimationFrame(()=>document.getElementById('staffMemberNameInput')?.focus({preventScroll:true}));
 }
 function closeStaffMember(){
   const returnTo=!!window.__staffMemberReturnToManage;
-  window.__staffMemberReturnToManage=false;window.__editingStaffMemberId=null;$("#staffMemberError").hidden=true;
+  window.__staffMemberReturnToManage=false;
+  window.__editingStaffMemberId=null;
+  document.getElementById('staffMemberError').hidden=true;
   operationUI.close('staffMemberModal',{restoreFocus:false});
   if(returnTo){renderStaffManageList();operationUI.open('staffManageModal');}
 }
 function saveStaffMemberForm(){
-  const input=$("#staffMemberNameInput"),err=$("#staffMemberError"),name=String(input.value||'').trim();
-  if(!name){err.textContent='Nama anggota wajib diisi.';err.hidden=false;return;}
+  const input=document.getElementById('staffMemberNameInput'),error=document.getElementById('staffMemberError');
+  const name=String(input?.value||'').trim();
+  if(!name){error.textContent='Nama anggota wajib diisi.';error.hidden=false;return;}
   const duplicate=handlingStaffMembers.find(m=>m.name.toLowerCase()===name.toLowerCase()&&String(m.id)!==String(window.__editingStaffMemberId||''));
-  if(duplicate){err.textContent='Nama anggota sudah terdaftar.';err.hidden=false;return;}
-  if(window.__editingStaffMemberId){const m=handlingStaffMembers.find(x=>String(x.id)===String(window.__editingStaffMemberId));if(m)m.name=name;}
+  if(duplicate){error.textContent='Nama anggota sudah terdaftar.';error.hidden=false;return;}
+  if(window.__editingStaffMemberId){const member=handlingStaffMembers.find(x=>String(x.id)===String(window.__editingStaffMemberId));if(member)member.name=name;}
   else handlingStaffMembers.push({id:makeStaffId(),name,active:true});
-  saveStaffMembers();closeStaffMember();toast('Data anggota handling disimpan');
+  saveStaffMembers();
+  closeStaffMember();
+  renderStaffManageList();
+  toast('Data anggota handling disimpan');
 }
 
-function posterSafeText(v,fallback='-'){const x=String(v??'').replace(/\s+/g,' ').trim();return x||fallback;}
+/* Poster lifecycle is isolated from the staff editor. It never opens the selector. */
+const staffPosterUI=(()=>{
+  let eventId=null;
+  let jpeg=null;
+  let trigger=null;
+  const root=()=>document.getElementById('staffPoster');
+  function unlockBody(){
+    if(operationUI.active)return;
+    document.body.classList.remove('operation-lock');
+    if(!document.body.classList.contains('report-modal-open')&&!document.body.classList.contains('modal-open'))document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('touch-action');
+  }
+  function close({restoreFocus=true}={}){
+    const modal=root();if(!modal)return;
+    if(modal.contains(document.activeElement))document.activeElement.blur?.();
+    modal.classList.remove('open');modal.hidden=true;modal.setAttribute('aria-hidden','true');modal.setAttribute('inert','');
+    modal.style.display='none';modal.style.visibility='hidden';modal.style.pointerEvents='none';modal.style.opacity='0';
+    const img=document.getElementById('staffPosterPreview');if(img){img.hidden=true;img.removeAttribute('src');}
+    const loading=document.getElementById('staffPosterLoading');if(loading){loading.hidden=false;loading.textContent='Menyiapkan preview…';}
+    const button=document.getElementById('downloadStaffPoster');if(button)button.disabled=true;
+    eventId=null;jpeg=null;window.__staffPosterEventId=null;window.__staffPosterJpeg=null;
+    unlockBody();
+    if(restoreFocus&&trigger&&document.contains(trigger)){try{trigger.focus({preventScroll:true});}catch(_){}}
+    trigger=null;
+  }
+  function open(id,sourceTrigger=null){
+    close({restoreFocus:false});
+    operationUI.hardReset();
+    const modal=root();if(!modal)return false;
+    eventId=String(id);trigger=sourceTrigger&&document.contains(sourceTrigger)?sourceTrigger:document.activeElement;
+    window.__staffPosterEventId=eventId;
+    modal.hidden=false;modal.removeAttribute('inert');modal.setAttribute('aria-hidden','false');modal.classList.add('open');
+    modal.style.display='flex';modal.style.visibility='visible';modal.style.pointerEvents='auto';modal.style.opacity='1';
+    document.body.classList.add('operation-lock');document.body.style.overflow='hidden';document.body.style.touchAction='none';
+    return true;
+  }
+  return {open,close,get eventId(){return eventId},get jpeg(){return jpeg},set jpeg(v){jpeg=v;window.__staffPosterJpeg=v}};
+})();
+
+function posterSafeText(value,fallback='-'){const s=String(value??'').replace(/\s+/g,' ').trim();return s||fallback;}
 function posterWrap(ctx,text,maxWidth,maxLines=2){
-  const words=posterSafeText(text,'').split(' ');const lines=[];let line='';
-  for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width<=maxWidth){line=test}else{if(line)lines.push(line);line=word;if(lines.length>=maxLines-1)break}}
+  const source=posterSafeText(text,'');if(!source)return ['-'];
+  const words=source.split(' '),lines=[];let line='';let consumed=0;
+  for(const word of words){
+    const test=line?`${line} ${word}`:word;
+    if(ctx.measureText(test).width<=maxWidth){line=test;consumed++;continue;}
+    if(line){lines.push(line);line=word;consumed++;}
+    if(lines.length>=maxLines-1)break;
+  }
   if(line&&lines.length<maxLines)lines.push(line);
-  if(words.length && lines.length===maxLines){let last=lines[maxLines-1];while(ctx.measureText(last+'…').width>maxWidth&&last.length>1)last=last.slice(0,-1);lines[maxLines-1]=last+(last!==posterSafeText(text,'')?'…':'');}
-  return lines;
+  if(consumed<words.length&&lines.length){let last=lines[lines.length-1];while(last.length>2&&ctx.measureText(last+'…').width>maxWidth)last=last.slice(0,-1);lines[lines.length-1]=last.trim()+'…';}
+  return lines.slice(0,maxLines);
 }
 function roundRectPath(ctx,x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
-function drawRoundRect(ctx,x,y,w,h,r,fill,stroke){roundRectPath(ctx,x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke()}}
-async function loadPosterLogo(){return new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='brand-icon.png';if(img.complete&&img.naturalWidth)resolve(img);});}
+function drawRoundRect(ctx,x,y,w,h,r,fill,stroke){roundRectPath(ctx,x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+async function loadPosterLogo(){return await new Promise(resolve=>{let settled=false;const img=new Image();const done=v=>{if(settled)return;settled=true;resolve(v)};img.onload=()=>done(img);img.onerror=()=>done(null);img.src='brand-icon.png';if(img.complete&&img.naturalWidth)done(img);setTimeout(()=>done(null),1800);});}
 async function buildStaffPosterJpeg(eventId){
-  const e=findEvent(eventId);if(!e)throw new Error('Event tidak ditemukan');
-  const W=1080,H=1350,canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;const c=canvas.getContext('2d');
+  const event=findEvent(eventId);if(!event)throw new Error('Event tidak ditemukan');
+  const W=1080,H=1350,canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Canvas tidak tersedia');
   const green='#0A6B42',dark='#173C2D',muted='#708078',line='#DDE8E1',soft='#F4F8F5';
-  c.fillStyle='#FFFFFF';c.fillRect(0,0,W,H);
-  // top brand band
-  c.fillStyle=green;c.fillRect(0,0,W,218);
-  const logo=await loadPosterLogo();if(logo){drawRoundRect(c,74,56,104,104,24,'#fff');c.drawImage(logo,84,66,84,84)}
-  c.fillStyle='#CFE6DA';c.font='700 22px Arial, sans-serif';c.fillText('HAMDAN TOUR · CGK HANDLING',205,84);
-  c.fillStyle='#FFFFFF';c.font='800 48px Arial, sans-serif';c.fillText('JADWAL HANDLING',205,142);
-  const d=new Date(e.date+'T12:00:00');const dateLabel=d.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
-  c.font='700 26px Arial, sans-serif';c.fillStyle='#E8F3ED';c.fillText(dateLabel,205,184);
-  // primary info cards
-  const type=e.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA',time=posterSafeText(handlingTime(e)),flight=posterSafeText(e.flight),route=posterSafeText(e.route).replaceAll('→',' - ');
-  const cards=[['FLIGHT',flight],['HANDLING',type],['JAM',time]];let x=74;
-  cards.forEach(([lab,val],i)=>{drawRoundRect(c,x,260,286,138,24,soft,line);c.fillStyle=muted;c.font='700 18px Arial, sans-serif';c.fillText(lab,x+24,300);c.fillStyle=dark;c.font='800 36px Arial, sans-serif';c.fillText(val,x+24,352);x+=326;});
-  drawRoundRect(c,74,430,932,96,22,'#EAF5EE');c.fillStyle=green;c.font='800 32px Arial, sans-serif';c.fillText(route,104,490);
-  // details
-  drawRoundRect(c,74,558,932,184,24,'#FFFFFF',line);c.fillStyle=muted;c.font='700 18px Arial, sans-serif';c.fillText('DETAIL JADWAL',104,598);
-  c.fillStyle=dark;c.font='700 23px Arial, sans-serif';c.fillText(`AIRLINE  ${posterSafeText(e.airline)}`,104,642);
-  c.fillText(`PAX  ${posterSafeText(e.pax)}`,650,642);
-  c.fillStyle=muted;c.font='700 17px Arial, sans-serif';c.fillText('PACKAGE',104,687);c.fillStyle=dark;c.font='700 22px Arial, sans-serif';
-  const packLines=posterWrap(c,posterSafeText(e.package),850,2);packLines.forEach((ln,i)=>c.fillText(ln,104,718+i*28));
-  // staff
-  const ids=Array.isArray(assignedHandlingStaff[String(eventId)])?assignedHandlingStaff[String(eventId)]:[],names=staffLabels(ids);
-  c.fillStyle=dark;c.font='800 26px Arial, sans-serif';c.fillText('PETUGAS HANDLING',74,812);
-  const staff=names.length?names:['Belum ada petugas handling yang dipilih'];
-  const twoCols=staff.length>5;const colW=twoCols?446:932,rowH=72,startY=842;
-  staff.forEach((name,i)=>{const col=twoCols?i%2:0,row=twoCols?Math.floor(i/2):i;const sx=74+col*(colW+40),sy=startY+row*(rowH+10);drawRoundRect(c,sx,sy,colW,rowH,18,'#F7FAF8',line);c.fillStyle=green;c.font='800 20px Arial, sans-serif';if(names.length)c.fillText(String(i+1).padStart(2,'0'),sx+22,sy+44);c.fillStyle=dark;c.font='700 22px Arial, sans-serif';const max=names.length?colW-78:colW-44;let label=posterSafeText(name);while(c.measureText(label).width>max&&label.length>4)label=label.slice(0,-1);if(label!==posterSafeText(name))label=label.trim()+'…';c.fillText(label,sx+(names.length?66:22),sy+44);});
-  c.strokeStyle=line;c.lineWidth=2;c.beginPath();c.moveTo(74,1260);c.lineTo(1006,1260);c.stroke();c.fillStyle=muted;c.font='600 18px Arial, sans-serif';c.fillText('Hamdan Tour · CGK Handling Operations',74,1302);
+  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=green;ctx.fillRect(0,0,W,220);
+  const logo=await loadPosterLogo();
+  if(logo){drawRoundRect(ctx,72,55,108,108,26,'#fff');ctx.drawImage(logo,84,67,84,84);}
+  ctx.fillStyle='#CFE6DA';ctx.font='700 21px Arial, sans-serif';ctx.fillText('HAMDAN TOUR · CGK HANDLING',205,82);
+  ctx.fillStyle='#FFFFFF';ctx.font='800 49px Arial, sans-serif';ctx.fillText('JADWAL HANDLING',205,143);
+  const d=new Date(`${event.date}T12:00:00`);const dateLabel=d.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
+  ctx.fillStyle='#E8F3ED';ctx.font='700 26px Arial, sans-serif';ctx.fillText(dateLabel,205,185);
+  const type=event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA';
+  const time=posterSafeText(handlingTime(event));const flight=posterSafeText(event.flight);const route=posterSafeText(event.route).replaceAll('→',' - ');
+  const cards=[['FLIGHT',flight],['HANDLING',type],['JAM',time]];let x=72;
+  cards.forEach(([label,value])=>{drawRoundRect(ctx,x,258,288,140,24,soft,line);ctx.fillStyle=muted;ctx.font='700 18px Arial, sans-serif';ctx.fillText(label,x+24,299);ctx.fillStyle=dark;ctx.font='800 35px Arial, sans-serif';ctx.fillText(value,x+24,351);x+=326;});
+  drawRoundRect(ctx,72,430,936,96,22,'#EAF5EE');ctx.fillStyle=green;ctx.font='800 31px Arial, sans-serif';ctx.fillText(route,104,490);
+  drawRoundRect(ctx,72,558,936,184,24,'#FFFFFF',line);ctx.fillStyle=muted;ctx.font='700 18px Arial, sans-serif';ctx.fillText('DETAIL JADWAL',104,598);
+  ctx.fillStyle=dark;ctx.font='700 23px Arial, sans-serif';ctx.fillText(`AIRLINE  ${posterSafeText(event.airlineName||event.airline)}`,104,642);ctx.fillText(`PAX  ${posterSafeText(event.pax)}`,696,642);
+  ctx.fillStyle=muted;ctx.font='700 17px Arial, sans-serif';ctx.fillText('PACKAGE',104,687);ctx.fillStyle=dark;ctx.font='700 22px Arial, sans-serif';posterWrap(ctx,posterSafeText(event.package),850,2).forEach((lineText,i)=>ctx.fillText(lineText,104,718+i*28));
+  const ids=Array.isArray(assignedHandlingStaff[String(eventId)])?assignedHandlingStaff[String(eventId)]:[];const names=staffLabels(ids);
+  ctx.fillStyle=dark;ctx.font='800 26px Arial, sans-serif';ctx.fillText('PETUGAS HANDLING',72,812);
+  const staff=names.length?names:['Belum ada petugas handling yang dipilih'];const twoCols=staff.length>5;const colW=twoCols?446:936,rowH=72,startY=842;
+  staff.forEach((name,i)=>{const col=twoCols?i%2:0,row=twoCols?Math.floor(i/2):i;const sx=72+col*(colW+40),sy=startY+row*(rowH+10);drawRoundRect(ctx,sx,sy,colW,rowH,18,'#F7FAF8',line);let label=posterSafeText(name);ctx.font='700 22px Arial, sans-serif';const maxWidth=names.length?colW-82:colW-44;while(label.length>4&&ctx.measureText(label).width>maxWidth)label=label.slice(0,-1);if(label!==posterSafeText(name))label=label.trim()+'…';if(names.length){ctx.fillStyle=green;ctx.font='800 19px Arial, sans-serif';ctx.fillText(String(i+1).padStart(2,'0'),sx+22,sy+44);}ctx.fillStyle=dark;ctx.font='700 22px Arial, sans-serif';ctx.fillText(label,sx+(names.length?66:22),sy+44);});
+  ctx.strokeStyle=line;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(72,1260);ctx.lineTo(1008,1260);ctx.stroke();ctx.fillStyle=muted;ctx.font='600 18px Arial, sans-serif';ctx.fillText('Hamdan Tour · CGK Handling Operations',72,1302);
   return canvas.toDataURL('image/jpeg',0.94);
 }
 async function openStaffPoster(eventId){
-  const e=findEvent(eventId);if(!e)return;
-  closeStaffPoster({silent:true}); operationUI.cleanup();
-  const modal=$("#staffPoster"),img=$("#staffPosterPreview"),loading=$("#staffPosterLoading"),download=$("#downloadStaffPoster");
-  window.__staffPosterEventId=String(eventId);window.__staffPosterJpeg=null;
+  const event=findEvent(eventId);if(!event)return;
+  const sourceTrigger=document.activeElement;
+  if(!staffPosterUI.open(eventId,sourceTrigger))return;
+  const img=document.getElementById('staffPosterPreview'),loading=document.getElementById('staffPosterLoading'),download=document.getElementById('downloadStaffPoster');
   img.hidden=true;img.removeAttribute('src');loading.hidden=false;loading.textContent='Menyiapkan preview…';download.disabled=true;
-  modal.hidden=false;modal.removeAttribute('inert');modal.setAttribute('aria-hidden','false');modal.classList.add('open');document.body.classList.add('operation-lock');document.body.style.overflow='hidden';
-  try{const data=await buildStaffPosterJpeg(eventId);if(window.__staffPosterEventId!==String(eventId))return;window.__staffPosterJpeg=data;img.src=data;img.hidden=false;loading.hidden=true;download.disabled=false;}
-  catch(err){console.error('staff poster build failed',err);loading.textContent='Preview gagal dibuat. Coba tutup lalu buka kembali.';toast('Gagal membuat preview JPG');}
+  try{
+    const data=await buildStaffPosterJpeg(eventId);
+    if(staffPosterUI.eventId!==String(eventId))return;
+    staffPosterUI.jpeg=data;img.src=data;img.hidden=false;loading.hidden=true;download.disabled=false;
+  }catch(err){console.error('staff poster build failed',err);loading.hidden=false;loading.textContent='Preview JPG gagal dibuat.';toast('Gagal membuat preview JPG');}
 }
-function closeStaffPoster(opts={}){
-  const m=$("#staffPoster"),img=$("#staffPosterPreview");if(!m)return;
-  if(m.contains(document.activeElement))document.activeElement.blur?.();m.classList.remove('open');m.hidden=true;m.setAttribute('aria-hidden','true');m.setAttribute('inert','');img?.removeAttribute('src');if(img)img.hidden=true;window.__staffPosterEventId=null;window.__staffPosterJpeg=null;document.body.classList.remove('operation-lock');if(!document.body.classList.contains('report-modal-open')&&!document.body.classList.contains('modal-open'))document.body.style.removeProperty('overflow');
-}
+function closeStaffPoster(){staffPosterUI.close();}
 async function downloadStaffPosterImage(){
-  try{const e=findEvent(window.__staffPosterEventId||'');if(!e)throw new Error('Event tidak ditemukan');let data=window.__staffPosterJpeg;if(!data){data=await buildStaffPosterJpeg(e.id);window.__staffPosterJpeg=data;}const a=document.createElement('a');a.href=data;a.download=`Jadwal_Handling_${e.date||'schedule'}_${posterSafeText(e.flight,'event').replace(/[^a-z0-9_-]+/gi,'_')}.jpg`;document.body.appendChild(a);a.click();a.remove();}
-  catch(err){console.error(err);toast('Gagal membuat JPG petugas handling');}
+  try{
+    const id=staffPosterUI.eventId;if(!id)throw new Error('Tidak ada preview aktif');
+    const event=findEvent(id);if(!event)throw new Error('Event tidak ditemukan');
+    let data=staffPosterUI.jpeg;if(!data){data=await buildStaffPosterJpeg(id);staffPosterUI.jpeg=data;}
+    const anchor=document.createElement('a');anchor.href=data;anchor.download=`Jadwal_Handling_${event.date||'schedule'}_${posterSafeText(event.flight,'event').replace(/[^a-z0-9_-]+/gi,'_')}.jpg`;document.body.appendChild(anchor);anchor.click();anchor.remove();
+  }catch(err){console.error('staff JPG download failed',err);toast('Gagal download JPG petugas handling');}
 }
 
-// Replace handlers with v33 lifecycle-safe handlers.
-window.openChecklistModal=openChecklistModal;window.openStaffModal=openStaffModal;window.openStaffPoster=openStaffPoster;window.openStaffManage=openStaffManage;
-$("#closeChecklist").onclick=()=>closeChecklistModal(false);$("#cancelChecklist").onclick=()=>closeChecklistModal(false);$("#saveChecklistBtn").onclick=()=>closeChecklistModal(true);
-$("#closeStaff").onclick=()=>closeStaffModal(false);$("#cancelStaff").onclick=()=>closeStaffModal(false);$("#saveStaffBtn").onclick=()=>closeStaffModal(true);
-$("#closeStaffPoster").onclick=()=>closeStaffPoster();$("#posterCloseBtn").onclick=()=>closeStaffPoster();$("#downloadStaffPoster").onclick=downloadStaffPosterImage;
-$("#closeStaffManage").onclick=closeStaffManage;$("#cancelStaffManage").onclick=closeStaffManage;$("#addStaffMemberBtn").onclick=()=>openStaffMemberModal();
-$("#closeStaffMember").onclick=closeStaffMember;$("#cancelStaffMember").onclick=closeStaffMember;$("#saveStaffMember").onclick=saveStaffMemberForm;$("#quickStaff").onclick=openStaffManage;
-$("#operationBackdrop").onclick=()=>{if(operationUI.active==='checklistModal')closeChecklistModal(false);else if(operationUI.active==='staffModal')closeStaffModal(false);else if(operationUI.active==='staffManageModal')closeStaffManage();else if(operationUI.active==='staffMemberModal')closeStaffMember();};
-window.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$("#staffPoster").hidden){e.preventDefault();closeStaffPoster();return;}if(operationUI.active){e.preventDefault();if(operationUI.active==='checklistModal')closeChecklistModal(false);else if(operationUI.active==='staffModal')closeStaffModal(false);else if(operationUI.active==='staffMemberModal')closeStaffMember();else closeStaffManage();}},true);
+window.openChecklistModal=openChecklistModal;
+window.openStaffModal=openStaffModal;
+window.openStaffPoster=openStaffPoster;
+window.openStaffManage=openStaffManage;
 
-// Initial hard cleanup prevents invisible text boxes/backdrops on first load/pageshow.
-function cleanupOperationInitialState(){window.__checklistEditing=null;window.__staffEditing=null;window.__editingStaffMemberId=null;operationUI.cleanup();closeStaffPoster({silent:true});['checklistModal','staffModal','staffManageModal','staffMemberModal','staffPoster','operationBackdrop'].forEach(id=>{const n=document.getElementById(id);if(n){n.hidden=true;n.setAttribute('aria-hidden','true');n.setAttribute('inert','');n.classList.remove('open')}});}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanupOperationInitialState,{once:true});else cleanupOperationInitialState();
-window.addEventListener('pageshow',()=>{if(!operationUI.active&&!window.__staffPosterEventId)cleanupOperationInitialState();});
+/* exactly one handler per control */
+document.getElementById('closeChecklist').onclick=()=>closeChecklistModal(false);
+document.getElementById('cancelChecklist').onclick=()=>closeChecklistModal(false);
+document.getElementById('saveChecklistBtn').onclick=()=>closeChecklistModal(true);
+document.getElementById('closeStaff').onclick=()=>closeStaffModal(false);
+document.getElementById('cancelStaff').onclick=()=>closeStaffModal(false);
+document.getElementById('saveStaffBtn').onclick=()=>closeStaffModal(true);
+document.getElementById('closeStaffManage').onclick=closeStaffManage;
+document.getElementById('cancelStaffManage').onclick=closeStaffManage;
+document.getElementById('addStaffMemberBtn').onclick=()=>openStaffMemberModal();
+document.getElementById('closeStaffMember').onclick=closeStaffMember;
+document.getElementById('cancelStaffMember').onclick=closeStaffMember;
+document.getElementById('saveStaffMember').onclick=saveStaffMemberForm;
+document.getElementById('quickStaff').onclick=openStaffManage;
+document.getElementById('closeStaffPoster').onclick=closeStaffPoster;
+document.getElementById('posterCloseBtn').onclick=closeStaffPoster;
+document.getElementById('downloadStaffPoster').onclick=downloadStaffPosterImage;
+
+document.getElementById('operationBackdrop').onclick=()=>{
+  if(operationUI.active==='checklistModal')closeChecklistModal(false);
+  else if(operationUI.active==='staffModal')closeStaffModal(false);
+  else if(operationUI.active==='staffManageModal')closeStaffManage();
+  else if(operationUI.active==='staffMemberModal')closeStaffMember();
+};
+document.getElementById('staffPoster').addEventListener('click',event=>{if(event.target===document.getElementById('staffPoster'))closeStaffPoster();});
+
+window.addEventListener('keydown',event=>{
+  if(event.key!=='Escape')return;
+  if(!document.getElementById('staffPoster').hidden){event.preventDefault();closeStaffPoster();return;}
+  if(operationUI.active){
+    event.preventDefault();
+    if(operationUI.active==='checklistModal')closeChecklistModal(false);
+    else if(operationUI.active==='staffModal')closeStaffModal(false);
+    else if(operationUI.active==='staffMemberModal')closeStaffMember();
+    else closeStaffManage();
+  }
+},{capture:true});
+
+window.addEventListener('cgk-remote-state',()=>{
+  if(window.__checklistEditing){
+    const current=getChecklistState(window.__checklistEditing.eventId).state;
+    window.__checklistEditing.draft={...current,...window.__checklistEditing.draft};
+    renderChecklistDraft();
+  }
+  if(operationUI.active==='staffModal'&&window.__staffEditing){
+    const selected=new Set(Array.isArray(assignedHandlingStaff[window.__staffEditing.eventId])?assignedHandlingStaff[window.__staffEditing.eventId]:Array.from(window.__staffEditing.selected));
+    window.__staffEditing.selected=selected;renderStaffSelector(window.__staffEditing.eventId,selected);
+  }
+});
+
+function hardResetOperationArtifacts(){
+  operationUI.hardReset();
+  staffPosterUI.close({restoreFocus:false});
+  const ids=['checklistModal','staffModal','staffManageModal','staffMemberModal','staffPoster','operationBackdrop'];
+  ids.forEach(id=>{
+    const node=document.getElementById(id);if(!node)return;
+    node.classList.remove('open');node.hidden=true;node.setAttribute('aria-hidden','true');node.setAttribute('inert','');node.style.display='none';node.style.visibility='hidden';node.style.pointerEvents='none';node.style.opacity='0';
+  });
+  document.body.classList.remove('operation-lock');
+  if(!document.body.classList.contains('report-modal-open')&&!document.body.classList.contains('modal-open'))document.body.style.removeProperty('overflow');
+  document.body.style.removeProperty('touch-action');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hardResetOperationArtifacts,{once:true});else hardResetOperationArtifacts();
+window.addEventListener('pageshow',()=>{if(!operationUI.active&&document.getElementById('staffPoster')?.hidden)hardResetOperationArtifacts();});
 
 </script>
 <script>
