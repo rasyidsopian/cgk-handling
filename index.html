@@ -18,7 +18,9 @@
     .report-modal{max-width:760px}.report-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:4px 20px 14px}.report-wide{grid-column:1/-1}.report-field{display:flex;flex-direction:column;gap:7px;color:#68776f;font-size:11px;font-weight:700}.report-field input,.report-field select{width:100%;padding:11px 12px;border:1px solid #dfe8e2;border-radius:11px;background:#fff;color:#183c2c;font:600 12px Inter,system-ui,sans-serif;box-sizing:border-box;outline:none}.report-field input:focus,.report-field select:focus{border-color:#7cb898;box-shadow:0 0 0 3px rgba(14,122,72,.08)}.report-note{margin:2px 20px 14px;padding:12px 13px;border:1px solid #e2ebe5;background:#f7faf8;border-radius:12px;display:flex;gap:9px;align-items:flex-start;color:#718079;font-size:10px;line-height:1.45}.report-note .icon-slot{margin-top:1px;flex:none}.report-validation{margin:0 20px 14px;padding:10px 12px;border-radius:10px;background:#fff2ef;border:1px solid #f0cfc6;color:#a54433;font-size:11px;font-weight:700}.report-btn{box-shadow:0 8px 18px rgba(10,107,66,.16)}
     @media(max-width:760px){.report-form-grid{grid-template-columns:1fr}.report-wide{grid-column:auto}.report-modal{width:calc(100vw - 22px);max-width:none}}
     .pdf-preview-canvas{display:none}
-  </style>
+  
+.staff-manage-tools{display:flex;justify-content:flex-end;padding:12px 20px;border-bottom:1px solid #e6eee8;background:#fbfdfc}.staff-manage-list{padding:12px 20px 16px;overflow:auto;display:grid;gap:8px;max-height:48vh}.staff-manage-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid #e0e9e3;border-radius:12px;background:#fff}.staff-manage-row.is-inactive{opacity:.6;background:#f6f8f7}.staff-manage-name{font-size:12px;font-weight:750;color:#193f30}.staff-manage-status{font-size:9px;color:#76857e;margin-top:3px}.staff-manage-actions{display:flex;gap:6px;flex-wrap:wrap}.staff-manage-modal{max-width:620px}.staff-member-modal{max-width:460px}.form-error{color:#b33d2e;background:#fff2ef;border:1px solid #f2c0b8;border-radius:10px;padding:8px 10px;font-size:10px}.staff-chip-btn.selected{background:#0a6b42;color:#fff;border-color:#0a6b42;box-shadow:0 2px 8px rgba(10,107,66,.14)}.poster-visual{width:540px;height:675px;padding:28px 28px 22px;background:#fff;color:#183a2d;box-sizing:border-box;display:flex;flex-direction:column}.poster-visual .poster-top{display:flex;align-items:center;gap:12px}.poster-visual .poster-top img{width:58px;height:58px;border-radius:16px;object-fit:cover}.poster-visual .poster-top h3{font-size:25px;margin:4px 0 0;line-height:1.1}.poster-subline{margin-top:10px;font-size:18px;font-weight:800;color:#0a6b42;letter-spacing:.02em}.poster-flight-band{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px;background:#0a6b42;color:#fff;border-radius:16px;padding:15px}.poster-flight-band span{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.74}.poster-flight-band b{display:block;margin-top:4px;font-size:18px}.poster-route{margin-top:12px;padding:10px 12px;border-radius:12px;background:#eef7f0;color:#0a6b42;font-size:15px;font-weight:850;letter-spacing:.04em}.poster-package{margin-top:14px;padding:12px 14px;border:1px solid #dce8e0;border-radius:14px;background:#fbfdfc}.poster-package b{display:block;margin-top:6px;font-size:12px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.poster-staff-wrap{padding:16px 0 0}.poster-staff-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.poster-staff-item{padding:10px 11px;border:1px solid #dfe9e3;border-radius:12px;background:#f7faf8;color:#1e4434;font-size:11px;font-weight:750}.poster-footer{margin-top:auto;padding-top:14px;border-top:1px solid #e5ece7;color:#87958e;font-size:9px}.poster-actions{position:relative}.poster-actions .poster-close{position:absolute;right:10px;top:10px}.staff-poster{align-items:center;justify-content:center}.staff-poster .poster-card{max-width:96vw;max-height:94vh;overflow:auto}@media(max-width:760px){.staff-manage-row{align-items:flex-start;flex-direction:column}.staff-manage-actions{width:100%}.poster-visual{width:90vw;height:auto;min-height:112.5vw;max-height:78vh;padding:22px}.poster-visual .poster-top h3{font-size:20px}.poster-flight-band{grid-template-columns:1fr 1fr 1fr}.poster-flight-band b{font-size:15px}.poster-staff-list{grid-template-columns:1fr 1fr}.poster-actions{justify-content:flex-end}.poster-actions .poster-close{display:none}}
+</style>
 <style id="ops-feature-styles">
 .operation-modal-backdrop{position:fixed;inset:0;background:rgba(8,24,17,.34);z-index:1100;opacity:0;pointer-events:none;transition:opacity .16s}.operation-modal-backdrop.open{opacity:1;pointer-events:auto}.operation-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,92vw);max-height:min(82vh,760px);background:#fff;border:1px solid #dfe9e3;border-radius:18px;box-shadow:0 30px 90px rgba(10,37,27,.2);z-index:1101;display:flex;flex-direction:column;overflow:hidden}.operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{display:none!important}.operation-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid #e4ebe6;flex:none}.operation-modal-head h3{margin:4px 0 0;font-size:18px;color:#173c2d}.checklist-summary{padding:13px 20px 12px;border-bottom:1px solid #e9efeb;background:#fbfdfc;display:grid;grid-template-columns:130px 1fr 95px;gap:12px;align-items:center;flex:none}.checklist-summary strong{display:block;margin-top:3px;font-size:20px;color:#0a6b42}.checklist-summary small{font-size:9px;color:#7a8881;text-align:right}.progress-track{height:8px;background:#e5eee8;border-radius:999px;overflow:hidden}.progress-track span{display:block;height:100%;width:0;background:#0a6b42;border-radius:999px;transition:width .18s}.checklist-scroll{padding:12px 20px 16px;overflow-y:auto;min-height:0;flex:1}.checklist-group{margin-bottom:12px}.checklist-group:last-child{margin-bottom:0}.checklist-group-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 7px;color:#6f7d76;font-size:9px;letter-spacing:.08em;font-weight:800}.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid #e1eae4;background:#fff;border-radius:11px;margin-top:6px;cursor:pointer;transition:.14s}.checklist-item:hover{border-color:#9ac9ad;background:#f7fbf9}.checklist-item.checked{border-color:#b9dfc7;background:#eef8f1}.checklist-item input{width:17px;height:17px;accent-color:#0a6b42;flex:none}.checklist-item label{font-size:11px;color:#274438;font-weight:650;cursor:pointer;flex:1}.checklist-item .checkmark{font-size:9px;font-weight:800;color:#0a6b42}.operation-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e4ebe6;background:#fff;flex:none}.operation-hint{margin:0;padding:0 20px 12px;color:#74817b;font-size:10px;line-height:1.5}.staff-modal{max-width:560px}.staff-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:4px 20px 16px;overflow:auto;min-height:0}.staff-chip-btn{border:1px solid #dfe8e3;background:#fff;color:#28473a;border-radius:11px;min-height:44px;padding:8px 10px;font:700 11px Inter,system-ui,sans-serif;cursor:pointer;transition:.14s}.staff-chip-btn.selected{background:#0a6b42;color:#fff;border-color:#0a6b42;box-shadow:0 5px 14px rgba(10,107,66,.13)}.staff-chip-btn.selected::before{content:'✓ ';font-weight:900}.operation-card{margin:12px 0 0;padding:13px;border:1px solid #e3ebe6;background:#fbfdfc;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.operation-card>div:first-child{min-width:0}.operation-card strong{display:block;margin-top:4px;font-size:12px;color:#193f30}.operation-card small{display:block;margin-top:3px;color:#77857e;font-size:9px}.checklist-card{background:#f7fbf8}.staff-card{background:#fff}.staff-chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.staff-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#eaf5ee;color:#0a6b42;font-size:8px;font-weight:800;border:1px solid #cde5d5}.empty-inline{font-size:9px;color:#84918b}.operation-actions{display:flex;gap:6px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}.staff-poster{position:fixed;inset:0;z-index:1200;background:rgba(8,24,17,.42);display:flex;align-items:center;justify-content:center;padding:20px}.poster-card{width:min(540px,94vw);background:#fff;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden;border:1px solid #dce8e1}.poster-top{display:grid;grid-template-columns:54px 1fr 40px;align-items:center;gap:12px;padding:18px 20px;background:#0a6b42;color:#fff}.poster-top img{width:54px;height:54px;border-radius:15px;background:#fff;object-fit:cover}.poster-top .eyebrow{color:#b9d8ca}.poster-top h3{margin:4px 0 0;font-size:20px;letter-spacing:.02em}.poster-top .icon-btn{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}.poster-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 20px;border-bottom:1px solid #e5ece7}.poster-meta-item{padding:10px;border:1px solid #e4ece7;border-radius:12px;background:#fbfdfc}.poster-meta-item span{display:block;color:#7a8881;font-size:8px;text-transform:uppercase;letter-spacing:.08em}.poster-meta-item b{display:block;margin-top:4px;color:#1b4132;font-size:11px}.poster-staff-wrap{padding:16px 20px}.poster-staff-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.poster-staff-item{padding:11px 12px;border:1px solid #dfe9e3;border-radius:12px;background:#f7faf8;color:#1e4434;font-size:11px;font-weight:750}.poster-actions{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e5ece7;background:#fbfdfc}@media(max-width:760px){.operation-modal{width:94vw;max-height:82vh}.checklist-summary{grid-template-columns:95px 1fr 80px}.staff-selector{grid-template-columns:1fr 1fr}.operation-card{align-items:flex-start;flex-direction:column}.operation-actions{width:100%;justify-content:flex-start}.poster-card{width:96vw}.poster-meta{grid-template-columns:1fr 1fr}.poster-staff-list{grid-template-columns:1fr}.poster-top h3{font-size:16px}}
 </style>
@@ -104,6 +106,7 @@
           <button class="quick-action" id="quickNote"><span class="icon-slot" data-icon="notebook-pen" aria-hidden="true"></span><div><b>Add Note</b><span>Catat informasi penting</span></div></button>
           <button class="quick-action" id="quickFilter"><span class="icon-slot" data-icon="filter" aria-hidden="true"></span><div><b>Filter Events</b><span>Saring berdasarkan maskapai, jenis</span></div></button>
           <button class="quick-action" id="quickReport"><span class="icon-slot" data-icon="file-text" aria-hidden="true"></span><div><b>Generate Report</b><span>Download report attendance PDF</span></div></button>
+          <button class="quick-action" id="quickStaff"><span class="icon-slot" data-icon="users" aria-hidden="true"></span><div><b>Anggota Handling</b><span>Kelola anggota petugas handling</span></div></button>
         </section>
 
         <section class="rail-card note-card">
@@ -225,6 +228,13 @@
     <div class="operation-modal-foot"><button class="btn ghost" id="cancelChecklist" type="button">Batal</button><button class="btn primary" id="saveChecklistBtn" type="button">Simpan Checklist</button></div>
   </section>
 
+  <section class="operation-modal staff-manage-modal" id="staffManageModal" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+    <div class="operation-modal-head"><div><span class="eyebrow">MASTER DATA</span><h3 id="staffManageTitle">Anggota Handling</h3></div><button class="icon-btn" id="closeStaffManage" type="button" aria-label="Tutup">×</button></div>
+    <div class="staff-manage-tools"><button class="btn primary small" id="addStaffMemberBtn" type="button"><span class="icon-slot" data-icon="user-plus" aria-hidden="true"></span>Tambah Anggota</button></div>
+    <div class="staff-manage-list" id="staffManageList"></div>
+    <div class="operation-modal-foot"><button class="btn ghost" id="cancelStaffManage" type="button">Tutup</button></div>
+  </section>
+
   <section class="operation-modal staff-modal" id="staffModal" role="dialog" aria-modal="true" aria-hidden="true" hidden>
     <div class="operation-modal-head"><div><span class="eyebrow">PETUGAS HANDLING</span><h3 id="staffModalTitle">Pilih Petugas Handling</h3></div><button class="icon-btn" id="closeStaff" type="button" aria-label="Tutup">×</button></div>
     <p class="operation-hint">Pilih satu atau beberapa petugas yang ditugaskan pada jadwal ini.</p>
@@ -232,12 +242,25 @@
     <div class="operation-modal-foot"><button class="btn ghost" id="cancelStaff" type="button">Batal</button><button class="btn primary" id="saveStaffBtn" type="button">Simpan Petugas</button></div>
   </section>
 
+  <section class="operation-modal staff-member-modal" id="staffMemberModal" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+    <div class="operation-modal-head"><div><span class="eyebrow">ANGGOTA HANDLING</span><h3 id="staffMemberModalTitle">Tambah Anggota Handling</h3></div><button class="icon-btn" id="closeStaffMember" type="button" aria-label="Tutup">×</button></div>
+    <div style="padding:14px 20px 6px"><label class="report-field"><span>Nama</span><input id="staffMemberNameInput" type="text" maxlength="100" autocomplete="off" placeholder="Contoh: Pak Chandra"></label></div>
+    <div id="staffMemberError" class="form-error" hidden style="margin:8px 20px 0"></div>
+    <div class="operation-modal-foot"><button class="btn ghost" id="cancelStaffMember" type="button">Batal</button><button class="btn primary" id="saveStaffMember" type="button">Simpan</button></div>
+  </section>
+
   <section class="staff-poster" id="staffPoster" role="dialog" aria-modal="true" aria-hidden="true" hidden>
     <div class="poster-card" id="staffPosterCard">
-      <div class="poster-top"><img src="brand-icon.png" alt="CGK Handling"><div><span class="eyebrow">HAMDAN TOUR · CGK HANDLING</span><h3 id="posterTitle">JADWAL HANDLING</h3></div><button class="icon-btn poster-close" id="closeStaffPoster" type="button" aria-label="Tutup">×</button></div>
-      <div class="poster-meta" id="posterMeta"></div>
-      <div class="poster-staff-wrap"><span class="eyebrow">PETUGAS HANDLING</span><div class="poster-staff-list" id="posterStaffList"></div></div>
-      <div class="poster-actions"><button class="btn ghost" id="posterCloseBtn" type="button">Tutup</button><button class="btn primary" id="downloadStaffPoster" type="button">Download Image</button></div>
+      <div class="poster-visual" id="staffPosterVisual">
+        <div class="poster-top"><img src="brand-icon.png" alt="CGK Handling"><div><span class="eyebrow">HAMDAN TOUR · CGK HANDLING</span><h3 id="posterTitle">JADWAL HANDLING</h3></div></div>
+        <div class="poster-subline" id="posterDateLine"></div>
+        <div class="poster-flight-band"><div><span>FLIGHT</span><b id="posterFlight">-</b></div><div><span>HANDLING</span><b id="posterHandling">-</b></div><div><span>JAM</span><b id="posterTime">-</b></div></div>
+        <div class="poster-route" id="posterRoute">CGK - DOH</div>
+        <div class="poster-package"><span class="eyebrow">PACKAGE</span><b id="posterPackage">-</b></div>
+        <div class="poster-staff-wrap"><span class="eyebrow">PETUGAS HANDLING</span><div class="poster-staff-list" id="posterStaffList"></div></div>
+        <div class="poster-footer">Hamdan Tour · CGK Handling Operations</div>
+      </div>
+      <div class="poster-actions"><button class="btn ghost" id="posterCloseBtn" type="button">Tutup</button><button class="btn primary" id="downloadStaffPoster" type="button">Download JPG</button><button class="icon-btn poster-close" id="closeStaffPoster" type="button" aria-label="Tutup">×</button></div>
     </div>
   </section>
 
@@ -245,7 +268,7 @@
 
 
 <script>
-/* CGK Handling v21 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
+/* CGK Handling v32 — self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
 (async function(){
   try {
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
@@ -265,7 +288,7 @@
   const setStatus=(mode,label)=>{const el=document.getElementById("syncStatus");if(!el)return;el.dataset.mode=mode;const lab=el.querySelector(".sync-label");if(lab)lab.textContent=label;};
   function snapshot(){
     const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||"");return v??f}catch{return f}};
-    return {customEvents:read("cgk-custom-events",[]),eventOverrides:read("cgk-event-overrides",{}),deletedEvents:read("cgk-deleted-events",[]),attendanceByEventId:read("cgk-attendance",{}),receivedIncentiveByMonth:read("cgk-received-incentive",{}),checklistByEventId:read("cgk-checklist",{}),assignedHandlingStaff:read("cgk-assigned-handling-staff",{}),note:localStorage.getItem("cgk-note")||"",sourceVersion:"31"};
+    return {customEvents:read("cgk-custom-events",[]),eventOverrides:read("cgk-event-overrides",{}),deletedEvents:read("cgk-deleted-events",[]),attendanceByEventId:read("cgk-attendance",{}),receivedIncentiveByMonth:read("cgk-received-incentive",{}),checklistByEventId:read("cgk-checklist",{}),assignedHandlingStaff:read("cgk-assigned-handling-staff",{}),staffMembers:read("cgk-handling-staff-members",[]),note:localStorage.getItem("cgk-note")||"",sourceVersion:"32"};
   }
   function markChanged(){localUpdatedAt=Date.now();localStorage.setItem("cgk-local-updated-at",String(localUpdatedAt));}
   function writeLocal(state){
@@ -277,6 +300,7 @@
     const nextReceived=state.receivedIncentiveByMonth&&typeof state.receivedIncentiveByMonth==='object'?state.receivedIncentiveByMonth:{};
     const nextChecklist=state.checklistByEventId&&typeof state.checklistByEventId==='object'?state.checklistByEventId:{};
     const nextStaff=state.assignedHandlingStaff&&typeof state.assignedHandlingStaff==='object'?state.assignedHandlingStaff:{};
+    const nextMembers=Array.isArray(state.staffMembers)?state.staffMembers:[];
     localStorage.setItem("cgk-custom-events",JSON.stringify(nextCustom));
     localStorage.setItem("cgk-event-overrides",JSON.stringify(nextOverrides));
     localStorage.setItem("cgk-deleted-events",JSON.stringify(nextDeleted));
@@ -284,6 +308,8 @@
     localStorage.setItem("cgk-received-incentive",JSON.stringify(nextReceived));
     localStorage.setItem("cgk-checklist",JSON.stringify(nextChecklist));
     localStorage.setItem("cgk-assigned-handling-staff",JSON.stringify(nextStaff));
+    localStorage.setItem("cgk-handling-staff-members",JSON.stringify(nextMembers));
+    handlingStaffMembers=nextMembers.length?nextMembers:handlingStaffMembers; normalizeStaffAssignments();
     if(typeof state.note==='string') localStorage.setItem("cgk-note",state.note);
   }
   async function loadSDK(){
@@ -20747,6 +20773,7 @@ window.addEventListener('cgk-remote-state',ev=>{
   receivedIncentiveByMonth=state.receivedIncentiveByMonth&&typeof state.receivedIncentiveByMonth==='object'?state.receivedIncentiveByMonth:{};
   if(Object.prototype.hasOwnProperty.call(state,'checklistByEventId')) checklistByEventId=state.checklistByEventId&&typeof state.checklistByEventId==='object'?state.checklistByEventId:{};
   if(Object.prototype.hasOwnProperty.call(state,'assignedHandlingStaff')) assignedHandlingStaff=state.assignedHandlingStaff&&typeof state.assignedHandlingStaff==='object'?state.assignedHandlingStaff:{};
+  if(Object.prototype.hasOwnProperty.call(state,'staffMembers')&&Array.isArray(state.staffMembers)&&state.staffMembers.length){ handlingStaffMembers=state.staffMembers; normalizeStaffAssignments(); }
   showSavedNote();
   safeRender();
 });
@@ -21094,7 +21121,45 @@ setTimeout(()=>window.CGKSync?.init(),0);
 </script>
 <script>
 /* ========================= CHECKLIST + HANDLING STAFF ========================= */
-const HANDLING_STAFF=['Pak Azis','Pak Agus','Mas Ical','Pak Solihin','Pak Hidayat','Rasyid','Danial','Hadi','Yahya'];
+const DEFAULT_HANDLING_STAFF=[
+  ['staff_001','Pak Azis'],['staff_002','Pak Agus'],['staff_003','Mas Ical'],['staff_004','Pak Solihin'],['staff_005','Pak Hidayat'],
+  ['staff_006','Rasyid'],['staff_007','Danial'],['staff_008','Hadi'],['staff_009','Yahya'],['staff_010','Pak Chandra']
+];
+function makeStaffId(){return 'staff_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);}
+function loadStaffMembers(){
+  try{
+    const raw=JSON.parse(localStorage.getItem('cgk-handling-staff-members')||'null');
+    if(Array.isArray(raw)&&raw.length){
+      return raw.map((m,i)=>({id:String(m.id||makeStaffId()),name:String(m.name||'').trim(),active:m.active!==false})).filter(m=>m.name);
+    }
+  }catch{}
+  const seed=DEFAULT_HANDLING_STAFF.map(([id,name])=>({id,name,active:true}));
+  localStorage.setItem('cgk-handling-staff-members',JSON.stringify(seed));
+  return seed;
+}
+let handlingStaffMembers=loadStaffMembers();
+function saveStaffMembers(){localStorage.setItem('cgk-handling-staff-members',JSON.stringify(handlingStaffMembers));window.CGKSync?.queue()}
+function staffNameById(id){const m=handlingStaffMembers.find(x=>String(x.id)===String(id));return m?.name||String(id||'');}
+function normalizeStaffAssignments(){
+  let changed=false;
+  Object.keys(assignedHandlingStaff||{}).forEach(eventId=>{
+    const arr=Array.isArray(assignedHandlingStaff[eventId])?assignedHandlingStaff[eventId]:[];
+    const ids=arr.map(v=>{
+      const byId=handlingStaffMembers.find(m=>String(m.id)===String(v));
+      if(byId)return byId.id;
+      const byName=handlingStaffMembers.find(m=>m.name===String(v));
+      if(byName){changed=true;return byName.id;}
+      return null;
+    }).filter(Boolean);
+    if(JSON.stringify(ids)!==JSON.stringify(arr)) changed=true;
+    assignedHandlingStaff[eventId]=ids;
+  });
+  if(changed) saveAssignedStaff();
+}
+normalizeStaffAssignments();
+function activeStaffMembers(){return handlingStaffMembers.filter(m=>m.active);}
+function staffLabels(ids){return (Array.isArray(ids)?ids:[]).map(staffNameById).filter(Boolean);}
+
 const CHECKLIST_DEFINITION=[
   {group:'DOKUMEN & JAMAAH',items:[
     ['spanduk_keberangkatan','Spanduk keberangkatan'],
@@ -21156,12 +21221,22 @@ function closeChecklistModal(save=false){
   if(save){const ctx=window.__checklistEditing;if(ctx){checklistByEventId[ctx.eventId]={...ctx.draft};saveChecklist();}}
   modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__checklistEditing=null;render();
 }
+function renderStaffSelector(eventId,selected){
+  const box=$("#staffSelector");
+  const members=activeStaffMembers();
+  box.innerHTML=members.length?members.map(m=>`<button type="button" class="staff-chip-btn ${selected.has(m.id)?'selected':''}" data-staff-id="${escapeHTML(m.id)}"><span>${escapeHTML(m.name)}</span>${selected.has(m.id)?'<span class="staff-check">✓</span>':''}</button>`).join(''):'<div class="empty-inline" style="padding:12px 20px">Belum ada anggota handling aktif.</div>';
+  box.querySelectorAll('[data-staff-id]').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.dataset.staffId;if(selected.has(id))selected.delete(id);else selected.add(id);renderStaffSelector(eventId,selected);}));
+}
 function openStaffModal(eventId){
-  const e=findEvent(eventId);if(!e)return;const key=String(eventId),selected=new Set(assignedHandlingStaff[key]||[]);window.__staffEditing={eventId:key,selected};
+  const e=findEvent(eventId);if(!e)return;
+  const key=String(eventId);
+  const selected=new Set(Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[]);
+  window.__staffEditing={eventId:key,selected};
   $("#staffModalTitle").textContent=`Petugas ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;
-  const box=$("#staffSelector");box.innerHTML=HANDLING_STAFF.map(name=>`<button type="button" class="staff-chip-btn ${selected.has(name)?'selected':''}" data-staff-name="${escapeHTML(name)}">${escapeHTML(name)}</button>`).join('');
-  box.querySelectorAll('[data-staff-name]').forEach(btn=>btn.addEventListener('click',()=>{const name=btn.dataset.staffName;if(selected.has(name))selected.delete(name);else selected.add(name);btn.classList.toggle('selected',selected.has(name));}));
-  const modal=$("#staffModal"),back=$("#operationBackdrop");modal.hidden=false;back.hidden=false;modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');modal.classList.add('open');back.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
+  renderStaffSelector(key,selected);
+  const modal=$("#staffModal"),back=$("#operationBackdrop");
+  if(window.__checklistEditing)closeChecklistModal(false);
+  modal.hidden=false;back.hidden=false;modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');modal.classList.add('open');back.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
 }
 function closeStaffModal(save=false){
   const modal=$("#staffModal"),back=$("#operationBackdrop"),ctx=window.__staffEditing;
@@ -21169,23 +21244,78 @@ function closeStaffModal(save=false){
   modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__staffEditing=null;
   const id=ctx?.eventId;if(id&&document.getElementById('drawer')?.classList.contains('open'))openDrawer(id);else render();
 }
-function openStaffPoster(eventId){
-  const e=findEvent(eventId);if(!e)return;const key=String(eventId),staff=Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[];
-  const modal=$("#staffPoster"),list=$("#posterStaffList");
-  const date=new Date(e.date+'T12:00:00');const dateLabel=date.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
-  $("#posterTitle").textContent=`JADWAL HANDLING (${dateLabel})`;$("#posterMeta").innerHTML=[['Tanggal',fmtDate(e.date)],['Flight',e.flight||'-'],['Handling',e.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA'],['Jam',handlingTime(e)],['Route',String(e.route||'-').replaceAll('→','-')]].map(x=>`<div class="poster-meta-item"><span>${escapeHTML(x[0])}</span><b>${escapeHTML(x[1])}</b></div>`).join('');
-  list.innerHTML=staff.length?staff.map((n,i)=>`<div class="poster-staff-item">${i+1}. ${escapeHTML(n)}</div>`).join(''):'<div class="poster-staff-item">Belum ada petugas handling yang dipilih.</div>';
-  modal.hidden=false;modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
+function openStaffManage(){
+  if(window.__checklistEditing)closeChecklistModal(false);
+  if(window.__staffEditing)closeStaffModal(false);
+  renderStaffManageList();
+  const modal=$("#staffManageModal"),back=$("#operationBackdrop");modal.hidden=false;back.hidden=false;modal.classList.add('open');back.classList.add('open');modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
 }
-function closeStaffPoster(){const m=$("#staffPoster");m.hidden=true;m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');}
+function closeStaffManage(){const modal=$("#staffManageModal"),back=$("#operationBackdrop");modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();}
+function renderStaffManageList(){
+  const box=$("#staffManageList");
+  box.innerHTML=handlingStaffMembers.map(m=>`<div class="staff-manage-row ${m.active?'':'is-inactive'}"><div><div class="staff-manage-name">${escapeHTML(m.name)}</div><div class="staff-manage-status">${m.active?'Aktif':'Nonaktif'}</div></div><div class="staff-manage-actions"><button class="btn ghost small" type="button" data-edit-staff="${escapeHTML(m.id)}">Edit</button>${m.active?`<button class="btn danger small" type="button" data-toggle-staff="${escapeHTML(m.id)}">Nonaktifkan</button>`:`<button class="btn primary small" type="button" data-toggle-staff="${escapeHTML(m.id)}">Aktifkan</button>`}</div></div>`).join('');
+  box.querySelectorAll('[data-edit-staff]').forEach(btn=>btn.addEventListener('click',()=>openStaffMemberModal(btn.dataset.editStaff)));
+  box.querySelectorAll('[data-toggle-staff]').forEach(btn=>btn.addEventListener('click',()=>toggleStaffMember(btn.dataset.toggleStaff)));
+}
+function toggleStaffMember(id){const m=handlingStaffMembers.find(x=>String(x.id)===String(id));if(!m)return;m.active=!m.active;saveStaffMembers();renderStaffManageList();toast(`${m.name} ${m.active?'diaktifkan':'dinonaktifkan'}`);}
+function openStaffMemberModal(id=null){
+  window.__editingStaffMemberId=id?String(id):null;
+  const m=id?handlingStaffMembers.find(x=>String(x.id)===String(id)):null;
+  $("#staffMemberModalTitle").textContent=m?'Edit Anggota Handling':'Tambah Anggota Handling';
+  $("#staffMemberNameInput").value=m?.name||'';$("#staffMemberError").hidden=true;
+  const modal=$("#staffMemberModal");modal.hidden=false;modal.setAttribute('aria-hidden','false');modal.classList.add('open');
+  setTimeout(()=>$("#staffMemberNameInput")?.focus(),0);
+}
+function closeStaffMember(){const modal=$("#staffMemberModal");modal.classList.remove('open');modal.hidden=true;modal.setAttribute('aria-hidden','true');$("#staffMemberError").hidden=true;document.activeElement?.blur?.();window.__editingStaffMemberId=null;}
+function saveStaffMemberForm(){
+  const input=$("#staffMemberNameInput"),err=$("#staffMemberError"),name=String(input.value||'').trim();
+  if(!name){err.textContent='Nama anggota wajib diisi.';err.hidden=false;return;}
+  const duplicate=handlingStaffMembers.find(m=>m.name.toLowerCase()===name.toLowerCase() && String(m.id)!==String(window.__editingStaffMemberId||''));
+  if(duplicate){err.textContent='Nama anggota sudah terdaftar.';err.hidden=false;return;}
+  if(window.__editingStaffMemberId){const m=handlingStaffMembers.find(x=>String(x.id)===String(window.__editingStaffMemberId));if(m)m.name=name;}
+  else handlingStaffMembers.push({id:makeStaffId(),name,active:true});
+  saveStaffMembers();closeStaffMember();renderStaffManageList();toast('Data anggota handling disimpan');
+}
+function openStaffPoster(eventId){
+  const e=findEvent(eventId);if(!e)return;
+  const key=String(eventId),ids=Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[];
+  const names=staffLabels(ids);
+  const modal=$("#staffPoster"),list=$("#posterStaffList");
+  const date=new Date(e.date+'T12:00:00');
+  const dateLabel=date.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
+  $("#posterTitle").textContent='JADWAL HANDLING';
+  $("#posterDateLine").textContent=dateLabel;
+  $("#posterFlight").textContent=e.flight||'-';
+  $("#posterHandling").textContent=e.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA';
+  $("#posterTime").textContent=handlingTime(e);
+  $("#posterRoute").textContent=String(e.route||'-').replaceAll('→',' - ');
+  $("#posterPackage").textContent=String(e.package||'-').replace(/\s+/g,' ').trim();
+  list.innerHTML=names.length?names.map((n,i)=>`<div class="poster-staff-item"><span>${String(i+1).padStart(2,'0')}</span>${escapeHTML(n)}</div>`).join(''):'<div class="poster-staff-item">Belum ada petugas handling yang dipilih.</div>';
+  window.__staffPosterEventId=String(eventId);
+  modal.hidden=false;modal.setAttribute('aria-hidden','false');modal.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
+}
+function closeStaffPoster(){const m=$("#staffPoster");m.classList.remove('open');m.hidden=true;m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__staffPosterEventId=null;}
 async function loadHtml2Canvas(){if(window.html2canvas)return window.html2canvas;return new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';sc.onload=()=>resolve(window.html2canvas);sc.onerror=reject;document.head.appendChild(sc);});}
-async function downloadStaffPosterImage(){try{const html2canvas=await loadHtml2Canvas();const canvas=await html2canvas($("#staffPosterCard"),{backgroundColor:'#ffffff',scale:2,useCORS:true});const a=document.createElement('a');const e=findEvent(window.__staffPosterEventId||'');a.download=`Jadwal_Handling_${e?.date||'schedule'}_${e?.flight||'event'}.png`;a.href=canvas.toDataURL('image/png');a.click();}catch(err){console.error(err);toast('Gagal membuat gambar petugas');}}
-window.openChecklistModal=openChecklistModal;window.openStaffModal=openStaffModal;window.openStaffPoster=(id)=>{window.__staffPosterEventId=String(id);openStaffPoster(id)};
+async function downloadStaffPosterImage(){
+  try{
+    const html2canvas=await loadHtml2Canvas();
+    const node=$("#staffPosterVisual");
+    const canvas=await html2canvas(node,{backgroundColor:'#ffffff',scale:2,useCORS:true,logging:false,width:540,height:675,windowWidth:540,windowHeight:675});
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.94));
+    if(!blob)throw new Error('Gagal membuat JPG');
+    const e=findEvent(window.__staffPosterEventId||'');
+    const a=document.createElement('a');a.download=`Jadwal_Handling_${e?.date||'schedule'}_${e?.flight||'event'}.jpg`;a.href=URL.createObjectURL(blob);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  }catch(err){console.error(err);toast('Gagal membuat JPG petugas handling');}
+}
+window.openChecklistModal=openChecklistModal;window.openStaffModal=openStaffModal;window.openStaffPoster=(id)=>openStaffPoster(id);window.openStaffManage=openStaffManage;
 $("#closeChecklist").onclick=()=>closeChecklistModal(false);$("#cancelChecklist").onclick=()=>closeChecklistModal(false);$("#saveChecklistBtn").onclick=()=>closeChecklistModal(true);
 $("#closeStaff").onclick=()=>closeStaffModal(false);$("#cancelStaff").onclick=()=>closeStaffModal(false);$("#saveStaffBtn").onclick=()=>closeStaffModal(true);
 $("#closeStaffPoster").onclick=closeStaffPoster;$("#posterCloseBtn").onclick=closeStaffPoster;$("#downloadStaffPoster").onclick=downloadStaffPosterImage;
-$("#operationBackdrop").onclick=()=>{if(window.__checklistEditing)closeChecklistModal(false);else if(window.__staffEditing)closeStaffModal(false);};
-window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(window.__checklistEditing){e.preventDefault();closeChecklistModal(false);}else if(window.__staffEditing){e.preventDefault();closeStaffModal(false);}else if(!$("#staffPoster").hidden){e.preventDefault();closeStaffPoster();}}});
+$("#closeStaffManage").onclick=closeStaffManage;$("#cancelStaffManage").onclick=closeStaffManage;$("#addStaffMemberBtn").onclick=()=>openStaffMemberModal();
+$("#closeStaffMember").onclick=closeStaffMember;$("#cancelStaffMember").onclick=closeStaffMember;$("#saveStaffMember").onclick=saveStaffMemberForm;
+$("#quickStaff").onclick=openStaffManage;
+$("#operationBackdrop").onclick=()=>{if(window.__checklistEditing)closeChecklistModal(false);else if(window.__staffEditing)closeStaffModal(false);else if(!$("#staffManageModal").hidden)closeStaffManage();};
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(window.__checklistEditing){e.preventDefault();closeChecklistModal(false);}else if(window.__staffEditing){e.preventDefault();closeStaffModal(false);}else if(!$("#staffMemberModal").hidden){e.preventDefault();closeStaffMember();}else if(!$("#staffManageModal").hidden){e.preventDefault();closeStaffManage();}else if(!$("#staffPoster").hidden){e.preventDefault();closeStaffPoster();}}});
 window.addEventListener('cgk-remote-state',()=>{if(window.__checklistEditing){const cur=getChecklistState(window.__checklistEditing.eventId).state;window.__checklistEditing.draft={...cur,...window.__checklistEditing.draft};renderChecklistDraft();}});
 </script>
 <script>
