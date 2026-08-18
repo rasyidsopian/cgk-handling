@@ -7,18 +7,21 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=24">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=24">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=24">
-  <link rel="icon" type="image/png" href="icon-192.png?rev=24">
-      <title>CGK Handling · Hamdan Tour · v24</title>
+  <link rel="manifest" href="manifest.webmanifest?v=31">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=31">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=31">
+  <link rel="icon" type="image/png" href="icon-192.png?rev=31">
+      <title>CGK Handling · Hamdan Tour · v31</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=31">
   <style id="report-styles">
     .report-modal{max-width:760px}.report-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:4px 20px 14px}.report-wide{grid-column:1/-1}.report-field{display:flex;flex-direction:column;gap:7px;color:#68776f;font-size:11px;font-weight:700}.report-field input,.report-field select{width:100%;padding:11px 12px;border:1px solid #dfe8e2;border-radius:11px;background:#fff;color:#183c2c;font:600 12px Inter,system-ui,sans-serif;box-sizing:border-box;outline:none}.report-field input:focus,.report-field select:focus{border-color:#7cb898;box-shadow:0 0 0 3px rgba(14,122,72,.08)}.report-note{margin:2px 20px 14px;padding:12px 13px;border:1px solid #e2ebe5;background:#f7faf8;border-radius:12px;display:flex;gap:9px;align-items:flex-start;color:#718079;font-size:10px;line-height:1.45}.report-note .icon-slot{margin-top:1px;flex:none}.report-validation{margin:0 20px 14px;padding:10px 12px;border-radius:10px;background:#fff2ef;border:1px solid #f0cfc6;color:#a54433;font-size:11px;font-weight:700}.report-btn{box-shadow:0 8px 18px rgba(10,107,66,.16)}
     @media(max-width:760px){.report-form-grid{grid-template-columns:1fr}.report-wide{grid-column:auto}.report-modal{width:calc(100vw - 22px);max-width:none}}
     .pdf-preview-canvas{display:none}
   </style>
+<style id="ops-feature-styles">
+.operation-modal-backdrop{position:fixed;inset:0;background:rgba(8,24,17,.34);z-index:1100;opacity:0;pointer-events:none;transition:opacity .16s}.operation-modal-backdrop.open{opacity:1;pointer-events:auto}.operation-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,92vw);max-height:min(82vh,760px);background:#fff;border:1px solid #dfe9e3;border-radius:18px;box-shadow:0 30px 90px rgba(10,37,27,.2);z-index:1101;display:flex;flex-direction:column;overflow:hidden}.operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{display:none!important}.operation-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid #e4ebe6;flex:none}.operation-modal-head h3{margin:4px 0 0;font-size:18px;color:#173c2d}.checklist-summary{padding:13px 20px 12px;border-bottom:1px solid #e9efeb;background:#fbfdfc;display:grid;grid-template-columns:130px 1fr 95px;gap:12px;align-items:center;flex:none}.checklist-summary strong{display:block;margin-top:3px;font-size:20px;color:#0a6b42}.checklist-summary small{font-size:9px;color:#7a8881;text-align:right}.progress-track{height:8px;background:#e5eee8;border-radius:999px;overflow:hidden}.progress-track span{display:block;height:100%;width:0;background:#0a6b42;border-radius:999px;transition:width .18s}.checklist-scroll{padding:12px 20px 16px;overflow-y:auto;min-height:0;flex:1}.checklist-group{margin-bottom:12px}.checklist-group:last-child{margin-bottom:0}.checklist-group-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 7px;color:#6f7d76;font-size:9px;letter-spacing:.08em;font-weight:800}.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid #e1eae4;background:#fff;border-radius:11px;margin-top:6px;cursor:pointer;transition:.14s}.checklist-item:hover{border-color:#9ac9ad;background:#f7fbf9}.checklist-item.checked{border-color:#b9dfc7;background:#eef8f1}.checklist-item input{width:17px;height:17px;accent-color:#0a6b42;flex:none}.checklist-item label{font-size:11px;color:#274438;font-weight:650;cursor:pointer;flex:1}.checklist-item .checkmark{font-size:9px;font-weight:800;color:#0a6b42}.operation-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e4ebe6;background:#fff;flex:none}.operation-hint{margin:0;padding:0 20px 12px;color:#74817b;font-size:10px;line-height:1.5}.staff-modal{max-width:560px}.staff-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:4px 20px 16px;overflow:auto;min-height:0}.staff-chip-btn{border:1px solid #dfe8e3;background:#fff;color:#28473a;border-radius:11px;min-height:44px;padding:8px 10px;font:700 11px Inter,system-ui,sans-serif;cursor:pointer;transition:.14s}.staff-chip-btn.selected{background:#0a6b42;color:#fff;border-color:#0a6b42;box-shadow:0 5px 14px rgba(10,107,66,.13)}.staff-chip-btn.selected::before{content:'✓ ';font-weight:900}.operation-card{margin:12px 0 0;padding:13px;border:1px solid #e3ebe6;background:#fbfdfc;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.operation-card>div:first-child{min-width:0}.operation-card strong{display:block;margin-top:4px;font-size:12px;color:#193f30}.operation-card small{display:block;margin-top:3px;color:#77857e;font-size:9px}.checklist-card{background:#f7fbf8}.staff-card{background:#fff}.staff-chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.staff-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#eaf5ee;color:#0a6b42;font-size:8px;font-weight:800;border:1px solid #cde5d5}.empty-inline{font-size:9px;color:#84918b}.operation-actions{display:flex;gap:6px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}.staff-poster{position:fixed;inset:0;z-index:1200;background:rgba(8,24,17,.42);display:flex;align-items:center;justify-content:center;padding:20px}.poster-card{width:min(540px,94vw);background:#fff;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden;border:1px solid #dce8e1}.poster-top{display:grid;grid-template-columns:54px 1fr 40px;align-items:center;gap:12px;padding:18px 20px;background:#0a6b42;color:#fff}.poster-top img{width:54px;height:54px;border-radius:15px;background:#fff;object-fit:cover}.poster-top .eyebrow{color:#b9d8ca}.poster-top h3{margin:4px 0 0;font-size:20px;letter-spacing:.02em}.poster-top .icon-btn{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}.poster-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 20px;border-bottom:1px solid #e5ece7}.poster-meta-item{padding:10px;border:1px solid #e4ece7;border-radius:12px;background:#fbfdfc}.poster-meta-item span{display:block;color:#7a8881;font-size:8px;text-transform:uppercase;letter-spacing:.08em}.poster-meta-item b{display:block;margin-top:4px;color:#1b4132;font-size:11px}.poster-staff-wrap{padding:16px 20px}.poster-staff-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.poster-staff-item{padding:11px 12px;border:1px solid #dfe9e3;border-radius:12px;background:#f7faf8;color:#1e4434;font-size:11px;font-weight:750}.poster-actions{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e5ece7;background:#fbfdfc}@media(max-width:760px){.operation-modal{width:94vw;max-height:82vh}.checklist-summary{grid-template-columns:95px 1fr 80px}.staff-selector{grid-template-columns:1fr 1fr}.operation-card{align-items:flex-start;flex-direction:column}.operation-actions{width:100%;justify-content:flex-start}.poster-card{width:96vw}.poster-meta{grid-template-columns:1fr 1fr}.poster-staff-list{grid-template-columns:1fr}.poster-top h3{font-size:16px}}
+</style>
 </head>
 <body>
   <div class="app-shell">
@@ -214,6 +217,30 @@
     </form>
   </div>
 
+  <div class="operation-modal-backdrop" id="operationBackdrop" hidden></div>
+  <section class="operation-modal" id="checklistModal" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+    <div class="operation-modal-head"><div><span class="eyebrow">CHECKLIST KEBERANGKATAN</span><h3 id="checklistModalTitle">Checklist Keberangkatan</h3></div><button class="icon-btn" id="closeChecklist" type="button" aria-label="Tutup">×</button></div>
+    <div class="checklist-summary"><div><span class="eyebrow">PROGRESS</span><strong id="checklistProgressText">0%</strong></div><div class="progress-track"><span id="checklistProgressBar"></span></div><small id="checklistProgressMeta">0/0 item selesai</small></div>
+    <div class="checklist-scroll" id="checklistBody"></div>
+    <div class="operation-modal-foot"><button class="btn ghost" id="cancelChecklist" type="button">Batal</button><button class="btn primary" id="saveChecklistBtn" type="button">Simpan Checklist</button></div>
+  </section>
+
+  <section class="operation-modal staff-modal" id="staffModal" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+    <div class="operation-modal-head"><div><span class="eyebrow">PETUGAS HANDLING</span><h3 id="staffModalTitle">Pilih Petugas Handling</h3></div><button class="icon-btn" id="closeStaff" type="button" aria-label="Tutup">×</button></div>
+    <p class="operation-hint">Pilih satu atau beberapa petugas yang ditugaskan pada jadwal ini.</p>
+    <div class="staff-selector" id="staffSelector"></div>
+    <div class="operation-modal-foot"><button class="btn ghost" id="cancelStaff" type="button">Batal</button><button class="btn primary" id="saveStaffBtn" type="button">Simpan Petugas</button></div>
+  </section>
+
+  <section class="staff-poster" id="staffPoster" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+    <div class="poster-card" id="staffPosterCard">
+      <div class="poster-top"><img src="brand-icon.png" alt="CGK Handling"><div><span class="eyebrow">HAMDAN TOUR · CGK HANDLING</span><h3 id="posterTitle">JADWAL HANDLING</h3></div><button class="icon-btn poster-close" id="closeStaffPoster" type="button" aria-label="Tutup">×</button></div>
+      <div class="poster-meta" id="posterMeta"></div>
+      <div class="poster-staff-wrap"><span class="eyebrow">PETUGAS HANDLING</span><div class="poster-staff-list" id="posterStaffList"></div></div>
+      <div class="poster-actions"><button class="btn ghost" id="posterCloseBtn" type="button">Tutup</button><button class="btn primary" id="downloadStaffPoster" type="button">Download Image</button></div>
+    </div>
+  </section>
+
   <div class="toast" id="toast"></div>
 
 
@@ -226,7 +253,7 @@
   } catch(e) { console.warn('cache cleanup skipped',e); }
 })();
 </script>
-<script src="sync-config.js?v=24"></script>
+<script src="sync-config.js?v=31"></script>
 <script>
 /* Cross-device realtime sync adapter. Configure Supabase in sync-config.js. */
 (function(){
@@ -238,7 +265,7 @@
   const setStatus=(mode,label)=>{const el=document.getElementById("syncStatus");if(!el)return;el.dataset.mode=mode;const lab=el.querySelector(".sync-label");if(lab)lab.textContent=label;};
   function snapshot(){
     const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||"");return v??f}catch{return f}};
-    return {customEvents:read("cgk-custom-events",[]),eventOverrides:read("cgk-event-overrides",{}),deletedEvents:read("cgk-deleted-events",[]),attendanceByEventId:read("cgk-attendance",{}),receivedIncentiveByMonth:read("cgk-received-incentive",{}),checklistsByEventId:read("cgk-checklists",{}),note:localStorage.getItem("cgk-note")||"",sourceVersion:"37"};
+    return {customEvents:read("cgk-custom-events",[]),eventOverrides:read("cgk-event-overrides",{}),deletedEvents:read("cgk-deleted-events",[]),attendanceByEventId:read("cgk-attendance",{}),receivedIncentiveByMonth:read("cgk-received-incentive",{}),checklistByEventId:read("cgk-checklist",{}),assignedHandlingStaff:read("cgk-assigned-handling-staff",{}),note:localStorage.getItem("cgk-note")||"",sourceVersion:"31"};
   }
   function markChanged(){localUpdatedAt=Date.now();localStorage.setItem("cgk-local-updated-at",String(localUpdatedAt));}
   function writeLocal(state){
@@ -248,13 +275,15 @@
     const nextDeleted=Array.isArray(state.deletedEvents)?state.deletedEvents:[];
     const nextAttendance=state.attendanceByEventId&&typeof state.attendanceByEventId==='object'?state.attendanceByEventId:{};
     const nextReceived=state.receivedIncentiveByMonth&&typeof state.receivedIncentiveByMonth==='object'?state.receivedIncentiveByMonth:{};
-    const nextChecklists=state.checklistsByEventId&&typeof state.checklistsByEventId==='object'?state.checklistsByEventId:{};
+    const nextChecklist=state.checklistByEventId&&typeof state.checklistByEventId==='object'?state.checklistByEventId:{};
+    const nextStaff=state.assignedHandlingStaff&&typeof state.assignedHandlingStaff==='object'?state.assignedHandlingStaff:{};
     localStorage.setItem("cgk-custom-events",JSON.stringify(nextCustom));
     localStorage.setItem("cgk-event-overrides",JSON.stringify(nextOverrides));
     localStorage.setItem("cgk-deleted-events",JSON.stringify(nextDeleted));
     localStorage.setItem("cgk-attendance",JSON.stringify(nextAttendance));
     localStorage.setItem("cgk-received-incentive",JSON.stringify(nextReceived));
-    localStorage.setItem("cgk-checklists",JSON.stringify(nextChecklists));
+    localStorage.setItem("cgk-checklist",JSON.stringify(nextChecklist));
+    localStorage.setItem("cgk-assigned-handling-staff",JSON.stringify(nextStaff));
     if(typeof state.note==='string') localStorage.setItem("cgk-note",state.note);
   }
   async function loadSDK(){
@@ -20678,26 +20707,13 @@ const PERIODS=[
   {y:2026,m:11,label:"December 2026"},{y:2027,m:0,label:"January 2027"},
   {y:2027,m:1,label:"February 2027"},{y:2027,m:2,label:"March 2027"}
 ];
-const APP_VERSION="22";
+const APP_VERSION="31";
 let state={index:0,query:"",type:"all",airline:"all",highPax:false};
 let lastRenderedIndex=0;
 const $=s=>document.querySelector(s);
 const monthKey=p=>`${p.y}-${String(p.m+1).padStart(2,"0")}`;
 const fmtDate=s=>new Date(`${s}T12:00:00`).toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"});
 const handlingTime=e=>e.type==="ARRIVAL_CGK" ? (e.arrivalTime || e.time) : (e.departureTime || e.time);
-const OFFICE_DEPARTURE_OFFSET_MINUTES=420;
-const RETURN_DEPARTURE_OFFSET_MINUTES=120;
-function shiftDateTime(date,time,deltaMinutes){
-  const m=String(time||"00:00").match(/^(\d{1,2}):(\d{2})$/);
-  if(!m||!/^(\d{4})-(\d{2})-(\d{2})$/.test(String(date||""))) return null;
-  const dt=new Date(`${date}T${m[1].padStart(2,"0")}:${m[2]}:00`);
-  if(Number.isNaN(dt.getTime())) return null;
-  dt.setMinutes(dt.getMinutes()+deltaMinutes);
-  return {date:`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`,time:`${String(dt.getHours()).padStart(2,"0")}:${String(dt.getMinutes()).padStart(2,"0")}`};
-}
-function getOfficeDeparture(e){return e&&e.type==="DEPARTURE_CGK"?shiftDateTime(e.date,handlingTime(e),-OFFICE_DEPARTURE_OFFSET_MINUTES):null;}
-function getReturnDeparture(e){return e&&e.type==="ARRIVAL_CGK"?shiftDateTime(e.date,handlingTime(e),-RETURN_DEPARTURE_OFFSET_MINUTES):null;}
-function auxiliaryTimeLabel(e){const a=e?.type==="DEPARTURE_CGK"?getOfficeDeparture(e):getReturnDeparture(e);if(!a)return "";return `${a.time}${a.date!==e.date?` · ${fmtDate(a.date)}`:""}`;}
 
 // Source data stays intact. Operator edits are stored as local overrides, while new schedules are stored separately.
 handlingEvents.forEach(e=>{ if(e.type==="ARRIVAL_CGK" && e.arrivalTime) e.time=e.arrivalTime; });
@@ -20711,12 +20727,17 @@ function loadAttendance(){try{return JSON.parse(localStorage.getItem("cgk-attend
 function saveAttendance(){localStorage.setItem("cgk-attendance",JSON.stringify(attendanceByEventId));window.CGKSync?.queue()}
 function loadReceived(){try{return JSON.parse(localStorage.getItem("cgk-received-incentive")||"{}")}catch{return {}}}
 function saveReceived(){localStorage.setItem("cgk-received-incentive",JSON.stringify(receivedIncentiveByMonth));window.CGKSync?.queue()}
+function loadChecklist(){try{return JSON.parse(localStorage.getItem("cgk-checklist")||"{}")}catch{return {}}}
+function saveChecklist(){localStorage.setItem("cgk-checklist",JSON.stringify(checklistByEventId));window.CGKSync?.queue()}
+function loadAssignedStaff(){try{return JSON.parse(localStorage.getItem("cgk-assigned-handling-staff")||"{}")}catch{return {}}}
+function saveAssignedStaff(){localStorage.setItem("cgk-assigned-handling-staff",JSON.stringify(assignedHandlingStaff));window.CGKSync?.queue()}
 let customEvents=loadCustomEvents();
 let eventOverrides=loadOverrides();
 let deletedEvents=loadDeleted();
 let attendanceByEventId=loadAttendance();
 let receivedIncentiveByMonth=loadReceived();
-let checklistsByEventId={};
+let checklistByEventId=loadChecklist();
+let assignedHandlingStaff=loadAssignedStaff();
 window.addEventListener('cgk-remote-state',ev=>{
   const state=ev.detail||{};
   customEvents=Array.isArray(state.customEvents)?state.customEvents:[];
@@ -20724,7 +20745,8 @@ window.addEventListener('cgk-remote-state',ev=>{
   deletedEvents=Array.isArray(state.deletedEvents)?state.deletedEvents:[];
   attendanceByEventId=state.attendanceByEventId&&typeof state.attendanceByEventId==='object'?state.attendanceByEventId:{};
   receivedIncentiveByMonth=state.receivedIncentiveByMonth&&typeof state.receivedIncentiveByMonth==='object'?state.receivedIncentiveByMonth:{};
-  checklistsByEventId=state.checklistsByEventId&&typeof state.checklistsByEventId==='object'?state.checklistsByEventId:{};
+  if(Object.prototype.hasOwnProperty.call(state,'checklistByEventId')) checklistByEventId=state.checklistByEventId&&typeof state.checklistByEventId==='object'?state.checklistByEventId:{};
+  if(Object.prototype.hasOwnProperty.call(state,'assignedHandlingStaff')) assignedHandlingStaff=state.assignedHandlingStaff&&typeof state.assignedHandlingStaff==='object'?state.assignedHandlingStaff:{};
   showSavedNote();
   safeRender();
 });
@@ -20759,13 +20781,13 @@ function renderYear(){
   $("#yearOverview").innerHTML=PERIODS.map(p=>{const k=monthKey(p),n=allEvents().filter(e=>e.date.slice(0,7)===k).length;return `<div class="year-item"><span>${p.label}</span><b>${n}</b><small>CGK events</small></div>`;}).join("");
 }
 function eventCard(e){
-  const dep=e.type==="DEPARTURE_CGK",cls=dep?"dep":"arr",time=handlingTime(e),custom=e.custom===true,aux=auxiliaryTimeLabel(e);
-  const attended=!!attendanceByEventId[String(e.id)]?.checkedIn,check=getChecklistSummary(checklistsByEventId[String(e.id)]);
+  const dep=e.type==="DEPARTURE_CGK",cls=dep?"dep":"arr",time=handlingTime(e),custom=e.custom===true;
+  const attended=!!attendanceByEventId[String(e.id)]?.checkedIn;
   const header=dep
     ?`<div class="event-top"><div><div class="type">BERANGKAT</div><div class="time">${time}</div></div>${custom?`<span class="custom-badge">CUSTOM</span>`:""}</div>`
     :`<div class="event-top"><div><div class="type">TIBA</div><div class="time right-time">${time}</div></div></div>`;
   const attendBtn=`<button class="event-attendance ${attended?"checked":""}" data-attend-id="${e.id}" type="button">${attended?"✓ ABSEN MASUK":"○ ABSEN MASUK"}</button>`;
-  return `<div class="event ${cls} ${custom?"custom-event":""} ${attended?"is-attended":""}" data-id="${e.id}">${header}<div class="flight">${e.flight||"CUSTOM"}</div><div class="route">${e.route||"-"}</div><div class="pax">${e.pax?`${e.pax} PAX`:"PAX —"}</div>${aux?`<div class="aux-time"><span>${dep?"KANTOR":"HANDLING"}</span><b>${aux}</b></div>`:""}${dep&&check.total?`<div class="check-mini">✓ Checklist ${check.percent}%</div>`:""}${attendBtn}</div>`;
+  return `<div class="event ${cls} ${custom?"custom-event":""} ${attended?"is-attended":""}" data-id="${e.id}">${header}<div class="flight">${e.flight||"CUSTOM"}</div><div class="route">${e.route||"-"}</div><div class="pax">${e.pax?`${e.pax} PAX`:"PAX —"}</div>${attendBtn}</div>`;
 }
 function renderCalendar(){
   const p=PERIODS[state.index],events=monthEvents();
@@ -20792,19 +20814,25 @@ function isCustomEvent(id){return customEvents.some(e=>String(e.id)===String(id)
 function isSourceEvent(id){return handlingEvents.some(e=>String(e.id)===String(id))}
 function openDrawer(id){
   const e=findEvent(id);if(!e)return;
-  const dep=e.type==="DEPARTURE_CGK",time=handlingTime(e),custom=e.custom===true,edited=e.sourceEdited===true,attended=!!attendanceByEventId[String(e.id)]?.checkedIn,aux=dep?getOfficeDeparture(e):getReturnDeparture(e),check=checklistsByEventId[String(e.id)],checkSummary=getChecklistSummary(check);
+  const dep=e.type==="DEPARTURE_CGK",time=handlingTime(e),custom=e.custom===true,edited=e.sourceEdited===true,attended=!!attendanceByEventId[String(e.id)]?.checkedIn;
   $("#drawerTitle").textContent=e.flight||"Custom Schedule";
   const legs=(e.scheduleLegs||[]).map(x=>`<div class="leg-row"><span>${x.date}</span><b>${x.dep} → ${x.arr}</b><span>${x.route}</span><span>${x.flight}${x.arrivalNextDay?" (+1)":""}</span></div>`).join("");
   const actions=`<button class="btn ghost" id="editEventBtn"><span class="icon-slot" data-icon="pencil" aria-hidden="true"></span>${custom?"Edit":"Edit isi"}</button>${!custom&&edited?`<button class="btn ghost" id="resetEventBtn"><span class="icon-slot" data-icon="rotate-ccw" aria-hidden="true"></span>Reset asli</button>`:""}<button class="btn danger" id="deleteEventBtn"><span class="icon-slot" data-icon="trash-2" aria-hidden="true"></span>Hapus</button>`;
   const attendanceBox=`<div class="attendance-panel ${attended?"checked":""}"><div><span class="eyebrow">ATTENDANCE</span><strong>${attended?"✓ Sudah Absen":"Belum Absen"}</strong>${attended?`<small>${new Date(attendanceByEventId[String(e.id)].checkedInAt).toLocaleString("id-ID",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</small>`:""}</div><button class="btn ${attended?"ghost":"primary"} small" id="attendanceDrawerBtn" type="button">${attended?"Batalkan Absen":"✓ Absen Masuk"}</button></div>`;
-  const checklistBox=dep?`<div class="checklist-panel ${checkSummary.status==="COMPLETE"?"complete":""}"><div><span class="eyebrow">CHECKLIST KEBERANGKATAN</span><strong>${checkSummary.total?`${checkSummary.completed} / ${checkSummary.total} · ${checkSummary.percent}%`:'Belum Diisi'}</strong>${checkSummary.total?`<small>${checkSummary.statusLabel}</small>`:""}</div><button class="btn ghost small" id="openChecklistBtn" type="button">${checkSummary.total?"Edit Checklist":"Checklist Keberangkatan"}</button></div>`:"";
-  $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div><div class="drawer-actions">${actions}</div>${attendanceBox}${checklistBox}<div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div><div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div><div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
+  const staff=Array.isArray(assignedHandlingStaff[String(e.id)])?assignedHandlingStaff[String(e.id)]:[];
+  const checklist=getChecklistState(e.id);
+  const checklistSummary=`${checklist.checked}/${checklist.total} · ${checklist.percent}%`;
+  const staffChips=staff.length?staff.map(n=>`<span class="staff-chip">${escapeHTML(n)}</span>`).join(""):"<span class=\"empty-inline\">Belum ada petugas</span>";
+  const operations=`${dep?`<div class="operation-card checklist-card"><div><span class="eyebrow">CHECKLIST KEBERANGKATAN</span><strong>${checklistSummary}</strong><small>${checklist.percent===100?"Checklist lengkap":"Masih ada item yang belum selesai"}</small></div><button class="btn ghost small" id="checklistBtn" type="button">Checklist Keberangkatan</button></div>`:''}<div class="operation-card staff-card"><div><span class="eyebrow">PETUGAS HANDLING</span><div class="staff-chip-row">${staffChips}</div></div><div class="operation-actions"><button class="btn ghost small" id="staffBtn" type="button">Petugas Handling</button><button class="btn primary small" id="showStaffBtn" type="button">Tampilkan Petugas Handling</button></div></div>`;
+  $("#drawerBody").innerHTML=`<div class="detail-hero"><small>${dep?"DEPARTURE":"ARRIVAL"} · ${fmtDate(e.date)}${custom?" · CUSTOM":edited?" · EDITED":""}</small><div class="big ${dep?"left":"right"}">${time}</div><small>${e.route||"-"}</small></div><div class="drawer-actions">${actions}</div>${attendanceBox}${operations}<div class="detail-grid">${[["Handling",dep?"BERANGKAT":"TIBA"],["Flight",e.flight||"CUSTOM"],["Airline",e.airlineName||e.airline||"-"],["Date",fmtDate(e.date)],["Handling Time",time],["Route",e.route||"-"],["Package",e.package||"-"],["PNR",e.pnr||"-"],["PAX",e.pax??"-"],["Rooms",e.rooms??"-"],["Hotel",e.hotel||"-"],["Vendor",e.vendor||"-"],["Status",e.status||"-"],["Note",e.note||"-"]].map(x=>`<div class="detail-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div><div class="legs-box"><b>Flight schedule source</b>${legs||"<div style='margin-top:7px;color:#7b8983;font-size:10px'>No linked itinerary legs.</div>"}</div><div class="source-box"><b>Source</b><p>${custom?"Custom operator schedule saved in this browser.":edited?"Source schedule has a local operator edit. Reset asli to restore the PDF value.":"Handling TIBA = actual arrival time at CGK on the final inbound segment. Transit departure times are never used as CGK handling arrival times. Source: PNR HAMDAN TOUR - Google Spreadsheet."}</p></div>`;
   $("#drawer").classList.add("open");$("#backdrop").classList.add("open");renderIcons();
   $("#editEventBtn").onclick=()=>{closeDrawer();openEditModal(e.id)};
   $("#attendanceDrawerBtn").onclick=()=>{toggleAttendance(e.id);openDrawer(e.id)};
+  if($("#checklistBtn")) $("#checklistBtn").onclick=()=>openChecklistModal(e.id);
+  $("#staffBtn").onclick=()=>openStaffModal(e.id);
+  $("#showStaffBtn").onclick=()=>openStaffPoster(e.id);
   $("#deleteEventBtn").onclick=()=>deleteSchedule(e.id);
   if(edited&&$("#resetEventBtn")) $("#resetEventBtn").onclick=()=>resetSourceOverride(e.id);
-  if(dep && $("#openChecklistBtn")) $("#openChecklistBtn").onclick=()=>openChecklistModal(e.id);
 }
 function closeDrawer(){$("#drawer").classList.remove("open");$("#backdrop").classList.remove("open")}
 function deleteSchedule(id){
@@ -20813,7 +20841,10 @@ function deleteSchedule(id){
   if(!confirm(`Hapus jadwal ini?\n\n${label}`))return;
   if(e.custom===true){customEvents=customEvents.filter(x=>String(x.id)!==String(id));saveCustomEvents();}
   else {if(!deletedEvents.includes(String(id)))deletedEvents.push(String(id));saveDeleted();delete eventOverrides[id];saveOverrides();}
-  delete attendanceByEventId[String(id)];saveAttendance(); delete checklistsByEventId[String(id)]; saveChecklists(); closeDrawer();render();toast("Jadwal dihapus");
+  delete attendanceByEventId[String(id)];saveAttendance();
+  delete checklistByEventId[String(id)]; saveChecklist();
+  delete assignedHandlingStaff[String(id)]; saveAssignedStaff();
+  closeDrawer();render();toast("Jadwal dihapus");
 }
 function toggleAttendance(id){
   const key=String(id),e=findEvent(id);if(!e)return;
@@ -20875,91 +20906,16 @@ function populateForm(e,date){
   $("#scheduleAirline").value=e?.airline||"";$("#scheduleAirlineName").value=e?.airlineName||"";$("#scheduleFlight").value=e?.flight||"";$("#scheduleRoute").value=e?.route||"";
   $("#schedulePackage").value=e?.package||"";$("#schedulePnr").value=e?.pnr||"";$("#schedulePax").value=e?.pax??"";$("#scheduleRooms").value=e?.rooms??"";$("#scheduleHotel").value=e?.hotel||"";$("#scheduleVendor").value=e?.vendor||"";$("#scheduleStatus").value=e?.status||"";$("#scheduleNote").value=e?.note||"";
 }
-const CHECKLIST_ITEMS=[
-  "SPANDUK KEBERANGKATAN","ID CARD + LANYARD","ROOMLIST 3 LEMBAR","MANIFEST JAMAAH 3 LEMBAR","TAS SERUT, SYAL, VITAMIN","KAIN IHRAM, SYAL, MUKENA, TAS SLEMPANG DLL","TEAM HANDLING (5 ORG)","OBAT-OBATAN P3K (2 TAS)","PASSPORT + BUKU KUNING (MENINGITIS) + CADANGAN","PRINT VISA","PRINT TIKET","PENGENAL KOPER (TAG & STIKER)","STIKER ZAMZAM","SARUNG KOPER","MENU MAKAN LOUNGE","CABLE TIE (TAG KOPER)","PLASTIK TAG KOPER (1 BUNGKUS)","UANG BENSIN + ETOL","HT 5 + SPEAKER TL + TITIK KUMPUL","TAS PRENTEL-PRENTEL & THUMBLER","PERLENGKAPAN DITERIMA DI BANDARA"
-];
-function loadChecklists(){try{return JSON.parse(localStorage.getItem("cgk-checklists")||"{}")}catch{return {}}}
-checklistsByEventId=loadChecklists();
-function saveChecklists(){localStorage.setItem("cgk-checklists",JSON.stringify(checklistsByEventId));window.CGKSync?.queue()}
-function getChecklistSummary(data){
-  if(!data||!data.items)return {total:0,completed:0,percent:0,status:"EMPTY",statusLabel:"Belum diisi",missing:CHECKLIST_ITEMS.slice()};
-  let completed=0;
-  const missing=[];
-  CHECKLIST_ITEMS.forEach(item=>{let ok=!!data.items[item];if(item===CHECKLIST_ITEMS[8]) ok=!!data.items[item]&&Number(data.passportCount)>0;if(ok)completed++;else missing.push(item);});
-  const percent=Math.round((completed/CHECKLIST_ITEMS.length)*100);
-  const status=percent===100?"COMPLETE":percent===0?"EMPTY":"IN_PROGRESS";
-  return {total:CHECKLIST_ITEMS.length,completed,percent,status,statusLabel:status==="COMPLETE"?"LENGKAP":status==="IN_PROGRESS"?"IN PROGRESS":"Belum diisi",missing};
-}
-function ensureChecklistModal(){
-  let back=document.getElementById("checklistBackdrop"),modal=document.getElementById("checklistModal");
-  if(back&&modal)return {back,modal};
-  back=document.createElement("div");back.id="checklistBackdrop";back.className="modal-backdrop";back.hidden=true;back.setAttribute("aria-hidden","true");
-  modal=document.createElement("div");modal.id="checklistModal";modal.className="schedule-modal checklist-modal";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-hidden","true");modal.setAttribute("inert","");
-  document.body.append(back,modal);
-  back.addEventListener("click",closeChecklistModal);
-  return {back,modal};
-}
-function openChecklistModal(eventId){
-  const e=findEvent(eventId);if(!e||e.type!=="DEPARTURE_CGK")return;
-  forceCloseAllModals();
-  const {back,modal}=ensureChecklistModal();
-  const d=checklistsByEventId[String(eventId)]||{items:{},passportCount:"",note:""};
-  const sum=getChecklistSummary(d);
-  modal.innerHTML=`<div class="modal-head"><div><span class="eyebrow">PRE-DEPARTURE OPERATIONS</span><h3>Checklist Keberangkatan</h3><div class="checklist-event-meta">${e.flight||"CUSTOM"} · ${e.route||"-"} · ${handlingTime(e)}</div></div><button class="icon-btn modal-x" id="closeChecklist" type="button">×</button></div><div class="check-progress"><div><span>Kelengkapan Perlengkapan</span><b id="checkPercent">${sum.percent}%</b></div><div class="progress-track"><i id="checkProgressBar" style="width:${sum.percent}%"></i></div></div><div class="checklist-list">${CHECKLIST_ITEMS.map((item,i)=>{const isPass=i===8;return `<label class="check-item ${isPass?"passport-item":""}"><input type="checkbox" data-check-item="${encodeURIComponent(item)}" ${d.items[item]?"checked":""}><span class="check-mark"></span><span class="check-label">${item}</span>${isPass?`<span class="passport-count-wrap"><small>Jumlah Paspor Diterima</small><input id="passportCount" type="number" min="0" inputmode="numeric" value="${Number(d.passportCount)||""}" placeholder="0"></span>`:""}</label>`}).join("")}</div><div class="check-missing" id="checkMissing">${sum.missing.length?`<b>Belum Lengkap</b><span>${sum.missing.join(" · ")}</span>`:"<b>✓ Checklist Lengkap</b>"}</div><label class="check-note">Catatan<textarea id="checkNote" rows="3" placeholder="Tambahkan catatan operasional..."></textarea></label><div class="modal-foot"><button class="btn ghost" id="cancelChecklist" type="button">Batal</button><button class="btn primary" id="saveChecklist" type="button">Simpan Checklist</button></div>`;
-  modal.querySelector("#checkNote").value=d.note||"";
-  modalManager.open("checklist");
-  const updatePreview=()=>{const items={};modal.querySelectorAll("[data-check-item]").forEach(cb=>items[decodeURIComponent(cb.dataset.checkItem)]=cb.checked);const preview=getChecklistSummary({items,passportCount:modal.querySelector("#passportCount")?.value||""});modal.querySelector("#checkPercent").textContent=preview.percent+"%";modal.querySelector("#checkProgressBar").style.width=preview.percent+"%";modal.querySelector("#checkMissing").innerHTML=preview.missing.length?`<b>Belum Lengkap</b><span>${preview.missing.join(" · ")}</span>`:`<b>✓ Checklist Lengkap</b>`;};
-  modal.querySelectorAll("[data-check-item],#passportCount").forEach(el=>el.addEventListener("input",updatePreview));
-  modal.querySelector("#closeChecklist").onclick=closeChecklistModal;modal.querySelector("#cancelChecklist").onclick=closeChecklistModal;modal.querySelector("#saveChecklist").onclick=()=>saveChecklist(eventId);
-  requestAnimationFrame(()=>modal.querySelector("[data-check-item]")?.focus());
-}
-function saveChecklist(eventId){const {modal}=ensureChecklistModal();const items={};modal.querySelectorAll("[data-check-item]").forEach(cb=>items[decodeURIComponent(cb.dataset.checkItem)]=cb.checked);const passportCount=Number(modal.querySelector("#passportCount")?.value||0);if(items[CHECKLIST_ITEMS[8]]&&passportCount<=0){toast("Jumlah paspor diterima wajib diisi");return;}const note=modal.querySelector("#checkNote")?.value||"";const summary=getChecklistSummary({items,passportCount});checklistsByEventId[String(eventId)]={items,passportCount,note,completedCount:summary.completed,totalItems:summary.total,percentage:summary.percent,status:summary.status,updatedAt:new Date().toISOString()};saveChecklists();closeChecklistModal();render();const e=findEvent(eventId);if(e)openDrawer(eventId);toast("Checklist disimpan");}
-function closeChecklistModal(){if(document.getElementById("checklistModal")) modalManager.close();}
 const modalManager=(()=>{
  let activeModal=null,suppressUntil=0;
- const refs={import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")},checklist:{modal:()=>$("#checklistModal"),backdrop:()=>$("#checklistBackdrop")}};
+ const refs={import:{modal:()=>$("#importModal"),backdrop:()=>$("#importBackdrop")},schedule:{modal:()=>$("#scheduleModal"),backdrop:()=>$("#scheduleBackdrop")}};
  function hide(el){if(!el)return;el.classList.remove("open");el.hidden=true;el.setAttribute("aria-hidden","true");el.setAttribute("inert","");el.style.display="none";el.style.visibility="hidden";el.style.opacity="0";el.style.pointerEvents="none";}
  function forceCloseAll(){clearTimeout(window.__importCloseTimer);clearTimeout(window.__scheduleCloseTimer);Object.values(refs).forEach(p=>{hide(p.modal());hide(p.backdrop())});document.querySelectorAll('[data-modal-layer="stale"]').forEach(el=>el.remove());activeModal=null;document.body.classList.remove("modal-open");document.body.style.removeProperty("overflow");document.body.style.removeProperty("touch-action");document.documentElement.style.removeProperty("overflow");}
- function open(type){if(type!=="import"&&type!=="schedule"&&type!=="checklist")return false;forceCloseAll();const modal=refs[type].modal(),back=refs[type].backdrop();if(!modal||!back)return false;activeModal=type;document.body.classList.add("modal-open");document.body.style.overflow="hidden";document.body.style.touchAction="none";[back,modal].forEach(el=>{el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";el.classList.add("open")});return true;}
+ function open(type){if(type!=="import"&&type!=="schedule")return false;forceCloseAll();const modal=refs[type].modal(),back=refs[type].backdrop();if(!modal||!back)return false;activeModal=type;document.body.classList.add("modal-open");document.body.style.overflow="hidden";document.body.style.touchAction="none";[back,modal].forEach(el=>{el.hidden=false;el.removeAttribute("inert");el.setAttribute("aria-hidden","false");el.style.display="block";el.style.visibility="visible";el.style.opacity="1";el.style.pointerEvents="auto";el.classList.add("open")});return true;}
  function close(){suppressUntil=Date.now()+120;forceCloseAll();}
  return{open,close,forceCloseAll,get active(){return activeModal},get suppressUntil(){return suppressUntil}};
 })();
 function syncModalLock(){if(!modalManager.active)document.body.classList.remove("modal-open");}
-
-/* V36 iOS/PWA initial UI sanitizer. Runs only before first user interaction. */
-(function hardenInitialUiState(){
-  let userInteracted=false;
-  const markInteraction=()=>{ userInteracted=true; };
-  window.addEventListener('pointerdown',markInteraction,{once:true,passive:true});
-  window.addEventListener('touchstart',markInteraction,{once:true,passive:true});
-  window.addEventListener('keydown',markInteraction,{once:true,passive:true});
-  function sanitize(){
-    if(userInteracted) return;
-    try{
-      ['importModal','scheduleModal','importBackdrop','scheduleBackdrop','checklistModal','checklistBackdrop'].forEach(id=>{
-        const el=document.getElementById(id); if(!el)return;
-        el.classList.remove('open');
-        el.hidden=true;
-        el.setAttribute('aria-hidden','true');
-        el.setAttribute('inert','');
-        el.style.setProperty('display','none','important');
-        el.style.setProperty('visibility','hidden','important');
-        el.style.setProperty('opacity','0','important');
-        el.style.setProperty('pointer-events','none','important');
-        try{el.blur?.();}catch(_){}
-      });
-      document.querySelectorAll('.report-root').forEach(el=>el.remove());
-      document.body.classList.remove('modal-open','report-modal-open','drawer-open','overlay-open','body-locked','scroll-locked');
-      document.body.style.removeProperty('overflow');
-      document.body.style.removeProperty('touch-action');
-      document.documentElement.style.removeProperty('overflow');
-      const ae=document.activeElement;
-      if(ae && ae!==document.body && ['INPUT','TEXTAREA','SELECT','BUTTON'].includes(ae.tagName)) { try{ae.blur?.();}catch(_){} }
-    }catch(err){ console.warn('[CGK] initial UI sanitize skipped',err); }
-  }
-  const boot=()=>{ sanitize(); setTimeout(sanitize,250); setTimeout(sanitize,800); };
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
-})();
 function forceCloseAllModals(){modalManager.forceCloseAll();}
 function prepareModal(){}
 function resetModalElement(){modalManager.forceCloseAll();}
@@ -21137,6 +21093,102 @@ setTimeout(()=>window.CGKSync?.init(),0);
 
 </script>
 <script>
+/* ========================= CHECKLIST + HANDLING STAFF ========================= */
+const HANDLING_STAFF=['Pak Azis','Pak Agus','Mas Ical','Pak Solihin','Pak Hidayat','Rasyid','Danial','Hadi','Yahya'];
+const CHECKLIST_DEFINITION=[
+  {group:'DOKUMEN & JAMAAH',items:[
+    ['spanduk_keberangkatan','Spanduk keberangkatan'],
+    ['id_card','ID Card'],
+    ['lanyard','Lanyard'],
+    ['roomlist','Roomlist 3 lembar'],
+    ['manifest_jamaah','Manifest jamaah 3 lembar'],
+    ['paspor_diterima','Paspor diterima'],
+    ['vaksin_diterima','Vaksin / buku kuning diterima']
+  ]},
+  {group:'PERLENGKAPAN',items:[
+    ['tas_serut','Tas serut'],
+    ['syal','Syal'],
+    ['vitamin','Vitamin'],
+    ['kain_ihram','Kain ihram'],
+    ['mukena','Mukena'],
+    ['team_handling','Team handling 5 orang'],
+    ['p3k','Obat-obat P3K (2 tas)'],
+    ['pengenal_koper','Pengenal koper (tag & stiker)'],
+    ['stiker_zamzam','Stiker Zamzam'],
+    ['sarung_koper','Sarung koper'],
+    ['tas_prentel','Tas prentel-prentel & tumbler']
+  ]},
+  {group:'LOGISTIK & BANDARA',items:[
+    ['menu_lounge','Menu makan lounge'],
+    ['cable_tie','Cable tie (tag koper)'],
+    ['plastik_koper','Plastik tag koper (1 bungkus)'],
+    ['uang_bensin','Uang bensin'],
+    ['etoll','E-toll'],
+    ['ht_speaker','HT + 5 speaker TL + titik kumpul'],
+    ['perlengkapan_bandara','Perlengkapan diterima di bandara']
+  ]}
+];
+function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function defaultChecklist(){const o={};CHECKLIST_DEFINITION.forEach(g=>g.items.forEach(([id])=>o[id]=false));return o;}
+function getChecklistState(eventId){
+  const saved=checklistByEventId[String(eventId)]||{};const state={...defaultChecklist(),...(saved||{})};
+  const total=Object.keys(state).length;const checked=Object.values(state).filter(Boolean).length;const percent=total?Math.round(checked/total*100):0;
+  return {state,total,checked,percent};
+}
+function openChecklistModal(eventId){
+  const e=findEvent(eventId);if(!e)return;
+  const modal=$("#checklistModal"),back=$("#operationBackdrop");
+  window.__checklistEditing={eventId:String(eventId),original:getChecklistState(eventId).state,draft:{...getChecklistState(eventId).state}};
+  $("#checklistModalTitle").textContent=`Checklist ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;
+  renderChecklistDraft();
+  modal.hidden=false;back.hidden=false;modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');modal.classList.add('open');back.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>{const first=modal.querySelector('input');first?.focus({preventScroll:true});});
+}
+function renderChecklistDraft(){
+  const ctx=window.__checklistEditing;if(!ctx)return;const body=$("#checklistBody");
+  body.innerHTML=CHECKLIST_DEFINITION.map(g=>`<section class="checklist-group"><div class="checklist-group-title"><span>${escapeHTML(g.group)}</span><span>${g.items.filter(([id])=>ctx.draft[id]).length}/${g.items.length}</span></div>${g.items.map(([id,label])=>{const checked=!!ctx.draft[id];return `<label class="checklist-item ${checked?'checked':''}"><input type="checkbox" data-check-id="${id}" ${checked?'checked':''}><span class="check-label">${escapeHTML(label)}</span><span class="checkmark">${checked?'SELESAI':'BELUM'}</span></label>`}).join('')}</section>`).join('');
+  const total=Object.keys(ctx.draft).length,checked=Object.values(ctx.draft).filter(Boolean).length,pct=total?Math.round(checked/total*100):0;
+  $("#checklistProgressText").textContent=`${pct}%`;$("#checklistProgressBar").style.width=`${pct}%`;$("#checklistProgressMeta").textContent=`${checked}/${total} item selesai${pct===100?' · Checklist Lengkap':''}`;
+  body.querySelectorAll('[data-check-id]').forEach(inp=>inp.addEventListener('change',()=>{ctx.draft[inp.dataset.checkId]=inp.checked;renderChecklistDraft();}));
+}
+function closeChecklistModal(save=false){
+  const modal=$("#checklistModal"),back=$("#operationBackdrop");
+  if(save){const ctx=window.__checklistEditing;if(ctx){checklistByEventId[ctx.eventId]={...ctx.draft};saveChecklist();}}
+  modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__checklistEditing=null;render();
+}
+function openStaffModal(eventId){
+  const e=findEvent(eventId);if(!e)return;const key=String(eventId),selected=new Set(assignedHandlingStaff[key]||[]);window.__staffEditing={eventId:key,selected};
+  $("#staffModalTitle").textContent=`Petugas ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;
+  const box=$("#staffSelector");box.innerHTML=HANDLING_STAFF.map(name=>`<button type="button" class="staff-chip-btn ${selected.has(name)?'selected':''}" data-staff-name="${escapeHTML(name)}">${escapeHTML(name)}</button>`).join('');
+  box.querySelectorAll('[data-staff-name]').forEach(btn=>btn.addEventListener('click',()=>{const name=btn.dataset.staffName;if(selected.has(name))selected.delete(name);else selected.add(name);btn.classList.toggle('selected',selected.has(name));}));
+  const modal=$("#staffModal"),back=$("#operationBackdrop");modal.hidden=false;back.hidden=false;modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');modal.classList.add('open');back.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
+}
+function closeStaffModal(save=false){
+  const modal=$("#staffModal"),back=$("#operationBackdrop"),ctx=window.__staffEditing;
+  if(save&&ctx){assignedHandlingStaff[ctx.eventId]=Array.from(ctx.selected);saveAssignedStaff();}
+  modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__staffEditing=null;
+  const id=ctx?.eventId;if(id&&document.getElementById('drawer')?.classList.contains('open'))openDrawer(id);else render();
+}
+function openStaffPoster(eventId){
+  const e=findEvent(eventId);if(!e)return;const key=String(eventId),staff=Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[];
+  const modal=$("#staffPoster"),list=$("#posterStaffList");
+  const date=new Date(e.date+'T12:00:00');const dateLabel=date.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
+  $("#posterTitle").textContent=`JADWAL HANDLING (${dateLabel})`;$("#posterMeta").innerHTML=[['Tanggal',fmtDate(e.date)],['Flight',e.flight||'-'],['Handling',e.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA'],['Jam',handlingTime(e)],['Route',String(e.route||'-').replaceAll('→','-')]].map(x=>`<div class="poster-meta-item"><span>${escapeHTML(x[0])}</span><b>${escapeHTML(x[1])}</b></div>`).join('');
+  list.innerHTML=staff.length?staff.map((n,i)=>`<div class="poster-staff-item">${i+1}. ${escapeHTML(n)}</div>`).join(''):'<div class="poster-staff-item">Belum ada petugas handling yang dipilih.</div>';
+  modal.hidden=false;modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
+}
+function closeStaffPoster(){const m=$("#staffPoster");m.hidden=true;m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');}
+async function loadHtml2Canvas(){if(window.html2canvas)return window.html2canvas;return new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';sc.onload=()=>resolve(window.html2canvas);sc.onerror=reject;document.head.appendChild(sc);});}
+async function downloadStaffPosterImage(){try{const html2canvas=await loadHtml2Canvas();const canvas=await html2canvas($("#staffPosterCard"),{backgroundColor:'#ffffff',scale:2,useCORS:true});const a=document.createElement('a');const e=findEvent(window.__staffPosterEventId||'');a.download=`Jadwal_Handling_${e?.date||'schedule'}_${e?.flight||'event'}.png`;a.href=canvas.toDataURL('image/png');a.click();}catch(err){console.error(err);toast('Gagal membuat gambar petugas');}}
+window.openChecklistModal=openChecklistModal;window.openStaffModal=openStaffModal;window.openStaffPoster=(id)=>{window.__staffPosterEventId=String(id);openStaffPoster(id)};
+$("#closeChecklist").onclick=()=>closeChecklistModal(false);$("#cancelChecklist").onclick=()=>closeChecklistModal(false);$("#saveChecklistBtn").onclick=()=>closeChecklistModal(true);
+$("#closeStaff").onclick=()=>closeStaffModal(false);$("#cancelStaff").onclick=()=>closeStaffModal(false);$("#saveStaffBtn").onclick=()=>closeStaffModal(true);
+$("#closeStaffPoster").onclick=closeStaffPoster;$("#posterCloseBtn").onclick=closeStaffPoster;$("#downloadStaffPoster").onclick=downloadStaffPosterImage;
+$("#operationBackdrop").onclick=()=>{if(window.__checklistEditing)closeChecklistModal(false);else if(window.__staffEditing)closeStaffModal(false);};
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(window.__checklistEditing){e.preventDefault();closeChecklistModal(false);}else if(window.__staffEditing){e.preventDefault();closeStaffModal(false);}else if(!$("#staffPoster").hidden){e.preventDefault();closeStaffPoster();}}});
+window.addEventListener('cgk-remote-state',()=>{if(window.__checklistEditing){const cur=getChecklistState(window.__checklistEditing.eventId).state;window.__checklistEditing.draft={...cur,...window.__checklistEditing.draft};renderChecklistDraft();}});
+</script>
+<script>
 // Initial render is intentionally direct and independent of external libraries.
 (function bootNow(){
   function draw(){
@@ -21267,16 +21319,7 @@ setTimeout(()=>window.CGKSync?.init(),0);
     if(root?. _cleanup) root._cleanup();
     _baseClose(focusBack);
   };
-  function openReport(){
-  try{
-    forceCloseAllModals();
-    document.querySelectorAll('.report-root').forEach(el=>el.remove());
-    buildReportModal();
-  }catch(err){
-    console.error('[CGK] openReport failed',err);
-    try{toast('Gagal membuka report.');}catch(_){}
-  }
-}
+  function openReport(){buildReportModal();}
   function getLiveEvents(){return typeof allEvents==='function'?allEvents():[];}
   function getLiveAttendance(){return typeof attendanceByEventId!=='undefined'?attendanceByEventId:{};}
   function getAttendedRows(){const events=getLiveEvents();const attendance=getLiveAttendance();return events.filter(e=>attendance[String(e.id)]?.checkedIn).map(e=>({event:{...e},attendance:{...attendance[String(e.id)]}}));}
@@ -21309,220 +21352,159 @@ setTimeout(()=>window.CGKSync?.init(),0);
   }
   function getPeriodLabel(rows){if(!rows.length)return'Tidak ada data';const dates=daysBetweenRows(rows),first=dates[0],last=dates[dates.length-1];if(first===last)return new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});return `${new Date(first+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})} — ${new Date(last+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}`;}
   function reportId(){return`HTR-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${String(Date.now()).slice(-6)}`;}
-  function sanitizeFileName(s){return String(s).trim().replace(/[\\/:*?"<>|]+/g,' ').replace(/\s+/g,' ').replace(/^[.\s]+|[.\s]+$/g,'')||'Report';}
-  function reportFileName(snapshot){
-    const words=String(snapshot.personName||'Report').trim().split(/\s+/).filter(Boolean).slice(0,2);
-    const shortName=sanitizeFileName(words.join(' '))||'Report';
-    let monthName='Report';
-    const monthMap=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-    let dateStr=snapshot?.dateRange?.start || snapshot?.attendanceRows?.[0]?.event?.date || '';
-    if(!dateStr && snapshot?.dateRange?.month && snapshot.dateRange.month!=='all'){
-      const m=Number(snapshot.dateRange.month); if(m>=1&&m<=12) monthName=monthMap[m-1];
-    }
-    if(dateStr){const m=Number(String(dateStr).slice(5,7)); if(m>=1&&m<=12) monthName=monthMap[m-1];}
-    if(monthName==='Report'){
-      const lbl=String(snapshot.periodLabel||'');
-      const hit=monthMap.findIndex(m=>lbl.toLowerCase().includes(m.toLowerCase()));
-      if(hit>=0) monthName=monthMap[hit];
-    }
-    return `HTR_${shortName}_${monthName}.pdf`;
-  }
+  function sanitizeFileName(s){return String(s).trim().replace(/[^a-zA-Z0-9-_]+/g,'_').replace(/^_+|_+$/g,'')||'Report';}
   function money(n){return typeof formatRp==='function'?formatRp(n):`Rp${Number(n||0).toLocaleString('id-ID')}`;}
-  async function loadJsPDF(){if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;return await new Promise((resolve,reject)=>{const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';const existing=document.querySelector('script[data-jspdf]');if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF),{once:true});existing.addEventListener('error',reject,{once:true});return;}const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('Library PDF tidak tersedia.'));s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));document.head.appendChild(s);});}
-  function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{try{const c=document.createElement('canvas');c.width=Math.max(1,img.naturalWidth);c.height=Math.max(1,img.naturalHeight);const ctx=c.getContext('2d');ctx.drawImage(img,0,0);resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
+  async function loadJsPDF(){if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;return await new Promise((resolve,reject)=>{const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';const existing=document.querySelector('script[data-jspdf]');if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF));existing.addEventListener('error',reject);return;}const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('jsPDF tidak tersedia'));s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));document.head.appendChild(s);});}
+  function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d');ctx.drawImage(img,0,0);try{resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
+  function wrap(doc,text,maxWidth,fontSize){doc.setFontSize(fontSize);return doc.splitTextToSize(String(text??'-'),maxWidth);}
+  function routeText(route){return String(route||'-').replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').trim();}
   function pdfNum(v,fallback=0){const n=Number(v);return Number.isFinite(n)?n:fallback;}
   function pdfText(v,fallback='-'){const s=String(v??'').trim();return s?s:fallback;}
   function pdfLines(doc,text,maxWidth,size,maxLines=2){doc.setFontSize(pdfNum(size,7));const out=doc.splitTextToSize(pdfText(text),Math.max(1,pdfNum(maxWidth,10)));return Array.isArray(out)?out.map(x=>String(x)).slice(0,maxLines):[pdfText(text)];}
   function safePdfText(doc,text,x,y,opts={}){const xx=pdfNum(x),yy=pdfNum(y);try{doc.text(pdfText(text),xx,yy,opts||{});}catch(e){console.warn('PDF text fallback',e);doc.text(String(pdfText(text)),xx,yy);}}
   function safePdfLines(doc,lines,x,y,opts={}){const xx=pdfNum(x),yy=pdfNum(y);const arr=Array.isArray(lines)?lines.map(v=>String(v)):[String(lines)];try{doc.text(arr,xx,yy,opts||{});}catch(e){safePdfText(doc,arr.join(' '),xx,yy,opts);}}
   function safeRect(doc,x,y,w,h,style='FD',radius=0){const xx=pdfNum(x),yy=pdfNum(y),ww=Math.max(0,pdfNum(w)),hh=Math.max(0,pdfNum(h));try{if(radius>0)doc.roundedRect(xx,yy,ww,hh,pdfNum(radius),pdfNum(radius),style);else doc.rect(xx,yy,ww,hh,style);}catch(e){try{doc.rect(xx,yy,ww,hh,style);}catch(_){}}}
-    function routeText(route){return pdfText(route).replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').replace(/\s+/g,' ').trim();}
-  function safeRoundRect(doc,x,y,w,h,radius=0,style='FD'){return safeRect(doc,x,y,w,h,style,radius);}
-  // PDF helper preflight: these helpers must exist before any PDF rendering starts.
-  if(typeof safeRect!=='function' || typeof safeRoundRect!=='function') throw new Error('PDF geometry helpers unavailable');
-  function drawSectionTitle(doc,title,x,y,green,olive){
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);safePdfText(doc,title,x,y);
-    const tw=Math.max(28,doc.getTextWidth(title));
-    doc.setDrawColor(...olive);doc.setLineWidth(.35);doc.line(x+tw+5,y-1.2,x+tw+20,y-1.2);
+  async function loadJsPDF(){
+    if(window.jspdf?.jsPDF)return window.jspdf.jsPDF;
+    return await new Promise((resolve,reject)=>{
+      const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      const existing=document.querySelector('script[data-jspdf]');
+      if(existing){existing.addEventListener('load',()=>resolve(window.jspdf?.jsPDF),{once:true});existing.addEventListener('error',reject,{once:true});return;}
+      const s=document.createElement('script');s.src=src;s.async=true;s.dataset.jspdf='true';
+      s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('Library PDF tidak tersedia.'));
+      s.onerror=()=>reject(new Error('Library PDF gagal dimuat.'));
+      document.head.appendChild(s);
+    });
   }
-  function drawFooterBand(doc,page,total,W,H,bg,muted,white){
-    doc.setFillColor(...bg);safeRect(doc,0,H-9,W,9,'F');
-    doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(...white);
-    safePdfText(doc,'Hamdan Tour · CGK Handling Operations · Confidential Operational Report',12,H-3.8);
-    safePdfText(doc,`Page ${page} of ${total}`,W-12,H-3.8,{align:'right'});
-  }
+  function imageToDataURL(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{try{const c=document.createElement('canvas');c.width=Math.max(1,img.naturalWidth);c.height=Math.max(1,img.naturalHeight);const ctx=c.getContext('2d');ctx.drawImage(img,0,0);resolve(c.toDataURL('image/png'));}catch(e){reject(e);}};img.onerror=reject;img.src=url;});}
+  function routeText(route){return pdfText(route).replaceAll('→',' - ').replaceAll('↔',' - ').replace(/[!‘’]/g,'').replace(/\s+-\s+/g,' - ').replace(/\s+/g,' ').trim();}
+  function safeRoundRect(doc,x,y,w,h,radius=0,style='FD'){ return safeRect(doc,x,y,w,h,style,radius); }
   async function buildPDF(snapshot){
     const jsPDF=await loadJsPDF();
     const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
-    const W=210,H=297,margin=9,contentW=W-(margin*2);
-    const bg=[244,243,235],green=[22,58,45],dark=[26,52,42],muted=[99,113,105],line=[205,212,202],white=[255,255,255],softGreen=[224,235,226],softOlive=[221,221,198],olive=[145,145,79],cream=[250,248,239],alt=[239,243,237];
-    let y=12;
+    const W=210,H=297,margin=16;
+    const green=[10,107,66], dark=[22,58,45], muted=[102,117,109], line=[221,231,225], pale=[245,249,246], white=[255,255,255], alt=[250,252,251];
+    let y=16, page=1;
     let logo=null;
     try{logo=await imageToDataURL('brand-icon.png?report='+Date.now());}catch(_){logo=null;}
 
-    // Page background
-    doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');
+    const addFooter=()=>{
+      doc.setDrawColor(...line);doc.setLineWidth(.3);doc.line(pdfNum(margin),284,pdfNum(W-margin),284);
+      doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...muted);
+      safePdfText(doc,'Hamdan Tour · CGK Handling Operations · Confidential Operational Report',margin,289);
+      safePdfText(doc,`Page ${page}`,W-margin,289,{align:'right'});
+    };
+    const newPage=(section)=>{
+      addFooter();doc.addPage();page++;y=18;
+      doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(...green);
+      safePdfText(doc,section,margin,y);y+=6;
+    };
 
-    // Decorative circles, subtle and cropped at upper-right like the reference.
-    try{
-      doc.setDrawColor(...olive);doc.setLineWidth(.22);
-      [11,17,23,29].forEach(r=>doc.circle(194,12,r,'S'));
-      doc.line(177,0,194,12);doc.line(194,12,210,0);
-      doc.line(194,12,210,24);
-    }catch(_){ }
+    // PREMIUM HEADER — based on original V25 report design
+    if(logo){try{doc.addImage(logo,'PNG',margin,11,16,16,undefined,'FAST');}catch(_){}}
+    doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(17);
+    safePdfText(doc,'HAMDAN TOUR HANDLING REPORT',38,18);
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...muted);
+    safePdfText(doc,'Operational Attendance & Handling Incentive Report',38,24);
+    doc.setDrawColor(...green);doc.setLineWidth(.8);doc.line(pdfNum(margin),31,pdfNum(W-margin),31);
+    y=40;
 
-    // Header — keep the title inside a fixed left column so it can never collide with report metadata.
-    if(logo){try{doc.addImage(logo,'PNG',margin,8,16,16,undefined,'FAST');}catch(_){} }
-    const titleX=35, titleMaxW=92, metaX=165;
-    doc.setTextColor(...green);doc.setFont('times','bold');
-    let titleSize=18.0;
-    while(titleSize>14.0){
-      doc.setFontSize(titleSize);
-      if(doc.getTextWidth('HAMDAN TOUR HANDLING REPORT')<=titleMaxW) break;
-      titleSize-=0.5;
-    }
-    safePdfText(doc,'HAMDAN TOUR HANDLING REPORT',titleX,15.2);
-    doc.setFont('helvetica','normal');doc.setFontSize(8.2);doc.setTextColor(...muted);
-    doc.setFontSize(7.6); safePdfText(doc,'Operational Attendance & Handling Incentive Report',titleX,21.0);
+    // REPORT INFORMATION
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);
+    safePdfText(doc,'REPORT INFORMATION',margin,y);y+=7;
+    doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...muted);
+    safePdfText(doc,'Prepared For',margin,y);
+    safePdfText(doc,'Report Period',78,y);
+    safePdfText(doc,'Generated',137,y);
+    y+=5;
+    doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(...dark);
+    safePdfText(doc,pdfText(snapshot.personName),margin,y);
+    safePdfLines(doc,pdfLines(doc,pdfText(snapshot.periodLabel),48,9.5,2),78,y);
+    doc.setFontSize(8);
+    safePdfLines(doc,pdfLines(doc,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),57,8,2),137,y);
+    y+=6;
+    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(...muted);
+    safePdfText(doc,`Report ID ${pdfText(snapshot.reportId)}`,137,y);y+=9;
 
-    doc.setFont('helvetica','bold');doc.setFontSize(6.9);doc.setTextColor(...green);
-    safePdfText(doc,'REPORT GENERATED',metaX,11.5);
-    doc.setFont('helvetica','normal');doc.setFontSize(7.6);doc.setTextColor(...dark);
-    safePdfText(doc,new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),metaX,16.2);
-    doc.setFont('helvetica','bold');doc.setFontSize(6.9);doc.setTextColor(...green);safePdfText(doc,'REPORT ID',metaX,20.7);
-    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(...dark);safePdfText(doc,pdfText(snapshot.reportId),metaX,24.8);
-    doc.setDrawColor(...olive);doc.setLineWidth(.55);doc.line(margin,32,W-margin,32);
-    y=38;
-
-    // Report information
-    drawSectionTitle(doc,'REPORT INFORMATION',margin,y,green,olive); y+=6;
-    const infoXs=[margin,69,136];
-    const infoLabels=['PREPARED FOR','REPORT PERIOD','REPORT GENERATED'];
-    const infoVals=[pdfText(snapshot.personName),pdfText(snapshot.periodLabel),new Date(snapshot.generatedAt).toLocaleString('id-ID',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})];
-    infoLabels.forEach((label,i)=>{
-      doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(...muted);safePdfText(doc,label,infoXs[i],y);
-      doc.setFont('helvetica','bold');doc.setFontSize(i===0?9.0:8.4);doc.setTextColor(...dark);
-      const lines=pdfLines(doc,infoVals[i],i===0?48:55,i===0?9.0:8.4,2);
-      safePdfLines(doc,lines,infoXs[i],y+6,{maxWidth:i===0?48:55});
+    // COMPACT PREMIUM SUMMARY — same V25 visual language, slightly safer sizing
+    doc.setFillColor(...pale);doc.setDrawColor(...line);safeRect(doc,margin,y,W-2*margin,30,'FD',3);
+    const stats=[['Total Attendance',snapshot.totalAttendance],['Departure',snapshot.departureCount],['Arrival',snapshot.arrivalCount],['Handling Days',snapshot.handlingDays],['Expected Incentive',money(snapshot.expectedIncentive)]];
+    const cols=[margin+5,margin+38,margin+67,margin+95,margin+126];
+    stats.forEach((s,i)=>{
+      doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(...muted);safePdfText(doc,s[0],cols[i],y+8);
+      doc.setFont('helvetica','bold');doc.setFontSize(i===4?9.2:11);doc.setTextColor(...dark);safePdfText(doc,pdfText(s[1]),cols[i],y+16);
     });
-    y+=19;
+    y+=40;
 
-    // Summary strip
-    const sumH=24;
-    doc.setFillColor(...green);safeRoundRect(doc,margin,y,contentW,sumH,3,'F');
-    const statXs=[margin+5,margin+40,margin+69,margin+98];
-    const statLabels=[['TOTAL ATTENDANCE',snapshot.totalAttendance],['DEPARTURE',snapshot.departureCount],['ARRIVAL',snapshot.arrivalCount],['HANDLING DAYS',snapshot.handlingDays]];
-    statLabels.forEach((s,i)=>{
-      doc.setFont('helvetica','bold');doc.setFontSize(6.2);doc.setTextColor(171,195,181);safePdfText(doc,s[0],statXs[i],y+8);
-      doc.setFont('times','bold');doc.setFontSize(15.5);doc.setTextColor(...white);safePdfText(doc,pdfText(s[1]),statXs[i],y+16.5);
-    });
-    const expX=142, expW=58, expY=y+3.5, expH=17;
-    doc.setFillColor(...cream);safeRoundRect(doc,expX,expY,expW,expH,3,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(6.3);doc.setTextColor(...green);safePdfText(doc,'EXPECTED INCENTIVE',expX+4,expY+5.2);
-    doc.setFont('times','bold');doc.setFontSize(14.2);doc.setTextColor(...dark);safePdfText(doc,money(snapshot.expectedIncentive),expX+4,expY+12.5);
-    doc.setDrawColor(...olive);doc.setLineWidth(.6);doc.line(expX+4,expY+14.6,expX+25,expY+14.6);
-    y+=31;
-
-    // Attendance detail
-    drawSectionTitle(doc,'ATTENDANCE DETAIL',margin,y,green,olive); y+=5.5;
-    const headers=['NO','DATE','TYPE','TIME','FLIGHT','ROUTE','PAX','ATTENDANCE','INCENTIVE'];
-    const widths=[7,20,19,14,16,35,10,29,28];
-    const totalW=widths.reduce((a,b)=>a+b,0);
-    const x0=margin + Math.max(0,(contentW-totalW)/2);
+    // ATTENDANCE DETAIL — original V25 layout, with V28-safe drawing helpers
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);
+    safePdfText(doc,'ATTENDANCE DETAIL',margin,y);y+=6;
+    const headers=['No','Date','Type','Time','Flight','Route','PAX','Attendance','Incentive'];
+    const widths=[8,23,21,17,19,37,12,27,28];
     const drawTableHeader=()=>{
-      const headerH=7.2;
-      // Draw ONE continuous dark-green background across the entire header row.
-      doc.setFillColor(...dark);
-      safeRect(doc,x0,y,totalW,headerH,'F');
-      let x=x0;
-      doc.setTextColor(...white);
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(6.4);
-      headers.forEach((h,i)=>{
-        const align=(i===0||i===3||i===6)?'center':'left';
-        safePdfText(doc,h,align==='center'?x+widths[i]/2:x+2,y+4.7,{align});
-        x+=widths[i];
-      });
-      y+=headerH;
+      let x=margin;doc.setFillColor(...green);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(6.8);
+      headers.forEach((h,i)=>{safeRect(doc,x,y,widths[i],8,'F');safePdfText(doc,h,x+2,y+5);x+=widths[i];});
+      y+=8;
     };
     drawTableHeader();
     snapshot.attendanceRows.forEach((r,idx)=>{
-      if(y>257){addFooterBand(doc,doc.getNumberOfPages(),doc.getNumberOfPages(),W,H,dark,muted,white);doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;drawSectionTitle(doc,'ATTENDANCE DETAIL (CONTINUED)',margin,y,green,olive);y+=5.5;drawTableHeader();}
-      const type=r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA';
-      const aux=r.event.type==='DEPARTURE_CGK'?getOfficeDeparture(r.event):getReturnDeparture(r.event); const mainTime=pdfText(handlingTime(r.event)); const auxTime=aux?`${aux.time}${aux.date!==r.event.date?`\n${fmtDate(aux.date)}`:""}`:"";
-      const row=[String(idx+1),new Date(r.event.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),type,mainTime,pdfText(r.event.flight||'-'),routeText(r.event.route),pdfText(r.event.pax??'-'),'CHECKED IN',pdfText(r.incentiveLabel)];
-      const rowH=9.2;let x=x0;
+      if(y>270){newPage('ATTENDANCE DETAIL (continued)');drawTableHeader();}
+      const d=r.event.date;
+      const row=[
+        String(idx+1),
+        new Date(d+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),
+        r.event.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA',
+        pdfText(handlingTime(r.event)),
+        pdfText(r.event.flight||'-'),
+        routeText(r.event.route),
+        pdfText(r.event.pax??'-'),
+        'CHECKED IN',
+        pdfText(r.incentiveLabel)
+      ];
+      const h=11;let x=margin;
       row.forEach((val,i)=>{
-        doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,widths[i],rowH,'FD');
-        doc.setTextColor(...dark);doc.setFont('helvetica',i===1||i===4||i===8?'bold':'normal');doc.setFontSize(6.15);
-        if(i===2){
-          const badgeW=widths[i]-5,badgeX=x+2.5,badgeY=y+1.7;const badgeFill=type==='TIBA'?softOlive:softGreen;
-          doc.setFillColor(...badgeFill);safeRoundRect(doc,badgeX,badgeY,badgeW,4.8,2.1,'F');doc.setFont('helvetica','bold');doc.setFontSize(5.7);doc.setTextColor(...green);safePdfText(doc,val,badgeX+badgeW/2,badgeY+3.25,{align:'center'});
-        } else if(i===7){
-          const badgeW=Math.min(widths[i]-4,23),badgeX=x+(widths[i]-badgeW)/2,badgeY=y+1.7;doc.setFillColor(...cream);safeRoundRect(doc,badgeX,badgeY,badgeW,4.8,2.1,'F');doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(...green);safePdfText(doc,val,badgeX+badgeW/2,badgeY+3.25,{align:'center'});
-        } else {
-          const align=i===0||i===3||i===6?'center':'left';
-          if(i===3 && auxTime){ safePdfText(doc,val,x+widths[i]/2,y+3.9,{align:'center'}); doc.setFontSize(4.8); doc.setTextColor(...muted); safePdfText(doc,(r.event.type==='DEPARTURE_CGK'?'Kantor ':'Handling ')+auxTime.replace(/\n/g,' · '),x+widths[i]/2,y+7.0,{align:'center'}); }
-          else { safePdfText(doc,val,align==='center'?x+widths[i]/2:x+2.2,y+5.1,{align}); }
-        }
+        doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,widths[i],h,'FD');
+        doc.setTextColor(...dark);doc.setFont('helvetica',i===8?'bold':'normal');doc.setFontSize(6.25);
+        const lines=pdfLines(doc,val,widths[i]-4,6.25,2);
+        safePdfLines(doc,lines,x+2,y+4.2,{align:i===6?'center':'left'});
         x+=widths[i];
       });
-      y+=rowH;
+      y+=h;
     });
 
-    y+=5.5;
-    drawSectionTitle(doc,'DAILY INCENTIVE BREAKDOWN',margin,y,green,olive); y+=5.5;
-    // Compact daily table
-    const dHeaders=['DATE','ATTENDANCE','DEPARTURE','ARRIVAL','DAILY INCENTIVE'];
-    const dWidths=[44,35,30,26,43];
-    const dTotal=dWidths.reduce((a,b)=>a+b,0);const dx0=margin+(contentW-dTotal)/2;
-    let x=dx0;
-    const dailyHeaderH=6.8;
-    doc.setFillColor(...dark);
-    safeRect(doc,dx0,y,dTotal,dailyHeaderH,'F');
-    doc.setTextColor(...white);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(6.2);
-    dHeaders.forEach((h,i)=>{
-      safePdfText(doc,h,i===0?x+2:x+dWidths[i]/2,y+4.4,{align:i===0?'left':'center'});
-      x+=dWidths[i];
-    });
-    y+=dailyHeaderH;
-    snapshot.dailyBreakdown.forEach((d,idx)=>{
-      if(y>270){doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;drawSectionTitle(doc,'DAILY INCENTIVE BREAKDOWN (CONTINUED)',margin,y,green,olive);y+=5.5;x=dx0;
-        doc.setFillColor(...dark);
-        safeRect(doc,dx0,y,dTotal,dailyHeaderH,'F');
-        doc.setTextColor(...white);
-        doc.setFont('helvetica','bold');
-        doc.setFontSize(6.2);
-        dHeaders.forEach((h,i)=>{safePdfText(doc,h,i===0?x+2:x+dWidths[i]/2,y+4.4,{align:i===0?'left':'center'});x+=dWidths[i];});
-        y+=dailyHeaderH;}
-      const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
-      const vals=[label,String(d.attended.length),String(d.departures),String(d.arrivals),d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount)];
-      x=dx0;vals.forEach((val,i)=>{doc.setFillColor(...(idx%2?white:alt));doc.setDrawColor(...line);safeRect(doc,x,y,dWidths[i],6.8,'FD');doc.setFont('helvetica',i===4?'bold':'normal');doc.setFontSize(6.1);doc.setTextColor(...dark);safePdfText(doc,val,i===0?x+2:x+dWidths[i]/2,y+4.35,{align:i===0?'left':'center'});x+=dWidths[i];});y+=6.8;
+    if(y>255){newPage('DAILY INCENTIVE BREAKDOWN');}
+    else y+=8;
+
+    // DAILY INCENTIVE — keep original V25 card-like treatment, but compact enough for one page
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);
+    safePdfText(doc,'DAILY INCENTIVE BREAKDOWN',margin,y);y+=6;
+    snapshot.dailyBreakdown.forEach((d)=>{
+      if(y>270){newPage('DAILY INCENTIVE BREAKDOWN (continued)');}
+      const label=new Date(d.date+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+      doc.setFillColor(...pale);doc.setDrawColor(...line);safeRect(doc,margin,y,W-2*margin,17,'FD',2.5);
+      doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(8.5);safePdfText(doc,label,margin+4,y+5.8);
+      doc.setFont('helvetica','normal');doc.setFontSize(7.0);doc.setTextColor(...muted);
+      safePdfText(doc,`${d.attended.length} attendance · Departure ${d.departures} · Arrival ${d.arrivals}`,margin+4,y+11.8);
+      doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(...dark);
+      safePdfText(doc,d.status==='NEEDS_VERIFICATION'?'PERLU VERIFIKASI':money(d.amount),W-margin-4,y+9.5,{align:'right'});
+      y+=20;
     });
 
-    y+=5.5;
-    if(y>274){doc.addPage();doc.setFillColor(...bg);safeRect(doc,0,0,W,H,'F');y=15;}
-    drawSectionTitle(doc,'REPORT NOTES',margin,y,green,olive); y+=5.2;
-    doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(...muted);
+    if(y>268)newPage('REPORT NOTES'); else y+=3;
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...green);safePdfText(doc,'REPORT NOTES',margin,y);y+=6;
+    doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.setTextColor(...muted);
     const notes=[
       'Report dibuat sebagai snapshot dari attendance saat tombol Generate PDF ditekan.',
       'Jadwal yang belum berstatus ABSEN MASUK tidak dimasukkan ke attendance detail.',
       'Expected incentive mengikuti incentive engine aplikasi dan tanggal handling event.',
       'Keterangan kombinasi harian digunakan untuk menjelaskan nilai insentif per tanggal.'
     ];
-    notes.forEach(n=>{safePdfText(doc,'•',margin,y);safePdfLines(doc,pdfLines(doc,n,contentW-7,6.8,1),margin+4,y);y+=4.1;});
+    notes.forEach(n=>{safePdfLines(doc,pdfLines(doc,`• ${pdfText(n)}`,W-2*margin,7.2,2),margin,y);y+=4.6;});
 
-    // Final footer on every page after page count is known.
-    const totalPages=doc.getNumberOfPages();
-    for(let i=1;i<=totalPages;i++){
-      doc.setPage(i);
-      drawFooterBand(doc,i,totalPages,W,H,dark,muted,white);
-    }
-
-    const fileName=reportFileName(snapshot);
-    doc.save(fileName);
+    addFooter();
+    const safeName=sanitizeFileName(snapshot.personName);
+    const safePeriod=sanitizeFileName(snapshot.periodLabel.replaceAll(' ','_'));
+    doc.save(`Hamdan_Tour_Handling_Report_${safeName}_${safePeriod}.pdf`);
   }
   function buildSnapshot(rows,personName){const daily=daysBetweenRows(rows).map(d=>dailyReport(rows,d));const expected=daily.reduce((s,d)=>s+d.amount,0);const dep=rows.filter(r=>r.event.type==='DEPARTURE_CGK').length;const arr=rows.filter(r=>r.event.type==='ARRIVAL_CGK').length;const attendanceRows=rows.map(r=>{const d=daily.find(x=>x.date===r.event.date);let incentiveLabel=d?.status==='NEEDS_VERIFICATION'?'Perlu Verifikasi':(d?.amount?`Daily ${money(d.amount)}`:'Rp0');return{event:{...r.event},attendance:{...r.attendance},incentiveLabel};});return{reportId:reportId(),generatedAt:new Date().toISOString(),personName,dateRange:{mode:$r('#reportPeriodMode',activeRoot).value,start:$r('#reportStartDate',activeRoot).value||null,end:$r('#reportEndDate',activeRoot).value||null,month:$r('#reportMonthSelect',activeRoot).value,year:$r('#reportYearSelect',activeRoot).value},periodLabel:getPeriodLabel(rows),attendanceRows,totalAttendance:rows.length,departureCount:dep,arrivalCount:arr,handlingDays:daily.length,expectedIncentive:expected,dailyBreakdown:daily};}
   async function generateReport(root){
@@ -21540,22 +21522,5 @@ setTimeout(()=>window.CGKSync?.init(),0);
 })();
 </script>
 
-<script>
-window.addEventListener('pageshow',()=>{
-  try{
-    document.querySelectorAll('#importModal,#scheduleModal,#importBackdrop,#scheduleBackdrop').forEach(el=>{
-      if(!el.classList.contains('open')){
-        el.hidden=true;
-        el.setAttribute('aria-hidden','true');
-        el.setAttribute('inert','');
-        el.style.setProperty('display','none','important');
-        el.style.setProperty('pointer-events','none','important');
-        el.style.setProperty('visibility','hidden','important');
-        el.style.setProperty('opacity','0','important');
-      }
-    });
-  }catch(_){}
-},{once:true});
-</script>
 </body>
 </html>

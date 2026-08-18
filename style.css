@@ -17,26 +17,6 @@
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;background:#18251f;color:#fff;padding:10px 13px;border-radius:10px;font-size:10px;z-index:70;transition:.18s}.toast.show{opacity:1;transform:translate(-50%,0)}
 body.dark{--bg:#0e1713;--card:#15201b;--text:#eef6f2;--muted:#9aaca3;--line:#24362e;--shadow:none}body.dark .topbar,body.dark .calendar-card,body.dark .calendar-toolbar,body.dark .summary-card,body.dark .rail-card,body.dark .year-strip,body.dark .filter-popover,body.dark .drawer{background:#15201b}body.dark .weekdays{background:#111a16}body.dark .day{background:#15201b}body.dark .day.muted{background:#101813}body.dark .top-search,body.dark .tool-btn,body.dark .icon-btn,body.dark .profile,body.dark .btn,body.dark .quick-action,body.dark .month-title,body.dark .month-select{background:#15201b;color:var(--text)}body.dark .top-search input{color:var(--text)}
 @media(max-width:1200px){.main-grid{grid-template-columns:1fr}.rail{display:grid;grid-template-columns:1fr 1fr 1fr}.topbar{flex-wrap:wrap;height:auto;padding:14px 18px}.brand-block{min-width:0}.top-search{order:3;max-width:none;width:100%}.top-tools{margin-left:auto}.summary-strip{grid-template-columns:repeat(3,1fr)}}
-
-/* V36 iOS initial-state hardening: hidden legacy modals/backdrops must never render or intercept touch before user interaction. */
-#importModal[hidden],
-#scheduleModal[hidden],
-#importBackdrop[hidden],
-#scheduleBackdrop[hidden]{
-  display:none !important;
-  visibility:hidden !important;
-  opacity:0 !important;
-  pointer-events:none !important;
-}
-body:not(.modal-open) #importModal:not(.open),
-body:not(.modal-open) #scheduleModal:not(.open),
-body:not(.modal-open) #importBackdrop:not(.open),
-body:not(.modal-open) #scheduleBackdrop:not(.open){
-  display:none !important;
-  visibility:hidden !important;
-  opacity:0 !important;
-  pointer-events:none !important;
-}
 @media(max-width:760px){.topbar{gap:8px;overflow:visible}.brand-icon{width:40px;height:40px;border-radius:12px}.brand-block h1{font-size:18px}.brand-block p{font-size:9px}.tool-btn > span:not(.icon-slot),.profile{display:none}.tool-btn,.icon-btn{width:42px;height:42px;padding:0;flex:0 0 auto}.tool-btn .icon-slot,.icon-btn .icon-slot{display:inline-flex!important;width:18px;height:18px}.nav-pair{display:flex;flex:0 0 auto}.top-tools{overflow-x:auto;max-width:100%;padding-bottom:2px;scrollbar-width:none}.top-tools::-webkit-scrollbar{display:none}.main-grid{padding:12px}.calendar-toolbar{align-items:flex-start;flex-direction:column}.toolbar-actions{width:100%;overflow-x:auto;overflow-y:visible;flex-wrap:nowrap;scrollbar-width:none}.toolbar-actions::-webkit-scrollbar{display:none}.report-btn-top{display:inline-flex!important;flex:0 0 auto!important}.rail{grid-template-columns:1fr}.summary-strip{grid-template-columns:1fr 1fr}.weekdays,.calendar{grid-template-columns:repeat(7,minmax(118px,1fr))}.calendar-card{overflow:auto}.calendar{width:826px}.weekdays{width:826px}.day{min-height:165px}.year-grid{grid-template-columns:repeat(2,1fr)}.filter-popover{right:12px;left:12px;width:auto;top:145px}.leg-row{grid-template-columns:1fr 1fr}.form-grid.two{grid-template-columns:1fr}.schedule-modal{padding:15px;width:94vw}.leg-row span:nth-child(3){grid-column:1/-1}}
 @media print{body{background:#fff}.topbar,.rail,.toolbar-actions,.summary-strip,.year-strip,.filter-popover,.drawer,.drawer-backdrop{display:none!important}.main-grid{display:block;padding:0}.calendar-toolbar{border:0;box-shadow:none;padding:0 0 10px}.month-title{font-size:20px}.calendar-card{box-shadow:none;border:1px solid #aaa}.day{min-height:120px}.event{box-shadow:none}}
 
@@ -133,65 +113,3 @@ body.modal-open{overflow:hidden!important;}
 .report-root .report-dialog{position:absolute!important;z-index:1!important;pointer-events:auto!important;max-height:calc(100vh - 24px)!important;overflow:auto!important;}
 .report-root .report-dialog input,.report-root .report-dialog select,.report-root .report-dialog button{position:relative;z-index:2;pointer-events:auto;touch-action:manipulation;}
 body.report-modal-open{overflow:hidden!important;}
-
-/* V37 automatic handling time + pre-departure checklist */
-.aux-time{margin:5px 0 0;padding:5px 7px;border:1px solid #dce8e2;border-radius:8px;background:#f5f8f6;display:flex;justify-content:space-between;gap:8px;align-items:center}.aux-time span{font-size:9px;color:#718079;text-transform:uppercase;letter-spacing:.08em}.aux-time b{font-size:11px;color:#173f35}.checklist-panel{margin:12px 0;padding:12px;border:1px solid #dce8e2;border-radius:12px;background:#f7faf8;display:flex;justify-content:space-between;gap:12px;align-items:center}.checklist-panel.complete{border-color:#b8d9c8;background:#f1f8f3}.checklist-panel strong{display:block;margin-top:3px}.checklist-panel small{display:block;color:#718079;margin-top:2px}.checklist-event-meta{font-size:11px;color:#718079;margin-top:3px}.check-progress{padding:4px 0 14px}.check-progress>div:first-child{display:flex;justify-content:space-between;font-size:12px;color:#5d6c65}.check-progress b{color:#173f35;font-size:16px}.progress-track{height:8px;border-radius:99px;background:#e9efec;overflow:hidden;margin-top:7px}.progress-track i{display:block;height:100%;background:#2f6b55;border-radius:99px;transition:width .2s ease}.checklist-list{display:grid;gap:8px;max-height:48vh;overflow:auto;padding-right:2px}.check-item{display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;gap:9px;padding:9px 10px;border:1px solid #e2e9e5;border-radius:10px;background:#fff;cursor:pointer}.check-item input{position:absolute;opacity:0;pointer-events:none}.check-mark{width:18px;height:18px;border:1.7px solid #9aaba3;border-radius:5px;display:grid;place-items:center}.check-item input:checked + .check-mark{background:#2f6b55;border-color:#2f6b55}.check-item input:checked + .check-mark:after{content:'✓';color:#fff;font-size:12px;font-weight:700}.check-label{font-size:12px;line-height:1.35;color:#23342d}.passport-count-wrap{display:flex;flex-direction:column;gap:4px;min-width:132px}.passport-count-wrap small{font-size:9px;color:#75857d}.passport-count-wrap input{width:100%;padding:7px 8px;border:1px solid #d6e1db;border-radius:7px;font-size:12px}.check-missing{margin-top:10px;padding:9px 10px;border-radius:10px;background:#fbf6ea;border:1px solid #eee2c5;color:#6d5b31;font-size:10px}.check-missing b{display:block;margin-bottom:3px}.check-note{display:block;margin-top:10px;font-size:11px;color:#5d6c65}.check-note textarea{width:100%;margin-top:5px;resize:vertical;border:1px solid #d6e1db;border-radius:9px;padding:9px;font:inherit}.checklist-modal{max-width:760px}.checklist-modal .modal-foot{position:sticky;bottom:0;background:#fff;padding-top:10px;margin-top:8px;border-top:1px solid #e5ece8}@media(max-width:700px){.checklist-panel{align-items:flex-start;flex-direction:column}.passport-count-wrap{grid-column:2 / -1;width:100%}.check-item{grid-template-columns:22px minmax(0,1fr)}.checklist-list{max-height:52vh}}
-.check-mini{font-size:9px;color:#2f6b55;font-weight:700;margin-top:5px}
-
-/* V38 - Mobile auxiliary time layout fix */
-.aux-time{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  width:100%;
-  min-width:0;
-  max-width:100%;
-  box-sizing:border-box;
-  overflow:hidden;
-}
-.aux-time span{
-  flex:1 1 auto;
-  min-width:0;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.aux-time b{
-  flex:0 0 auto;
-  min-width:max-content;
-  white-space:nowrap;
-  font-variant-numeric:tabular-nums;
-}
-
-@media (max-width: 700px){
-  .event .aux-time{
-    margin:5px 0 0;
-    padding:5px 7px;
-    gap:6px;
-    min-height:30px;
-  }
-  .event .aux-time span{
-    font-size:10px;
-    line-height:1.1;
-    letter-spacing:.07em;
-  }
-  .event .aux-time b{
-    font-size:13px;
-    line-height:1;
-  }
-}
-
-@media (max-width: 380px){
-  .event .aux-time{
-    gap:4px;
-    padding-left:6px;
-    padding-right:6px;
-  }
-  .event .aux-time span{font-size:9px;letter-spacing:.05em}
-  .event .aux-time b{font-size:12px}
-}
-
-/* Prevent event content from creating horizontal overflow on narrow cards. */
-.event{min-width:0;max-width:100%;box-sizing:border-box;overflow:hidden}
-.event .flight,.event .route,.event .pax{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

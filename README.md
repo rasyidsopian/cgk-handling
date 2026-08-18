@@ -1,8 +1,9 @@
-CGK Handling PWA V30
+# CGK Handling V31
 
-Fixes:
-- Report PDF generator `safeRoundRect is not defined` error.
-- Keeps V29 report design and V28/V29 functionality.
-- sync-config.js unchanged.
+Updated from the latest CGK Handling build with:
+- Checklist Keberangkatan per schedule with stable checklist item IDs, Paspor/Vaksin separate, realtime progress, compact scrolling body, sticky footer, persist and cross-device sync via the existing sync adapter.
+- Petugas Handling per schedule for departure and arrival, multi-select for 9 fixed staff names, persistent assignment by event ID, and visual poster popup with optional PNG download.
+- Existing attendance, incentive, report, import, edit/delete, PWA, and realtime sync preserved.
 
-Upload the contents of this folder to the repository root.
+Upload the contents of this folder directly to the GitHub Pages repository root.
+Do not modify sync-config.js format.
