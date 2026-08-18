@@ -7,13 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=31">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=31">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=31">
-  <link rel="icon" type="image/png" href="icon-192.png?rev=31">
-      <title>CGK Handling · Hamdan Tour · v31</title>
+  <link rel="manifest" href="manifest.webmanifest?v=33">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=33">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=33">
+  <link rel="icon" type="image/png" href="icon-192.png?rev=33">
+      <title>CGK Handling · Hamdan Tour · v33</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=31">
+  <link rel="stylesheet" href="style.css?v=33">
   <style id="report-styles">
     .report-modal{max-width:760px}.report-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:4px 20px 14px}.report-wide{grid-column:1/-1}.report-field{display:flex;flex-direction:column;gap:7px;color:#68776f;font-size:11px;font-weight:700}.report-field input,.report-field select{width:100%;padding:11px 12px;border:1px solid #dfe8e2;border-radius:11px;background:#fff;color:#183c2c;font:600 12px Inter,system-ui,sans-serif;box-sizing:border-box;outline:none}.report-field input:focus,.report-field select:focus{border-color:#7cb898;box-shadow:0 0 0 3px rgba(14,122,72,.08)}.report-note{margin:2px 20px 14px;padding:12px 13px;border:1px solid #e2ebe5;background:#f7faf8;border-radius:12px;display:flex;gap:9px;align-items:flex-start;color:#718079;font-size:10px;line-height:1.45}.report-note .icon-slot{margin-top:1px;flex:none}.report-validation{margin:0 20px 14px;padding:10px 12px;border-radius:10px;background:#fff2ef;border:1px solid #f0cfc6;color:#a54433;font-size:11px;font-weight:700}.report-btn{box-shadow:0 8px 18px rgba(10,107,66,.16)}
     @media(max-width:760px){.report-form-grid{grid-template-columns:1fr}.report-wide{grid-column:auto}.report-modal{width:calc(100vw - 22px);max-width:none}}
@@ -23,6 +23,22 @@
 </style>
 <style id="ops-feature-styles">
 .operation-modal-backdrop{position:fixed;inset:0;background:rgba(8,24,17,.34);z-index:1100;opacity:0;pointer-events:none;transition:opacity .16s}.operation-modal-backdrop.open{opacity:1;pointer-events:auto}.operation-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,92vw);max-height:min(82vh,760px);background:#fff;border:1px solid #dfe9e3;border-radius:18px;box-shadow:0 30px 90px rgba(10,37,27,.2);z-index:1101;display:flex;flex-direction:column;overflow:hidden}.operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{display:none!important}.operation-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid #e4ebe6;flex:none}.operation-modal-head h3{margin:4px 0 0;font-size:18px;color:#173c2d}.checklist-summary{padding:13px 20px 12px;border-bottom:1px solid #e9efeb;background:#fbfdfc;display:grid;grid-template-columns:130px 1fr 95px;gap:12px;align-items:center;flex:none}.checklist-summary strong{display:block;margin-top:3px;font-size:20px;color:#0a6b42}.checklist-summary small{font-size:9px;color:#7a8881;text-align:right}.progress-track{height:8px;background:#e5eee8;border-radius:999px;overflow:hidden}.progress-track span{display:block;height:100%;width:0;background:#0a6b42;border-radius:999px;transition:width .18s}.checklist-scroll{padding:12px 20px 16px;overflow-y:auto;min-height:0;flex:1}.checklist-group{margin-bottom:12px}.checklist-group:last-child{margin-bottom:0}.checklist-group-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 7px;color:#6f7d76;font-size:9px;letter-spacing:.08em;font-weight:800}.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid #e1eae4;background:#fff;border-radius:11px;margin-top:6px;cursor:pointer;transition:.14s}.checklist-item:hover{border-color:#9ac9ad;background:#f7fbf9}.checklist-item.checked{border-color:#b9dfc7;background:#eef8f1}.checklist-item input{width:17px;height:17px;accent-color:#0a6b42;flex:none}.checklist-item label{font-size:11px;color:#274438;font-weight:650;cursor:pointer;flex:1}.checklist-item .checkmark{font-size:9px;font-weight:800;color:#0a6b42}.operation-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e4ebe6;background:#fff;flex:none}.operation-hint{margin:0;padding:0 20px 12px;color:#74817b;font-size:10px;line-height:1.5}.staff-modal{max-width:560px}.staff-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:4px 20px 16px;overflow:auto;min-height:0}.staff-chip-btn{border:1px solid #dfe8e3;background:#fff;color:#28473a;border-radius:11px;min-height:44px;padding:8px 10px;font:700 11px Inter,system-ui,sans-serif;cursor:pointer;transition:.14s}.staff-chip-btn.selected{background:#0a6b42;color:#fff;border-color:#0a6b42;box-shadow:0 5px 14px rgba(10,107,66,.13)}.staff-chip-btn.selected::before{content:'✓ ';font-weight:900}.operation-card{margin:12px 0 0;padding:13px;border:1px solid #e3ebe6;background:#fbfdfc;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.operation-card>div:first-child{min-width:0}.operation-card strong{display:block;margin-top:4px;font-size:12px;color:#193f30}.operation-card small{display:block;margin-top:3px;color:#77857e;font-size:9px}.checklist-card{background:#f7fbf8}.staff-card{background:#fff}.staff-chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.staff-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#eaf5ee;color:#0a6b42;font-size:8px;font-weight:800;border:1px solid #cde5d5}.empty-inline{font-size:9px;color:#84918b}.operation-actions{display:flex;gap:6px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}.staff-poster{position:fixed;inset:0;z-index:1200;background:rgba(8,24,17,.42);display:flex;align-items:center;justify-content:center;padding:20px}.poster-card{width:min(540px,94vw);background:#fff;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden;border:1px solid #dce8e1}.poster-top{display:grid;grid-template-columns:54px 1fr 40px;align-items:center;gap:12px;padding:18px 20px;background:#0a6b42;color:#fff}.poster-top img{width:54px;height:54px;border-radius:15px;background:#fff;object-fit:cover}.poster-top .eyebrow{color:#b9d8ca}.poster-top h3{margin:4px 0 0;font-size:20px;letter-spacing:.02em}.poster-top .icon-btn{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}.poster-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 20px;border-bottom:1px solid #e5ece7}.poster-meta-item{padding:10px;border:1px solid #e4ece7;border-radius:12px;background:#fbfdfc}.poster-meta-item span{display:block;color:#7a8881;font-size:8px;text-transform:uppercase;letter-spacing:.08em}.poster-meta-item b{display:block;margin-top:4px;color:#1b4132;font-size:11px}.poster-staff-wrap{padding:16px 20px}.poster-staff-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.poster-staff-item{padding:11px 12px;border:1px solid #dfe9e3;border-radius:12px;background:#f7faf8;color:#1e4434;font-size:11px;font-weight:750}.poster-actions{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e5ece7;background:#fbfdfc}@media(max-width:760px){.operation-modal{width:94vw;max-height:82vh}.checklist-summary{grid-template-columns:95px 1fr 80px}.staff-selector{grid-template-columns:1fr 1fr}.operation-card{align-items:flex-start;flex-direction:column}.operation-actions{width:100%;justify-content:flex-start}.poster-card{width:96vw}.poster-meta{grid-template-columns:1fr 1fr}.poster-staff-list{grid-template-columns:1fr}.poster-top h3{font-size:16px}}
+
+/* v33 Petugas Handling modal + generated JPG preview isolation */
+.operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{display:none!important;visibility:hidden!important;pointer-events:none!important;}
+.staff-poster{position:fixed;inset:0;z-index:1200;background:rgba(8,24,17,.46);display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto;}
+.staff-poster[aria-hidden="true"]{display:none!important;pointer-events:none!important;}
+.poster-dialog{width:min(760px,96vw);max-height:min(92vh,980px);background:#fff;border:1px solid #dce8e1;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column;}
+.poster-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:17px 20px 14px;border-bottom:1px solid #e5ece7;background:#fff;flex:none;}
+.poster-dialog-head h3{margin:5px 0 0;color:#173c2d;font-size:20px;letter-spacing:-.2px;}
+.poster-preview-shell{padding:18px;background:#f6faf8;display:flex;align-items:center;justify-content:center;min-height:320px;overflow:auto;}
+.poster-preview-image{display:block;width:min(100%,540px);height:auto;border:1px solid #dce8e1;border-radius:16px;box-shadow:0 16px 44px rgba(15,45,31,.12);background:#fff;}
+.poster-loading,.poster-error{width:min(540px,100%);min-height:220px;border:1px dashed #cfe0d6;border-radius:16px;background:#fff;display:grid;place-items:center;padding:28px;text-align:center;color:#6e7c75;font-size:12px;}
+.poster-error{color:#9c493c;background:#fff7f5;border-color:#efc8c0;}
+.poster-actions{display:flex;justify-content:flex-end;gap:8px;padding:13px 20px;border-top:1px solid #e5ece7;background:#fff;flex:none;}
+.poster-actions .btn:disabled{opacity:.5;cursor:not-allowed;}
+.staff-poster-capture{position:fixed;left:-100000px;top:0;width:1080px;height:1350px;overflow:hidden;pointer-events:none;opacity:0;}
+@media(max-width:760px){.staff-poster{padding:10px}.poster-dialog{width:100%;max-height:96vh;border-radius:18px}.poster-dialog-head{padding:14px 15px 12px}.poster-dialog-head h3{font-size:17px}.poster-preview-shell{padding:12px;min-height:240px}.poster-preview-image{width:100%;border-radius:12px}.poster-actions{padding:11px 15px;justify-content:stretch}.poster-actions .btn{flex:1;justify-content:center}}
 </style>
 </head>
 <body>
@@ -249,20 +265,21 @@
     <div class="operation-modal-foot"><button class="btn ghost" id="cancelStaffMember" type="button">Batal</button><button class="btn primary" id="saveStaffMember" type="button">Simpan</button></div>
   </section>
 
-  <section class="staff-poster" id="staffPoster" role="dialog" aria-modal="true" aria-hidden="true" hidden>
-    <div class="poster-card" id="staffPosterCard">
-      <div class="poster-visual" id="staffPosterVisual">
-        <div class="poster-top"><img src="brand-icon.png" alt="CGK Handling"><div><span class="eyebrow">HAMDAN TOUR · CGK HANDLING</span><h3 id="posterTitle">JADWAL HANDLING</h3></div></div>
-        <div class="poster-subline" id="posterDateLine"></div>
-        <div class="poster-flight-band"><div><span>FLIGHT</span><b id="posterFlight">-</b></div><div><span>HANDLING</span><b id="posterHandling">-</b></div><div><span>JAM</span><b id="posterTime">-</b></div></div>
-        <div class="poster-route" id="posterRoute">CGK - DOH</div>
-        <div class="poster-package"><span class="eyebrow">PACKAGE</span><b id="posterPackage">-</b></div>
-        <div class="poster-staff-wrap"><span class="eyebrow">PETUGAS HANDLING</span><div class="poster-staff-list" id="posterStaffList"></div></div>
-        <div class="poster-footer">Hamdan Tour · CGK Handling Operations</div>
+  <section class="staff-poster" id="staffPoster" role="dialog" aria-modal="true" aria-hidden="true" hidden aria-labelledby="staffPosterDialogTitle">
+    <div class="poster-dialog" id="staffPosterDialog">
+      <div class="poster-dialog-head">
+        <div><span class="eyebrow">HANDLING SUMMARY</span><h3 id="staffPosterDialogTitle">Jadwal Handling</h3></div>
+        <button class="icon-btn" id="closeStaffPoster" type="button" aria-label="Tutup">×</button>
       </div>
-      <div class="poster-actions"><button class="btn ghost" id="posterCloseBtn" type="button">Tutup</button><button class="btn primary" id="downloadStaffPoster" type="button">Download JPG</button><button class="icon-btn poster-close" id="closeStaffPoster" type="button" aria-label="Tutup">×</button></div>
+      <div class="poster-preview-shell">
+        <div class="poster-loading" id="staffPosterLoading">Membuat preview summary…</div>
+        <img id="staffPosterPreviewImage" class="poster-preview-image" alt="Preview summary jadwal handling" hidden>
+        <div class="poster-error" id="staffPosterError" hidden>Gagal membuat preview summary. Silakan coba lagi.</div>
+      </div>
+      <div class="poster-actions"><button class="btn ghost" id="posterCloseBtn" type="button">Tutup</button><button class="btn primary" id="downloadStaffPoster" type="button" disabled>Download JPG</button></div>
     </div>
   </section>
+  <div id="staffPosterCapture" aria-hidden="true" class="staff-poster-capture"></div>
 
   <div class="toast" id="toast"></div>
 
@@ -276,7 +293,7 @@
   } catch(e) { console.warn('cache cleanup skipped',e); }
 })();
 </script>
-<script src="sync-config.js?v=31"></script>
+<script src="sync-config.js?v=33"></script>
 <script>
 /* Cross-device realtime sync adapter. Configure Supabase in sync-config.js. */
 (function(){
@@ -21202,11 +21219,11 @@ function getChecklistState(eventId){
 }
 function openChecklistModal(eventId){
   const e=findEvent(eventId);if(!e)return;
-  const modal=$("#checklistModal"),back=$("#operationBackdrop");
+  const modal=$("#checklistModal");
   window.__checklistEditing={eventId:String(eventId),original:getChecklistState(eventId).state,draft:{...getChecklistState(eventId).state}};
   $("#checklistModalTitle").textContent=`Checklist ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;
   renderChecklistDraft();
-  modal.hidden=false;back.hidden=false;modal.setAttribute('aria-hidden','false');back.setAttribute('aria-hidden','false');modal.classList.add('open');back.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
+  openOperationModal(modal);
   requestAnimationFrame(()=>{const first=modal.querySelector('input');first?.focus({preventScroll:true});});
 }
 function renderChecklistDraft(){
@@ -21217,9 +21234,9 @@ function renderChecklistDraft(){
   body.querySelectorAll('[data-check-id]').forEach(inp=>inp.addEventListener('change',()=>{ctx.draft[inp.dataset.checkId]=inp.checked;renderChecklistDraft();}));
 }
 function closeChecklistModal(save=false){
-  const modal=$("#checklistModal"),back=$("#operationBackdrop");
+  const modal=$("#checklistModal");
   if(save){const ctx=window.__checklistEditing;if(ctx){checklistByEventId[ctx.eventId]={...ctx.draft};saveChecklist();}}
-  modal.classList.remove('open');back.classList.remove('open');modal.hidden=true;back.hidden=true;modal.setAttribute('aria-hidden','true');back.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__checklistEditing=null;render();
+  modal.classList.remove('open');modal.hidden=true;modal.setAttribute('aria-hidden','true');window.__checklistEditing=null;resetOperationModalLayer();window.__activeOperationModal=null;render();
 }
 function renderStaffSelector(eventId,selected){
   const box=$("#staffSelector");
@@ -21276,46 +21293,73 @@ function saveStaffMemberForm(){
   else handlingStaffMembers.push({id:makeStaffId(),name,active:true});
   saveStaffMembers();closeStaffMember();renderStaffManageList();toast('Data anggota handling disimpan');
 }
-function openStaffPoster(eventId){
-  const e=findEvent(eventId);if(!e)return;
-  const key=String(eventId),ids=Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[];
-  const names=staffLabels(ids);
-  const modal=$("#staffPoster"),list=$("#posterStaffList");
-  const date=new Date(e.date+'T12:00:00');
-  const dateLabel=date.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
-  $("#posterTitle").textContent='JADWAL HANDLING';
-  $("#posterDateLine").textContent=dateLabel;
-  $("#posterFlight").textContent=e.flight||'-';
-  $("#posterHandling").textContent=e.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA';
-  $("#posterTime").textContent=handlingTime(e);
-  $("#posterRoute").textContent=String(e.route||'-').replaceAll('→',' - ');
-  $("#posterPackage").textContent=String(e.package||'-').replace(/\s+/g,' ').trim();
-  list.innerHTML=names.length?names.map((n,i)=>`<div class="poster-staff-item"><span>${String(i+1).padStart(2,'0')}</span>${escapeHTML(n)}</div>`).join(''):'<div class="poster-staff-item">Belum ada petugas handling yang dipilih.</div>';
-  window.__staffPosterEventId=String(eventId);
+function resetOperationModalLayer(){
+  const backdrop=document.getElementById('operationBackdrop');
+  document.querySelectorAll('.operation-modal').forEach(modal=>{modal.classList.remove('open');modal.hidden=true;modal.setAttribute('aria-hidden','true');modal.style.removeProperty('pointer-events');modal.style.removeProperty('z-index');});
+  if(backdrop){backdrop.classList.remove('open');backdrop.hidden=true;backdrop.setAttribute('aria-hidden','true');backdrop.style.removeProperty('pointer-events');}
+  document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');
+  if(document.activeElement instanceof HTMLElement&&document.activeElement!==document.body){try{document.activeElement.blur();}catch{}}
+}
+function openOperationModal(modal,onOpen){
+  resetOperationModalLayer();const back=document.getElementById('operationBackdrop');
+  modal.hidden=false;modal.setAttribute('aria-hidden','false');modal.classList.add('open');
+  if(back){back.hidden=false;back.setAttribute('aria-hidden','false');back.classList.add('open');}
+  document.body.classList.add('modal-open');document.body.style.overflow='hidden';window.__activeOperationModal=modal.id;onOpen?.();
+}
+function openStaffModal(eventId){
+  const e=findEvent(eventId);if(!e)return;const key=String(eventId);const selected=new Set(Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[]);
+  window.__staffEditing={eventId:key,selected};document.getElementById('staffModalTitle').textContent=`Petugas ${e.flight||'Jadwal'} · ${fmtDate(e.date)}`;renderStaffSelector(key,selected);
+  if(window.__checklistEditing)window.__checklistEditing=null;if(window.__staffMemberModalOpen)closeStaffMember();openOperationModal(document.getElementById('staffModal'));
+}
+function closeStaffModal(save=false){
+  const ctx=window.__staffEditing;if(save&&ctx){assignedHandlingStaff[ctx.eventId]=Array.from(ctx.selected);saveAssignedStaff();}
+  resetOperationModalLayer();window.__staffEditing=null;window.__activeOperationModal=null;
+  const id=ctx?.eventId;if(id&&document.getElementById('drawer')?.classList.contains('open'))openDrawer(id);else render();
+}
+function openStaffManage(){
+  window.__checklistEditing=null;window.__staffEditing=null;renderStaffManageList();openOperationModal(document.getElementById('staffManageModal'));
+}
+function closeStaffManage(){
+  if(!document.getElementById('staffMemberModal').hidden)closeStaffMember();
+  resetOperationModalLayer();window.__activeOperationModal=null;
+}
+function openStaffMemberModal(id=null){
+  window.__editingStaffMemberId=id?String(id):null;const m=id?handlingStaffMembers.find(x=>String(x.id)===String(id)):null;
+  document.getElementById('staffMemberModalTitle').textContent=m?'Edit Anggota Handling':'Tambah Anggota Handling';document.getElementById('staffMemberNameInput').value=m?.name||'';document.getElementById('staffMemberError').hidden=true;
+  const modal=document.getElementById('staffMemberModal');modal.hidden=false;modal.setAttribute('aria-hidden','false');modal.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';window.__staffMemberModalOpen=true;
+  setTimeout(()=>document.getElementById('staffMemberNameInput')?.focus(),0);
+}
+function closeStaffMember(){
+  const modal=document.getElementById('staffMemberModal');modal.classList.remove('open');modal.hidden=true;modal.setAttribute('aria-hidden','true');document.getElementById('staffMemberError').hidden=true;document.activeElement?.blur?.();window.__editingStaffMemberId=null;window.__staffMemberModalOpen=false;
+  const manage=document.getElementById('staffManageModal');if(!manage.hidden){manage.classList.add('open');manage.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');document.body.style.overflow='hidden';const back=document.getElementById('operationBackdrop');back.hidden=false;back.setAttribute('aria-hidden','false');back.classList.add('open');}else resetOperationModalLayer();
+}
+function buildStaffPosterSvg(eventId,logoHref=''){
+  const e=findEvent(eventId);if(!e)throw new Error('Jadwal tidak ditemukan');const key=String(eventId);const ids=Array.isArray(assignedHandlingStaff[key])?assignedHandlingStaff[key]:[];const names=staffLabels(ids);
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+  const date=new Date(`${e.date}T12:00:00`);const dateLabel=date.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();const handling=e.type==='DEPARTURE_CGK'?'BERANGKAT':'TIBA';const time=handlingTime(e)||'-';const route=String(e.route||'-').replaceAll('→',' - ');const pkg=String(e.package||'-').replace(/\s+/g,' ').trim();
+  const staffMarkup=names.length?names.map((name,i)=>`<rect x="84" y="${1010+i*74}" width="912" height="56" rx="14" fill="#F5F9F7" stroke="#DCE9E1"/><text x="105" y="${1046+i*74}" font-family="Inter,Arial,sans-serif" font-size="21" font-weight="700" fill="#234939">${String(i+1).padStart(2,'0')}</text><text x="156" y="${1046+i*74}" font-family="Inter,Arial,sans-serif" font-size="21" font-weight="700" fill="#1E4434">${esc(name)}</text>`).join(''):`<rect x="84" y="1010" width="912" height="56" rx="14" fill="#FBFDFC" stroke="#DCE9E1"/><text x="105" y="1046" font-family="Inter,Arial,sans-serif" font-size="20" fill="#7D8A83">Belum ada petugas handling yang dipilih</text>`;
+  const footerY=Math.min(1265,1010+(names.length||1)*74+54);const logo=logoHref?`<image href="${logoHref}" x="84" y="82" width="86" height="86" preserveAspectRatio="xMidYMid slice"/>`:`<rect x="84" y="82" width="86" height="86" rx="22" fill="#0A6B42"/><text x="127" y="137" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="800" fill="#fff">H</text>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350"><rect width="1080" height="1350" fill="#FFFFFF"/><rect x="0" y="0" width="1080" height="292" fill="#0A6B42"/>${logo}<text x="194" y="111" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" letter-spacing="2" fill="#B9D8CA">HAMDAN TOUR · CGK HANDLING</text><text x="194" y="157" font-family="Inter,Arial,sans-serif" font-size="40" font-weight="800" fill="#FFFFFF">JADWAL HANDLING</text><text x="84" y="237" font-family="Inter,Arial,sans-serif" font-size="25" font-weight="800" fill="#D8F0E3">${esc(dateLabel)}</text><rect x="84" y="328" width="912" height="172" rx="24" fill="#0A6B42"/><text x="112" y="364" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2" fill="#A9D4BE">FLIGHT</text><text x="112" y="418" font-family="Inter,Arial,sans-serif" font-size="38" font-weight="800" fill="#FFFFFF">${esc(e.flight||'-')}</text><text x="410" y="364" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2" fill="#A9D4BE">HANDLING</text><text x="410" y="418" font-family="Inter,Arial,sans-serif" font-size="33" font-weight="800" fill="#FFFFFF">${esc(handling)}</text><text x="748" y="364" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2" fill="#A9D4BE">JAM</text><text x="748" y="418" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="800" fill="#FFFFFF">${esc(time)}</text><rect x="84" y="526" width="912" height="88" rx="20" fill="#EEF7F0"/><text x="112" y="582" font-family="Inter,Arial,sans-serif" font-size="27" font-weight="800" fill="#0A6B42">${esc(route)}</text><rect x="84" y="640" width="912" height="132" rx="20" fill="#FBFDFC" stroke="#DCE9E1"/><text x="112" y="682" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="800" letter-spacing="2" fill="#7A8881">PACKAGE</text><text x="112" y="728" font-family="Inter,Arial,sans-serif" font-size="21" font-weight="700" fill="#214737">${esc(pkg)}</text><text x="112" y="804" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="800" letter-spacing="2" fill="#7A8881">DETAIL</text><text x="112" y="846" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="700" fill="#214737">${esc(e.airline||'-')}</text>${e.pnr?`<text x="610" y="804" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="800" letter-spacing="2" fill="#7A8881">PNR</text><text x="610" y="846" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="700" fill="#214737">${esc(e.pnr)}</text>`:''}<text x="84" y="960" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="800" letter-spacing="2" fill="#7A8881">PETUGAS HANDLING</text>${staffMarkup}<line x1="84" x2="996" y1="${footerY}" y2="${footerY}" stroke="#E5ECE7"/><text x="84" y="${footerY+39}" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" fill="#87958E">Hamdan Tour · CGK Handling Operations</text></svg>`;
+}
+async function imageToDataUrl(url){const r=await fetch(url,{cache:'force-cache'});if(!r.ok)throw new Error(`HTTP ${r.status}`);const b=await r.blob();return await new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(String(fr.result));fr.onerror=reject;fr.readAsDataURL(b);});}
+async function buildStaffPosterDataUrl(eventId){let logoHref='';try{logoHref=await imageToDataUrl('brand-icon.png');}catch{}const svg=buildStaffPosterSvg(eventId,logoHref);return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;}
+async function openStaffPoster(eventId){
+  const e=findEvent(eventId);if(!e)return;const modal=document.getElementById('staffPoster'),img=document.getElementById('staffPosterPreviewImage'),loading=document.getElementById('staffPosterLoading'),error=document.getElementById('staffPosterError'),download=document.getElementById('downloadStaffPoster');
+  window.__staffPosterEventId=String(eventId);window.__staffPosterDataUrl=null;document.getElementById('staffPosterDialogTitle').textContent=`Jadwal ${e.flight||'Handling'} · ${fmtDate(e.date)}`;img.hidden=true;img.removeAttribute('src');loading.hidden=false;error.hidden=true;download.disabled=true;
   modal.hidden=false;modal.setAttribute('aria-hidden','false');modal.classList.add('open');document.body.classList.add('modal-open');document.body.style.overflow='hidden';
+  try{const dataUrl=await buildStaffPosterDataUrl(eventId);if(window.__staffPosterEventId!==String(eventId)||modal.hidden)return;window.__staffPosterDataUrl=dataUrl;img.src=dataUrl;img.hidden=false;loading.hidden=true;download.disabled=false;}catch(err){console.error('CGK staff poster generation failed',err);loading.hidden=true;error.hidden=false;}
 }
-function closeStaffPoster(){const m=$("#staffPoster");m.classList.remove('open');m.hidden=true;m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__staffPosterEventId=null;}
-async function loadHtml2Canvas(){if(window.html2canvas)return window.html2canvas;return new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';sc.onload=()=>resolve(window.html2canvas);sc.onerror=reject;document.head.appendChild(sc);});}
-async function downloadStaffPosterImage(){
-  try{
-    const html2canvas=await loadHtml2Canvas();
-    const node=$("#staffPosterVisual");
-    const canvas=await html2canvas(node,{backgroundColor:'#ffffff',scale:2,useCORS:true,logging:false,width:540,height:675,windowWidth:540,windowHeight:675});
-    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.94));
-    if(!blob)throw new Error('Gagal membuat JPG');
-    const e=findEvent(window.__staffPosterEventId||'');
-    const a=document.createElement('a');a.download=`Jadwal_Handling_${e?.date||'schedule'}_${e?.flight||'event'}.jpg`;a.href=URL.createObjectURL(blob);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  }catch(err){console.error(err);toast('Gagal membuat JPG petugas handling');}
-}
+function closeStaffPoster(){const modal=document.getElementById('staffPoster'),img=document.getElementById('staffPosterPreviewImage'),loading=document.getElementById('staffPosterLoading'),error=document.getElementById('staffPosterError'),download=document.getElementById('downloadStaffPoster');modal.classList.remove('open');modal.hidden=true;modal.setAttribute('aria-hidden','true');img.hidden=true;img.removeAttribute('src');loading.hidden=false;error.hidden=true;download.disabled=true;document.body.classList.remove('modal-open');document.body.style.removeProperty('overflow');document.activeElement?.blur?.();window.__staffPosterEventId=null;window.__staffPosterDataUrl=null;}
+async function downloadStaffPosterImage(){try{const eventId=window.__staffPosterEventId;if(!eventId)return;const dataUrl=window.__staffPosterDataUrl||await buildStaffPosterDataUrl(eventId);const image=new Image();image.decoding='async';image.src=dataUrl;await image.decode();const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0,1080,1350);const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.94));if(!blob)throw new Error('Gagal membuat JPG');const e=findEvent(eventId),href=URL.createObjectURL(blob),a=document.createElement('a');a.download=`Jadwal_Handling_${e?.date||'schedule'}_${e?.flight||'event'}.jpg`;a.href=href;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(href),1500);}catch(err){console.error(err);toast('Gagal membuat JPG petugas handling');}}
 window.openChecklistModal=openChecklistModal;window.openStaffModal=openStaffModal;window.openStaffPoster=(id)=>openStaffPoster(id);window.openStaffManage=openStaffManage;
-$("#closeChecklist").onclick=()=>closeChecklistModal(false);$("#cancelChecklist").onclick=()=>closeChecklistModal(false);$("#saveChecklistBtn").onclick=()=>closeChecklistModal(true);
 $("#closeStaff").onclick=()=>closeStaffModal(false);$("#cancelStaff").onclick=()=>closeStaffModal(false);$("#saveStaffBtn").onclick=()=>closeStaffModal(true);
 $("#closeStaffPoster").onclick=closeStaffPoster;$("#posterCloseBtn").onclick=closeStaffPoster;$("#downloadStaffPoster").onclick=downloadStaffPosterImage;
 $("#closeStaffManage").onclick=closeStaffManage;$("#cancelStaffManage").onclick=closeStaffManage;$("#addStaffMemberBtn").onclick=()=>openStaffMemberModal();
 $("#closeStaffMember").onclick=closeStaffMember;$("#cancelStaffMember").onclick=closeStaffMember;$("#saveStaffMember").onclick=saveStaffMemberForm;
 $("#quickStaff").onclick=openStaffManage;
-$("#operationBackdrop").onclick=()=>{if(window.__checklistEditing)closeChecklistModal(false);else if(window.__staffEditing)closeStaffModal(false);else if(!$("#staffManageModal").hidden)closeStaffManage();};
-window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(window.__checklistEditing){e.preventDefault();closeChecklistModal(false);}else if(window.__staffEditing){e.preventDefault();closeStaffModal(false);}else if(!$("#staffMemberModal").hidden){e.preventDefault();closeStaffMember();}else if(!$("#staffManageModal").hidden){e.preventDefault();closeStaffManage();}else if(!$("#staffPoster").hidden){e.preventDefault();closeStaffPoster();}}});
+$("#operationBackdrop").onclick=()=>{if(window.__checklistEditing)closeChecklistModal(false);else if(window.__staffEditing)closeStaffModal(false);else if(!$("#staffMemberModal").hidden)closeStaffMember();else if(!$("#staffManageModal").hidden)closeStaffManage();};
+$("#staffPoster").addEventListener('click',e=>{if(e.target===document.getElementById('staffPoster'))closeStaffPoster();});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$("#staffPoster").hidden){e.preventDefault();closeStaffPoster();return;}if(window.__checklistEditing){e.preventDefault();closeChecklistModal(false);}else if(window.__staffEditing){e.preventDefault();closeStaffModal(false);}else if(!$("#staffMemberModal").hidden){e.preventDefault();closeStaffMember();}else if(!$("#staffManageModal").hidden){e.preventDefault();closeStaffManage();}}});
 window.addEventListener('cgk-remote-state',()=>{if(window.__checklistEditing){const cur=getChecklistState(window.__checklistEditing.eventId).state;window.__checklistEditing.draft={...cur,...window.__checklistEditing.draft};renderChecklistDraft();}});
 </script>
 <script>
