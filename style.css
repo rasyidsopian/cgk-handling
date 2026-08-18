@@ -113,3 +113,19 @@ body.modal-open{overflow:hidden!important;}
 .report-root .report-dialog{position:absolute!important;z-index:1!important;pointer-events:auto!important;max-height:calc(100vh - 24px)!important;overflow:auto!important;}
 .report-root .report-dialog input,.report-root .report-dialog select,.report-root .report-dialog button{position:relative;z-index:2;pointer-events:auto;touch-action:manipulation;}
 body.report-modal-open{overflow:hidden!important;}
+
+/* v33 operation modal lifecycle hardening */
+#operationBackdrop[hidden],#checklistModal[hidden],#staffModal[hidden],#staffManageModal[hidden],#staffMemberModal[hidden],#staffPoster[hidden]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+#operationBackdrop{z-index:1090;}
+#checklistModal,#staffModal,#staffManageModal,#staffMemberModal{z-index:1091;}
+#staffPoster{z-index:1210;}
+body.operation-lock{overflow:hidden!important;touch-action:none;}
+.poster-preview-card{width:min(620px,96vw);max-height:min(92vh,900px);display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid #dce7e0;border-radius:22px;box-shadow:0 28px 80px rgba(8,31,21,.26)}
+.poster-preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid #e5ece7;background:#fff;flex:none}
+.poster-preview-head h3{margin:3px 0 0;font-size:16px;color:#173c2d}
+.poster-preview-stage{min-height:220px;overflow:auto;padding:16px;background:#f2f6f3;display:flex;align-items:flex-start;justify-content:center;flex:1}
+.poster-preview-stage img{display:block;width:min(100%,540px);height:auto;border-radius:14px;box-shadow:0 16px 40px rgba(12,47,32,.14);background:#fff}
+.poster-loading{padding:80px 24px;color:#728078;font-size:11px;font-weight:700;text-align:center}
+#staffPoster .poster-actions{position:static;flex:none;background:#fff}
+#staffPoster .poster-actions .poster-close{position:static}
+@media(max-width:760px){.poster-preview-card{width:94vw;max-height:90vh}.poster-preview-stage{padding:10px}.poster-preview-head{padding:13px 14px}.poster-preview-stage img{width:100%}}
