@@ -1,0 +1,23 @@
+CGK Handling V36 — Live Group Database
+
+Base: uploaded CGK Handling BACKUP before V36 (V35).
+
+Database upgrade:
+- Existing cgk_handling_state realtime sync is preserved unchanged.
+- Adds read-only frontend adapter for Supabase table: cgk_group_schedule.
+- Fetches the latest group snapshot at startup, when the app returns to foreground, when network reconnects, and periodically while open.
+- Successful database load changes the header status to GROUP LIVE.
+- Failed live fetch falls back to the last successful browser cache and displays GROUP CACHE; no cache displays GROUP OFFLINE.
+- Live group metadata overrides the V35 embedded Excel metadata only when a confident event match is found.
+- PAX, group name, and group departure date therefore update from the database without removing the original event schedule.
+- Matching supports event_id when supplied and defensive matching by flight/PNR/date for compatible snapshot schemas.
+- No service-role/secret key is embedded in the web project. Browser reads use the existing publishable key.
+
+Safety:
+- sync-config.js was not modified.
+- Existing calendar, drawer, attendance, checklist, staff assignment, poster/JPG, report, import/export and state sync code remain in place.
+- Static V35 metadata remains a fallback if the group table cannot be read or a row cannot be matched confidently.
+
+Deployment prerequisite:
+- Supabase RLS must allow SELECT on public.cgk_group_schedule for the publishable/anon browser role.
+- Apps Script continues to be responsible for writing/replacing the group snapshot with the server-side credential.

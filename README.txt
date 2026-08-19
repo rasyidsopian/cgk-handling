@@ -7,3 +7,6 @@ HTR_[2 kata pertama nama]_[Bulan].pdf
 Example: HTR_Muhammad Rasyid_Agustus.pdf
 
 sync-config.js is unchanged from V30.
+
+
+V36: Live cgk_group_schedule database adapter added. See V36-AUDIT.txt.

@@ -262,7 +262,7 @@
 
 
 <script>
-/* CGK Handling v35 — group metadata + JPG summary update. self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
+/* CGK Handling v36 — live Supabase group database + group metadata/JPG summary update. self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
 (async function(){
   try {
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
@@ -20773,11 +20773,123 @@ window.addEventListener('cgk-remote-state',ev=>{
   showSavedNote();
   safeRender();
 });
+/* V36 GROUP DATABASE ---------------------------------------------------------
+   Read-only browser adapter for the Apps Script -> Supabase snapshot table.
+   The existing cgk_handling_state realtime sync remains untouched. */
+const CGK_GROUP_TABLE='cgk_group_schedule';
+let liveGroupRows=[];
+let liveGroupMetaByEventId={};
+let groupDbReady=false;
+let groupDbLastLoaded=0;
+let groupDbLoading=null;
+
+function groupDbStatus(mode,label){
+  const el=document.getElementById('syncStatus'); if(!el)return;
+  el.dataset.groupDb=mode;
+  const lab=el.querySelector('.sync-label'); if(lab)lab.textContent=label;
+}
+function flatGroupRow(row){
+  const out={};
+  const walk=(v,p='')=>{
+    if(v==null)return;
+    if(Array.isArray(v)){out[p]=v;return;}
+    if(typeof v==='object'){Object.entries(v).forEach(([k,x])=>walk(x,p?`${p}.${k}`:k));return;}
+    out[p]=v;
+  }; walk(row); return out;
+}
+function normKey(k){return String(k||'').toLowerCase().replace(/[^a-z0-9]/g,'')}
+function groupValue(row,aliases){
+  const f=flatGroupRow(row), wanted=aliases.map(normKey);
+  for(const [k,v] of Object.entries(f)){const nk=normKey(k.split('.').pop());if(wanted.includes(nk)&&v!==''&&v!=null)return v}
+  return null;
+}
+function isoDateValue(v){
+  if(v==null||v==='')return '';
+  if(v instanceof Date&&!Number.isNaN(v.getTime()))return v.toISOString().slice(0,10);
+  const s=String(v).trim();
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  m=s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);if(m){let y=m[3];if(y.length===2)y=(+y<70?'20':'19')+y;return `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`}
+  const d=new Date(s);return Number.isNaN(d.getTime())?'':d.toISOString().slice(0,10);
+}
+function numberValue(v){if(v==null||v==='')return null;const m=String(v).replace(/,/g,'').match(/\d+/);return m?Number(m[0]):null}
+function rowFlights(row){
+  const vals=[]; const f=flatGroupRow(row);
+  Object.entries(f).forEach(([k,v])=>{if(/flight|penerbangan|pesawat|flt/i.test(k)){String(v??'').toUpperCase().match(/[A-Z0-9]{2}\s*\d{2,4}/g)?.forEach(x=>vals.push(x.replace(/\s+/g,'')))}});
+  return [...new Set(vals)];
+}
+function rowDates(row){
+  const vals=[]; const f=flatGroupRow(row);
+  Object.entries(f).forEach(([k,v])=>{if(/date|tanggal|tgl|departure|berangkat|return|arrival|tiba/i.test(k)){const d=isoDateValue(v);if(d)vals.push(d)}});
+  return [...new Set(vals)];
+}
+function rowText(row){return Object.values(flatGroupRow(row)).filter(v=>typeof v!=='object').join(' ').toUpperCase()}
+function matchGroupRowToEvent(row,event){
+  const direct=groupValue(row,['event_id','eventId','cgk_event_id']);
+  if(direct&&String(direct)===String(event.id))return 100;
+  const txt=rowText(row), flights=rowFlights(row), dates=rowDates(row), ef=String(event.flight||'').toUpperCase().replace(/\s+/g,''), pnr=String(event.pnr||'').toUpperCase();
+  const legs=(event.scheduleLegs||[]).map(l=>String(l.flight||'').toUpperCase().replace(/\s+/g,''));
+  let score=0;
+  if(ef&&(flights.includes(ef)||txt.includes(ef)))score+=5;
+  else if(flights.some(f=>legs.includes(f)))score+=3;
+  if(pnr&&pnr!=='-'&&txt.includes(pnr))score+=6;
+  if(dates.includes(event.date))score+=4;
+  const dep=event.scheduleLegs?.[0]?.date;if(dep&&dates.includes(dep))score+=4;
+  const airline=String(event.airline||'').toUpperCase();if(airline&&new RegExp(`(^|[^A-Z0-9])${airline}([^A-Z0-9]|$)`).test(txt))score+=1;
+  return score;
+}
+function groupMetaFromRows(rows,event){
+  const matched=rows.map(r=>[r,matchGroupRowToEvent(r,event)]).filter(x=>x[1]>=7).sort((a,b)=>b[1]-a[1]);
+  if(!matched.length)return null;
+  const best=matched[0][1], selected=matched.filter(x=>x[1]===best).map(x=>x[0]);
+  const names=[],deps=[];let pax=0,paxFound=false,paxLabels=[];
+  selected.forEach(r=>{
+    const dep=isoDateValue(groupValue(r,['departure_date','tanggal_berangkat','tgl_berangkat','date_departure','group_departure_date','tanggal_keberangkatan']));if(dep)deps.push(dep);
+    const name=groupValue(r,['group_name','nama_group','nama_grup','group','nama_group_umroh']);
+    const airline=String(groupValue(r,['airline_code','airline','kode_pesawat','kode_maskapai'])||eventAirlineCode(event)||'').toUpperCase().slice(0,2);
+    if(name)names.push(String(name).trim()); else if(dep)names.push(groupNameFromDate(dep,airline));
+    const pv=groupValue(r,['pax','jumlah_pax','total_pax','jumlah_jamaah','jamaah','pax_total']);const pn=numberValue(pv);if(pn!=null){pax+=pn;paxFound=true;if(String(pv).match(/[A-Za-z+]/))paxLabels.push(String(pv).trim())}
+  });
+  const meta={groupSource:'Supabase Group Database'};
+  if(names.length)meta.groupNames=[...new Set(names)];
+  if(deps.length)meta.groupDepartureDates=[...new Set(deps)];
+  if(paxFound)meta.pax=pax;
+  if(paxLabels.length)meta.groupPaxLabel=[...new Set(paxLabels)].join(' + ');
+  return meta;
+}
+function rebuildLiveGroupMeta(){
+  const map={}; handlingEvents.forEach(e=>{const m=groupMetaFromRows(liveGroupRows,e);if(m)map[String(e.id)]=m});
+  liveGroupMetaByEventId=map;
+}
+async function loadGroupDatabase(force=false){
+  if(groupDbLoading)return groupDbLoading;
+  if(!force&&groupDbReady&&Date.now()-groupDbLastLoaded<60000)return liveGroupRows;
+  groupDbLoading=(async()=>{
+    const cfg=window.CGK_SYNC_CONFIG||{};
+    if(!cfg.url||!cfg.anonKey)throw new Error('Supabase config belum tersedia');
+    groupDbStatus('syncing','GROUP SYNC');
+    const endpoint=`${String(cfg.url).replace(/\/$/,'')}/rest/v1/${CGK_GROUP_TABLE}?select=*`;
+    const res=await fetch(endpoint,{headers:{apikey:cfg.anonKey,Authorization:`Bearer ${cfg.anonKey}`,Accept:'application/json'},cache:'no-store'});
+    if(!res.ok)throw new Error(`Group database HTTP ${res.status}: ${(await res.text()).slice(0,240)}`);
+    const rows=await res.json();if(!Array.isArray(rows))throw new Error('Format group database tidak valid');
+    liveGroupRows=rows;rebuildLiveGroupMeta();groupDbReady=true;groupDbLastLoaded=Date.now();
+    localStorage.setItem('cgk-group-db-cache',JSON.stringify({at:groupDbLastLoaded,rows}));
+    groupDbStatus('online','GROUP LIVE');
+    safeRender();
+    return rows;
+  })().catch(err=>{
+    console.error('CGK group database load failed',err);
+    try{const c=JSON.parse(localStorage.getItem('cgk-group-db-cache')||'null');if(c?.rows?.length){liveGroupRows=c.rows;rebuildLiveGroupMeta();groupDbReady=false;groupDbStatus('local','GROUP CACHE');safeRender()}else groupDbStatus('error','GROUP OFFLINE')}catch{groupDbStatus('error','GROUP OFFLINE')}
+    return liveGroupRows;
+  }).finally(()=>{groupDbLoading=null});
+  return groupDbLoading;
+}
+window.CGKGroupDB={refresh:()=>loadGroupDatabase(true),rows:()=>liveGroupRows.slice(),status:()=>groupDbReady?'live':(liveGroupRows.length?'cache':'offline')};
+
 function applyExcelGroupMeta(event){
   if(!event)return event;
-  const meta=excelGroupMetaByEventId[String(event.id)];
-  if(!meta)return event;
-  return {...event,...meta};
+  const staticMeta=excelGroupMetaByEventId[String(event.id)]||{};
+  const liveMeta=liveGroupMetaByEventId[String(event.id)]||{};
+  return {...event,...staticMeta,...liveMeta};
 }
 function eventGroupDepartureDates(event){
   const dates=Array.isArray(event?.groupDepartureDates)?event.groupDepartureDates.filter(Boolean):[];
@@ -21154,6 +21266,10 @@ window.addEventListener("load",()=>safeRender(),{once:false});
 showSavedNote();
 if(document.readyState!=="loading") safeRender();
 setTimeout(()=>window.CGKSync?.init(),0);
+setTimeout(()=>loadGroupDatabase(false),25);
+setInterval(()=>{if(!document.hidden)loadGroupDatabase(false)},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadGroupDatabase(true)});
+window.addEventListener('online',()=>loadGroupDatabase(true));
 
 </script>
 <script>
