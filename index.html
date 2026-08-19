@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0a6b42">
+  <meta name="theme-color" content="#00382f">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CGK Handling">
-  <link rel="manifest" href="manifest.webmanifest?v=31">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v16.png?rev=31">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v16.png?rev=31">
-  <link rel="icon" type="image/png" href="icon-192.png?rev=31">
-      <title>CGK Handling · Hamdan Tour · v31</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=31">
+  <link rel="manifest" href="manifest.webmanifest?v=41">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?rev=41">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png?rev=41">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?rev=41">
+      <title>CGK Handling · Executive Aviation Operations · v41</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=41">
   <style id="report-styles">
     .report-modal{max-width:760px}.report-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:4px 20px 14px}.report-wide{grid-column:1/-1}.report-field{display:flex;flex-direction:column;gap:7px;color:#68776f;font-size:11px;font-weight:700}.report-field input,.report-field select{width:100%;padding:11px 12px;border:1px solid #dfe8e2;border-radius:11px;background:#fff;color:#183c2c;font:600 12px Inter,system-ui,sans-serif;box-sizing:border-box;outline:none}.report-field input:focus,.report-field select:focus{border-color:#7cb898;box-shadow:0 0 0 3px rgba(14,122,72,.08)}.report-note{margin:2px 20px 14px;padding:12px 13px;border:1px solid #e2ebe5;background:#f7faf8;border-radius:12px;display:flex;gap:9px;align-items:flex-start;color:#718079;font-size:10px;line-height:1.45}.report-note .icon-slot{margin-top:1px;flex:none}.report-validation{margin:0 20px 14px;padding:10px 12px;border-radius:10px;background:#fff2ef;border:1px solid #f0cfc6;color:#a54433;font-size:11px;font-weight:700}.report-btn{box-shadow:0 8px 18px rgba(10,107,66,.16)}
     @media(max-width:760px){.report-form-grid{grid-template-columns:1fr}.report-wide{grid-column:auto}.report-modal{width:calc(100vw - 22px);max-width:none}}
@@ -25,12 +25,13 @@
 .operation-modal-backdrop{position:fixed;inset:0;background:rgba(8,24,17,.34);z-index:1100;opacity:0;pointer-events:none;transition:opacity .16s}.operation-modal-backdrop.open{opacity:1;pointer-events:auto}.operation-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,92vw);max-height:min(82vh,760px);background:#fff;border:1px solid #dfe9e3;border-radius:18px;box-shadow:0 30px 90px rgba(10,37,27,.2);z-index:1101;display:flex;flex-direction:column;overflow:hidden}.operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{display:none!important}
 .operation-modal[hidden],.operation-modal-backdrop[hidden],.staff-poster[hidden]{visibility:hidden!important;pointer-events:none!important;opacity:0!important} body.operation-lock{overflow:hidden!important}.operation-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid #e4ebe6;flex:none}.operation-modal-head h3{margin:4px 0 0;font-size:18px;color:#173c2d}.checklist-summary{padding:13px 20px 12px;border-bottom:1px solid #e9efeb;background:#fbfdfc;display:grid;grid-template-columns:130px 1fr 95px;gap:12px;align-items:center;flex:none}.checklist-summary strong{display:block;margin-top:3px;font-size:20px;color:#0a6b42}.checklist-summary small{font-size:9px;color:#7a8881;text-align:right}.progress-track{height:8px;background:#e5eee8;border-radius:999px;overflow:hidden}.progress-track span{display:block;height:100%;width:0;background:#0a6b42;border-radius:999px;transition:width .18s}.checklist-scroll{padding:12px 20px 16px;overflow-y:auto;min-height:0;flex:1}.checklist-group{margin-bottom:12px}.checklist-group:last-child{margin-bottom:0}.checklist-group-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 7px;color:#6f7d76;font-size:9px;letter-spacing:.08em;font-weight:800}.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid #e1eae4;background:#fff;border-radius:11px;margin-top:6px;cursor:pointer;transition:.14s}.checklist-item:hover{border-color:#9ac9ad;background:#f7fbf9}.checklist-item.checked{border-color:#b9dfc7;background:#eef8f1}.checklist-item input{width:17px;height:17px;accent-color:#0a6b42;flex:none}.checklist-item label{font-size:11px;color:#274438;font-weight:650;cursor:pointer;flex:1}.checklist-item .checkmark{font-size:9px;font-weight:800;color:#0a6b42}.operation-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e4ebe6;background:#fff;flex:none}.operation-hint{margin:0;padding:0 20px 12px;color:#74817b;font-size:10px;line-height:1.5}.staff-modal{max-width:560px}.staff-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:4px 20px 16px;overflow:auto;min-height:0}.staff-chip-btn{border:1px solid #dfe8e3;background:#fff;color:#28473a;border-radius:11px;min-height:44px;padding:8px 10px;font:700 11px Inter,system-ui,sans-serif;cursor:pointer;transition:.14s}.staff-chip-btn.selected{background:#0a6b42;color:#fff;border-color:#0a6b42;box-shadow:0 5px 14px rgba(10,107,66,.13)}.staff-chip-btn.selected::before{content:'✓ ';font-weight:900}.operation-card{margin:12px 0 0;padding:13px;border:1px solid #e3ebe6;background:#fbfdfc;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.operation-card>div:first-child{min-width:0}.operation-card strong{display:block;margin-top:4px;font-size:12px;color:#193f30}.operation-card small{display:block;margin-top:3px;color:#77857e;font-size:9px}.checklist-card{background:#f7fbf8}.staff-card{background:#fff}.staff-chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.staff-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#eaf5ee;color:#0a6b42;font-size:8px;font-weight:800;border:1px solid #cde5d5}.empty-inline{font-size:9px;color:#84918b}.operation-actions{display:flex;gap:6px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}.staff-poster{position:fixed;inset:0;z-index:1200;background:rgba(8,24,17,.42);display:flex;align-items:center;justify-content:center;padding:20px}.poster-card{width:min(540px,94vw);background:#fff;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden;border:1px solid #dce8e1}.poster-top{display:grid;grid-template-columns:54px 1fr 40px;align-items:center;gap:12px;padding:18px 20px;background:#0a6b42;color:#fff}.poster-top img{width:54px;height:54px;border-radius:15px;background:#fff;object-fit:cover}.poster-top .eyebrow{color:#b9d8ca}.poster-top h3{margin:4px 0 0;font-size:20px;letter-spacing:.02em}.poster-top .icon-btn{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}.poster-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 20px;border-bottom:1px solid #e5ece7}.poster-meta-item{padding:10px;border:1px solid #e4ece7;border-radius:12px;background:#fbfdfc}.poster-meta-item span{display:block;color:#7a8881;font-size:8px;text-transform:uppercase;letter-spacing:.08em}.poster-meta-item b{display:block;margin-top:4px;color:#1b4132;font-size:11px}.poster-staff-wrap{padding:16px 20px}.poster-staff-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.poster-staff-item{padding:11px 12px;border:1px solid #dfe9e3;border-radius:12px;background:#f7faf8;color:#1e4434;font-size:11px;font-weight:750}.poster-actions{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #e5ece7;background:#fbfdfc}@media(max-width:760px){.operation-modal{width:94vw;max-height:82vh}.checklist-summary{grid-template-columns:95px 1fr 80px}.staff-selector{grid-template-columns:1fr 1fr}.operation-card{align-items:flex-start;flex-direction:column}.operation-actions{width:100%;justify-content:flex-start}.poster-card{width:96vw}.poster-meta{grid-template-columns:1fr 1fr}.poster-staff-list{grid-template-columns:1fr}.poster-top h3{font-size:16px}}
 </style>
+  <link rel="stylesheet" href="luxury-v41.css?v=41">
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div class="brand-block">
-        <div class="brand-icon"><img src="brand-icon.png" alt="CGK Handling logo"></div>
+        <div class="brand-icon"><img src="brand-mark.png" alt="CGK Handling emblem"></div>
         <div><h1>CGK Handling</h1><p>August 2026 — March 2027</p></div>
       </div>
       <div class="top-search">
@@ -57,11 +58,23 @@
       </div>
     </header>
 
+    <nav class="lux-side-nav" aria-label="Navigasi utama">
+      <div class="lux-side-stack">
+        <button class="lux-nav-btn active" type="button" data-lux-action="dashboard" title="Dashboard" aria-label="Dashboard"><span class="icon-slot" data-icon="calendar-days" aria-hidden="true"></span></button>
+        <button class="lux-nav-btn" type="button" data-lux-action="flights" title="Cari penerbangan" aria-label="Cari penerbangan"><span class="icon-slot" data-icon="plane" aria-hidden="true"></span></button>
+        <button class="lux-nav-btn" type="button" data-lux-action="staff" title="Anggota Handling" aria-label="Anggota Handling"><span class="icon-slot" data-icon="users" aria-hidden="true"></span></button>
+        <button class="lux-nav-btn" type="button" data-lux-action="report" title="Generate Report" aria-label="Generate Report"><span class="icon-slot" data-icon="file-text" aria-hidden="true"></span></button>
+        <button class="lux-nav-btn" type="button" data-lux-action="calendar" title="Kalender Handling" aria-label="Kalender Handling"><span class="icon-slot" data-icon="calendar-days" aria-hidden="true"></span></button>
+        <button class="lux-nav-btn" type="button" data-lux-action="incentive" title="Insentif Handling" aria-label="Insentif Handling"><span class="icon-slot" data-icon="wallet-cards" aria-hidden="true"></span></button>
+      </div>
+      <button class="lux-nav-btn" type="button" data-lux-action="profile" title="Profil Operator" aria-label="Profil Operator"><span class="icon-slot" data-icon="circle-help" aria-hidden="true"></span></button>
+    </nav>
+
     <main class="main-grid">
       <section class="workspace">
         <div class="calendar-toolbar">
           <div class="month-title-wrap">
-            <button id="monthButton" class="month-title" title="Pilih bulan"><span id="calendarTitle">August 2026</span><span class="icon-slot" data-icon="chevron-down" aria-hidden="true"></span></button>
+            <button id="monthButton" class="month-title" title="Pilih bulan"><span class="lux-month-badge"><span class="icon-slot" data-icon="calendar-days" aria-hidden="true"></span></span><span id="calendarTitle">August 2026</span><span class="icon-slot" data-icon="chevron-down" aria-hidden="true"></span></button>
             <select id="monthSelect" class="month-select" aria-label="Pilih bulan"></select>
           </div>
           <div class="toolbar-actions">
@@ -118,6 +131,12 @@
         </section>
       </aside>
     </main>
+
+    <footer class="lux-footer" aria-label="CGK Handling footer">
+      <div class="lux-footer-left">Secure · Reliable · Real-time</div>
+      <div class="lux-footer-center">CGK Handling System</div>
+      <div class="lux-footer-right">© 2026 CGK Handling · Hamdan Tour Operations</div>
+    </footer>
   </div>
 
   <div class="filter-popover" id="filterPanel">
@@ -22347,6 +22366,29 @@ window.addEventListener('pageshow',()=>{if(!operationUI.active&&document.getElem
       scheduleCleanup(0);
     }, 180);
   }, {passive:true});
+})();
+</script>
+
+
+<script>
+/* V41 luxury navigation rail: routes only to existing controls/features. */
+(function(){
+  function click(id){ const el=document.getElementById(id); if(el){ el.click(); return true; } return false; }
+  function scrollToEl(selector){ const el=document.querySelector(selector); if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); return true; } return false; }
+  document.addEventListener('click',function(e){
+    const btn=e.target.closest?.('.lux-nav-btn[data-lux-action]');
+    if(!btn) return;
+    const action=btn.dataset.luxAction;
+    document.querySelectorAll('.lux-nav-btn').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    if(action==='dashboard') window.scrollTo({top:0,behavior:'smooth'});
+    else if(action==='flights'){ const s=document.getElementById('search'); if(s){ s.focus(); s.select?.(); } }
+    else if(action==='staff') click('quickStaff');
+    else if(action==='report') click('reportBtn');
+    else if(action==='calendar') scrollToEl('.calendar-card');
+    else if(action==='incentive') scrollToEl('#incentiveSection');
+    else if(action==='profile') click('profileBtn');
+  });
 })();
 </script>
 
