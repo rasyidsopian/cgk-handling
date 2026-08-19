@@ -1,0 +1,19 @@
+CGK Handling V42 — Responsive / Safe-Area / Icon Fix
+
+Root causes fixed:
+- Desktop navigation rail began below the 88px header. When sticky-header behavior changed while scrolling, a visible ivory seam could appear. Rail now paints the full viewport behind the header.
+- Several data-icon names were missing from ICON_PATHS, so renderIcons() used its fallback circle. Added semantic SVG icons for report, users, add member, incentive wallet, download report, dashboard, and profile.
+- iPhone toolbar inherited nowrap/horizontal-flex behavior and long action labels collided. Mobile toolbar is now a bounded 2-column grid (1 column on very narrow devices).
+- Standalone iPhone PWA uses viewport-fit=cover with black-translucent status bar; topbar had no safe-area compensation. V42 applies env(safe-area-inset-top/left/right/bottom) in standalone mode and navigator.standalone fallback.
+- Mobile top header now uses explicit grid rows so brand, navigation controls, and search cannot overlap.
+- Drawer/modal safe-area max-height and padding hardened for installed iPhone PWA.
+
+Preserved:
+- Schedule/data logic
+- Supabase / GROUP LIVE logic
+- Exact PAX and group matching
+- Attendance / incentive / checklist
+- Per-event handling staff
+- Report / JPG poster
+- Import/export
+- sync-config.js unchanged

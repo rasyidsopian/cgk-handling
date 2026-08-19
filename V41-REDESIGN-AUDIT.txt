@@ -1,0 +1,35 @@
+CGK Handling V41 — Emerald & Gold Executive Aviation UI
+
+Scope
+- Visual redesign only. Existing calendar/event/database/realtime/attendance/incentive/checklist/staff/report/import-export logic preserved.
+- New dark emerald + gold executive aviation visual system.
+- New left navigation rail mapped only to existing app controls.
+- New footer and responsive layout.
+- New logo integration and iPhone/PWA icon assets derived from the supplied CGK Handling logo.
+
+Files added
+- luxury-v41.css
+- brand-logo.png
+- brand-logo-dark.png
+- brand-mark.png
+
+Files updated
+- index.html
+- manifest.webmanifest
+- apple-touch-icon.png
+- apple-touch-icon-v16.png
+- apple-touch-icon-v7.png
+- apple-touch-icon-v8.png
+- icon-180.png
+- icon-192.png
+- icon-512.png
+- brand-icon.png
+
+Safety
+- No sync-config.js changes.
+- No Apps Script changes.
+- No database schema/data changes.
+- No event ID changes.
+- No global MutationObserver added.
+- Existing invisible-layer safeguards retained.
+- Existing V40 edit-save, exact PAX/group, per-event staff, and multi-event density fixes retained.

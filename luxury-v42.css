@@ -1,0 +1,534 @@
+/* ======================================================================
+   CGK HANDLING V41 — EMERALD & GOLD EXECUTIVE AVIATION UI
+   Visual-only redesign. Existing IDs, data flow, event logic and modal
+   lifecycle remain untouched.
+   ====================================================================== */
+:root{
+  --lux-emerald-950:#002d27;
+  --lux-emerald-900:#00382f;
+  --lux-emerald-850:#004137;
+  --lux-emerald-800:#004a3d;
+  --lux-emerald-700:#075f4b;
+  --lux-emerald-600:#0b7056;
+  --lux-emerald-100:#e9f3ee;
+  --lux-emerald-050:#f3f8f5;
+  --lux-gold-700:#a97824;
+  --lux-gold-600:#bd8e38;
+  --lux-gold-500:#d0a852;
+  --lux-gold-300:#e3cb94;
+  --lux-gold-soft:#f7edd8;
+  --lux-ivory:#f8f5ee;
+  --lux-ivory-2:#fbfaf6;
+  --lux-white:#fffefa;
+  --lux-text:#14231d;
+  --lux-muted:#6d7872;
+  --lux-line:rgba(55,76,66,.12);
+  --lux-line-gold:rgba(199,154,59,.34);
+  --lux-shadow:0 12px 34px rgba(18,39,30,.065);
+  --lux-shadow-soft:0 5px 20px rgba(18,39,30,.045);
+  --lux-gradient:linear-gradient(135deg,#002d27 0%,#00463a 48%,#005d49 100%);
+  --lux-gradient-button:linear-gradient(135deg,#003d32 0%,#075f4b 65%,#0b7056 100%);
+  --lux-gradient-gold:linear-gradient(135deg,#b9852d 0%,#d5b364 55%,#a97824 100%);
+  --green:#075f4b;
+  --green-dark:#00382f;
+  --green-soft:#edf6f1;
+  --green-line:#bcd9cc;
+  --orange:#a96813;
+  --orange-soft:#fff7e9;
+  --orange-line:#e8c997;
+  --bg:var(--lux-ivory);
+  --card:var(--lux-white);
+  --text:var(--lux-text);
+  --muted:var(--lux-muted);
+  --line:var(--lux-line);
+  --shadow:var(--lux-shadow-soft);
+}
+
+html,body{background:var(--lux-ivory)!important;color:var(--lux-text);}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;letter-spacing:-.005em;}
+.app-shell{min-height:100dvh;background:
+  radial-gradient(circle at 15% 8%,rgba(215,187,119,.08),transparent 30%),
+  linear-gradient(180deg,#faf8f3 0%,#f5f2ea 100%);}
+
+/* ---------- Executive header ---------- */
+.topbar{
+  height:88px!important;
+  background:var(--lux-gradient)!important;
+  border-bottom:1px solid rgba(213,179,100,.28)!important;
+  box-shadow:0 8px 24px rgba(0,38,31,.13)!important;
+  padding:0 20px!important;
+  gap:18px!important;
+  color:#fff9ed!important;
+  z-index:90!important;
+}
+.brand-block{min-width:320px!important;gap:13px!important;}
+.brand-icon{
+  width:58px!important;height:58px!important;border-radius:17px!important;
+  background:linear-gradient(145deg,#fffef8,#f3ead7)!important;
+  border:1px solid rgba(221,184,96,.8)!important;
+  box-shadow:0 7px 24px rgba(0,0,0,.16),inset 0 0 0 1px rgba(255,255,255,.7)!important;
+  overflow:hidden;padding:5px!important;
+}
+.brand-icon img{width:100%!important;height:100%!important;object-fit:contain!important;border-radius:12px!important;}
+.brand-block h1{font-family:"Playfair Display",Georgia,serif!important;font-size:24px!important;font-weight:700!important;color:#fffaf0!important;letter-spacing:.005em!important;}
+.brand-block p{color:rgba(247,237,214,.68)!important;font-size:10px!important;letter-spacing:.04em!important;}
+.top-search{
+  height:50px!important;max-width:430px!important;
+  background:rgba(0,32,27,.22)!important;
+  border:1px solid rgba(211,173,84,.4)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;
+  color:#d9caa7!important;border-radius:14px!important;
+}
+.top-search input{color:#fff9ed!important;font-size:13px!important;}
+.top-search input::placeholder{color:rgba(244,235,216,.58)!important;}
+.top-search kbd{background:rgba(255,255,255,.07)!important;border-color:rgba(217,180,91,.3)!important;color:#e6d8b8!important;}
+.top-tools{gap:7px!important;}
+.topbar .tool-btn,.topbar .icon-btn,.topbar .profile{
+  background:rgba(0,35,29,.28)!important;
+  color:#f8efdc!important;
+  border:1px solid rgba(205,164,72,.42)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease!important;
+}
+.topbar .tool-btn:hover,.topbar .icon-btn:hover,.topbar .profile:hover{
+  background:rgba(18,94,73,.55)!important;border-color:rgba(228,194,115,.72)!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.12)!important;transform:translateY(-1px);
+}
+.topbar .tool-btn:active,.topbar .icon-btn:active,.topbar .profile:active{transform:scale(.98)}
+.topbar .profile{min-width:200px!important;}
+.avatar{background:linear-gradient(145deg,#0d7a5c,#00533f)!important;border:1px solid rgba(232,201,129,.5)!important;}
+.profile small{color:rgba(246,236,214,.58)!important;}
+.profile>svg{color:#d8c79f!important;}
+.notify span{border-color:#003d32!important;background:#d88f1f!important;}
+.sync-indicator{
+  background:rgba(0,31,26,.34)!important;border-color:rgba(207,168,79,.38)!important;
+  color:#e7dcc2!important;padding:8px 11px!important;
+}
+.sync-indicator[data-mode="online"] .sync-dot{box-shadow:0 0 0 4px rgba(35,190,124,.08);}
+
+/* ---------- Left luxury navigation rail ---------- */
+.lux-side-nav{
+  position:fixed;left:0;top:88px;bottom:0;width:78px;z-index:45;
+  background:linear-gradient(180deg,#00372f 0%,#003e34 52%,#002e27 100%);
+  border-right:1px solid rgba(211,173,84,.28);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:18px 11px 20px;box-shadow:8px 0 25px rgba(0,52,43,.06);
+}
+.lux-side-stack{display:flex;flex-direction:column;gap:12px;width:100%;align-items:center;}
+.lux-nav-btn{
+  width:48px;height:48px;border-radius:14px;border:1px solid transparent;background:transparent;
+  color:#dbc486;display:grid;place-items:center;transition:.16s ease;padding:0;position:relative;
+}
+.lux-nav-btn .icon-slot,.lux-nav-btn svg{width:20px;height:20px;}
+.lux-nav-btn:hover{background:rgba(220,183,92,.09);border-color:rgba(213,174,81,.25);transform:translateY(-1px);}
+.lux-nav-btn.active{background:linear-gradient(145deg,rgba(220,184,95,.18),rgba(220,184,95,.05));border-color:rgba(224,190,111,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 8px 18px rgba(0,0,0,.11);}
+.lux-nav-btn.active::after{content:"";position:absolute;right:-12px;width:2px;height:24px;border-radius:2px;background:var(--lux-gradient-gold);}
+
+/* ---------- Main composition ---------- */
+.main-grid{
+  grid-template-columns:minmax(0,1fr) 294px!important;
+  gap:18px!important;padding:20px 20px 32px 98px!important;
+  max-width:none!important;
+}
+.workspace{min-width:0;}
+.calendar-toolbar,.rail-card,.calendar-card,.year-strip,.incentive-section,.summary-card{
+  border-color:rgba(52,77,66,.115)!important;
+}
+.calendar-toolbar{
+  min-height:74px;background:rgba(255,254,250,.94)!important;
+  border-radius:18px!important;padding:13px 16px!important;
+  box-shadow:var(--lux-shadow-soft)!important;
+}
+.month-title{font-family:"Playfair Display",Georgia,serif!important;font-size:24px!important;font-weight:700!important;color:#1c2d26!important;letter-spacing:-.015em!important;}
+.lux-month-badge{width:38px;height:38px;border-radius:11px;display:inline-grid;place-items:center;background:linear-gradient(145deg,#fffdfa,#f6ecd7);border:1px solid rgba(202,160,67,.28);box-shadow:0 5px 14px rgba(112,82,24,.055);margin-right:4px;color:#295844}.lux-month-badge svg{width:18px!important;height:18px!important}.month-title>.icon-slot:last-child{margin-left:2px}
+.toolbar-actions{gap:8px!important;}
+.btn{height:42px!important;border-radius:11px!important;font-weight:650!important;transition:.16s ease!important;}
+.btn.primary{
+  background:var(--lux-gradient-button)!important;border-color:rgba(190,147,54,.5)!important;color:#fff8e8!important;
+  box-shadow:0 7px 16px rgba(0,68,53,.12),inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+.btn.primary:hover{filter:brightness(1.05);border-color:rgba(223,187,102,.72)!important;transform:translateY(-1px);}
+.btn.ghost{background:#fffefb!important;color:#24362f!important;border-color:rgba(62,81,72,.14)!important;}
+.btn.ghost:hover{border-color:rgba(198,153,55,.38)!important;background:#fffaf1!important;transform:translateY(-1px);}
+.btn.danger{background:#fff5f1!important;border-color:#efc4b7!important;}
+
+/* ---------- Summary strip ---------- */
+.summary-strip{gap:10px!important;margin:14px 0 16px!important;}
+.summary-card{
+  min-height:82px;background:linear-gradient(160deg,#fffefa 0%,#fbfaf6 100%)!important;
+  border-radius:16px!important;padding:13px 14px!important;box-shadow:var(--lux-shadow-soft)!important;
+  position:relative;overflow:hidden;
+}
+.summary-card::after{content:"";position:absolute;width:48px;height:48px;border-radius:50%;right:-16px;top:-18px;background:radial-gradient(circle,rgba(211,174,88,.16),transparent 68%);}
+.summary-card span{font-size:8px!important;text-transform:uppercase;letter-spacing:.08em!important;color:#748079!important;font-weight:700!important;}
+.summary-card b{font-family:"Playfair Display",Georgia,serif!important;font-size:21px!important;color:#132a21!important;margin-top:4px!important;font-weight:700!important;}
+.summary-card small{color:#929b96!important;font-size:7.5px!important;}
+
+/* ---------- Calendar ---------- */
+.calendar-card{background:#fffefa!important;border-radius:18px!important;box-shadow:var(--lux-shadow)!important;}
+.weekdays{background:linear-gradient(180deg,#fffefb,#faf7ef)!important;border-bottom-color:rgba(62,79,71,.11)!important;}
+.weekdays span{font-family:"Playfair Display",Georgia,serif!important;color:#52635b!important;font-size:10px!important;letter-spacing:.055em!important;padding:13px 10px!important;}
+.day{background:#fffefb!important;border-color:rgba(67,84,77,.10)!important;}
+.day.muted{background:#faf8f2!important;}
+.day.today{box-shadow:inset 0 0 0 2px rgba(196,153,59,.6)!important;background:linear-gradient(180deg,#fffdf7,#fbf8ee)!important;}
+.day-num{font-family:"Playfair Display",Georgia,serif!important;font-size:14px!important;color:#172a22!important;}
+.today-badge{background:var(--lux-gradient-button)!important;border:1px solid rgba(209,172,85,.45)!important;}
+.day-add{border-color:rgba(114,130,120,.19)!important;background:#fffdf8!important;color:#66736c!important;border-radius:999px!important;}
+.day-add:hover{border-color:rgba(199,154,59,.58)!important;color:#9d7022!important;background:#fff8e9!important;}
+.event{
+  border-radius:12px!important;box-shadow:0 3px 10px rgba(22,41,33,.03)!important;
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease!important;
+}
+.event:hover{transform:translateY(-1px)!important;box-shadow:0 9px 22px rgba(24,42,34,.075)!important;}
+.event.dep{background:linear-gradient(145deg,#eff7f2,#e8f3ec)!important;border-color:#b9d8ca!important;color:#075c43!important;}
+.event.arr{background:linear-gradient(145deg,#fff9ed,#fff4e2)!important;border-color:#e8c590!important;color:#a56213!important;}
+.event .type{letter-spacing:.08em!important;font-weight:800!important;}
+.event .time,.event .flight{font-weight:800!important;}
+.event .group-name{color:inherit!important;opacity:.86!important;}
+.event-attendance{background:rgba(255,254,250,.76)!important;border-color:rgba(77,107,91,.17)!important;color:#245f48!important;border-radius:8px!important;}
+.event-attendance.checked{background:var(--lux-gradient-button)!important;border-color:#075f4b!important;color:#fff9eb!important;}
+
+/* ---------- Right rail ---------- */
+.rail{gap:14px!important;}
+.rail-card{background:linear-gradient(160deg,#fffefa 0%,#fbfaf6 100%)!important;border-radius:18px!important;padding:16px!important;box-shadow:var(--lux-shadow-soft)!important;}
+.rail-card h3{font-family:"Playfair Display",Georgia,serif!important;font-size:17px!important;color:#1c2d26!important;margin-bottom:13px!important;}
+.legend-card{background:#fffdf9!important;border-color:rgba(70,87,78,.12)!important;border-radius:13px!important;padding:13px!important;}
+.dep-legend{border-left:3px solid #1b8a63!important;}
+.arr-legend{border-left:3px solid #c88627!important;}
+.quick-action{position:relative;background:#fffefa!important;border-color:rgba(66,84,75,.12)!important;border-radius:13px!important;padding:11px 12px!important;transition:.16s ease!important;}
+.quick-action::after{content:"›";position:absolute;right:12px;color:#a57b2d;font-size:18px;top:50%;transform:translateY(-50%);}
+.quick-action:hover{background:#fffaf0!important;border-color:rgba(198,153,55,.35)!important;transform:translateX(1px);box-shadow:0 5px 14px rgba(109,79,20,.045)!important;}
+.quick-action svg{color:#285c49!important;}
+.note-card{background:linear-gradient(145deg,#fbf8ef,#f7f1e4)!important;border-color:rgba(198,153,55,.18)!important;}
+.note-head{color:#77591f!important;}
+.note-card p{color:#6f726d!important;}
+
+/* ---------- Drawer & operational cards ---------- */
+.drawer{background:#fffdfa!important;border-left:1px solid rgba(203,165,77,.25)!important;box-shadow:-24px 0 60px rgba(0,38,30,.15)!important;}
+.drawer-head{border-bottom-color:rgba(52,75,65,.12)!important;}
+.drawer-head h3{font-family:"Playfair Display",Georgia,serif!important;font-size:23px!important;}
+.detail-hero{background:var(--lux-gradient)!important;border:1px solid rgba(215,178,91,.48)!important;border-radius:20px!important;padding:18px!important;box-shadow:0 13px 30px rgba(0,62,49,.16)!important;}
+.detail-hero small{color:#d9caa7!important;}
+.detail-hero .group-line{color:#ebd9ac!important;}
+.detail-grid{border-color:rgba(63,83,73,.12)!important;border-radius:15px!important;background:#fffefa!important;}
+.detail-item{border-color:rgba(63,83,73,.10)!important;padding:12px!important;}
+.detail-item span{color:#7c8781!important;text-transform:uppercase;letter-spacing:.05em!important;}
+.operation-card,.attendance-panel,.received-card,.incentive-stat,.daily-row,.legs-box,.source-box{border-color:rgba(64,84,74,.11)!important;}
+.attendance-panel,.operation-card,.received-card{background:linear-gradient(145deg,#fffefa,#faf8f2)!important;}
+.staff-chip{background:#eef6f1!important;border-color:#c6dbcF!important;color:#075f4b!important;}
+
+/* ---------- Modals: same luxury language, lifecycle untouched ---------- */
+.schedule-modal,.operation-modal,.report-root .report-dialog,.poster-preview-card,.poster-card{
+  background:#fffdfa!important;border-color:rgba(196,153,59,.30)!important;
+  box-shadow:0 28px 85px rgba(0,44,35,.22)!important;border-radius:20px!important;
+}
+.modal-head,.operation-modal-head,.poster-preview-head{border-color:rgba(58,79,69,.11)!important;}
+.modal-head h3,.operation-modal-head h3,.poster-preview-head h3{font-family:"Playfair Display",Georgia,serif!important;color:#173028!important;}
+.schedule-modal input,.schedule-modal select,.report-root input,.report-root select{
+  background:#fffefa!important;border-color:rgba(64,83,74,.15)!important;
+}
+.schedule-modal input:focus,.schedule-modal select:focus,.report-root input:focus,.report-root select:focus{
+  border-color:rgba(190,145,48,.55)!important;box-shadow:0 0 0 3px rgba(202,158,61,.09)!important;
+}
+.operation-modal-foot,.modal-foot,.poster-actions{background:#fcfaf5!important;border-color:rgba(58,79,69,.10)!important;}
+.progress-track{background:#e6ece7!important;}
+.progress-track span{background:linear-gradient(90deg,#075f4b,#d0a852)!important;}
+.staff-chip-btn.selected{background:var(--lux-gradient-button)!important;border-color:rgba(198,153,55,.48)!important;color:#fff9e9!important;}
+.poster-top{background:var(--lux-gradient)!important;border-bottom:1px solid rgba(213,176,88,.35)!important;}
+
+/* ---------- Incentive / lower sections ---------- */
+.year-strip,.incentive-section{background:linear-gradient(160deg,#fffefa 0%,#faf8f2 100%)!important;border-radius:18px!important;box-shadow:var(--lux-shadow-soft)!important;}
+.section-title b,.incentive-head h2,.received-card h3{font-family:"Playfair Display",Georgia,serif!important;}
+.incentive-stat.highlight{background:linear-gradient(145deg,#eef7f2,#e9f3ed)!important;}
+.received-value{color:#075f4b!important;}
+
+/* ---------- Footer ---------- */
+.lux-footer{
+  margin-left:78px;min-height:46px;background:var(--lux-gradient);border-top:1px solid rgba(211,173,84,.34);
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:0 24px;
+  color:#e8dcc2;font-size:9px;letter-spacing:.025em;
+}
+.lux-footer-center{font-family:"Playfair Display",Georgia,serif;font-size:11px;color:#fff5df;display:flex;align-items:center;gap:8px;}
+.lux-footer-center::before{content:"◇";color:#d6ae5a;font-size:16px;}
+.lux-footer-right{text-align:right;color:rgba(237,223,194,.7);}
+
+/* ---------- Filters ---------- */
+.filter-popover{background:#fffdfa!important;border-color:rgba(198,153,55,.25)!important;box-shadow:0 24px 60px rgba(0,44,35,.18)!important;}
+.chip.active{background:var(--lux-gradient-button)!important;border-color:#075f4b!important;}
+
+/* ---------- Dark mode keeps luxury identity ---------- */
+body.dark{
+  --bg:#081510;--card:#0e2018;--text:#f4efe3;--muted:#a9b5ae;--line:rgba(221,186,104,.15);
+  background:#081510!important;
+}
+body.dark .app-shell{background:linear-gradient(180deg,#0a1712,#0c1a14)!important;}
+body.dark .calendar-toolbar,body.dark .calendar-card,body.dark .summary-card,body.dark .rail-card,body.dark .year-strip,body.dark .incentive-section,body.dark .drawer{background:#10231b!important;color:var(--text)!important;}
+body.dark .day{background:#10231b!important;}body.dark .day.muted{background:#0b1a14!important;}
+body.dark .weekdays{background:#0d1d17!important;}
+body.dark .month-title,body.dark .rail-card h3,body.dark .summary-card b,body.dark .day-num,body.dark .drawer-head h3{color:#f3ead8!important;}
+body.dark .btn.ghost,body.dark .quick-action,body.dark .legend-card,body.dark .detail-grid,body.dark .schedule-modal,body.dark .operation-modal{background:#13271f!important;color:#f2eadb!important;}
+
+/* ---------- Responsive behavior ---------- */
+@media(max-width:1439px){
+  .brand-block{min-width:250px!important;}
+  .main-grid{grid-template-columns:minmax(0,1fr) 274px!important;gap:14px!important;padding-left:94px!important;padding-right:14px!important;}
+  .topbar{padding-right:14px!important;gap:12px!important;}
+  .top-search{max-width:320px!important;}
+  .profile{min-width:155px!important;}.profile div:nth-child(2){max-width:88px;overflow:hidden;}
+  .summary-strip{grid-template-columns:repeat(3,1fr)!important;}
+  .toolbar-actions{justify-content:flex-end;}
+}
+@media(max-width:1100px){
+  .lux-side-nav{width:66px;}.main-grid{padding-left:80px!important;grid-template-columns:minmax(0,1fr)!important;}
+  .rail{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));grid-column:1;}
+  .rail .note-card{grid-column:1/-1;}
+  .lux-footer{margin-left:66px;}
+  .brand-block{min-width:200px!important;}.brand-block h1{font-size:20px!important;}.brand-block p{display:none;}
+  .top-tools .report-top-btn span:last-child,.top-tools #todayBtn span:last-child{display:none;}
+}
+@media(max-width:820px){
+  .topbar{height:auto!important;min-height:76px!important;flex-wrap:wrap;padding:10px 12px!important;gap:9px!important;}
+  .brand-block{min-width:auto!important;flex:0 0 auto;}.brand-icon{width:48px!important;height:48px!important;}.brand-block h1{font-size:18px!important;}
+  .top-search{order:3;flex-basis:100%;max-width:none!important;height:44px!important;}
+  .top-tools{margin-left:auto!important;gap:5px!important;}.top-tools .report-top-btn,.top-tools #helpBtn,.top-tools #notifyBtn,.top-tools .profile{display:none!important;}
+  .lux-side-nav{display:none!important;}
+  .main-grid{padding:12px!important;display:block!important;}
+  .lux-footer{margin-left:0!important;grid-template-columns:1fr;text-align:center;padding:10px 14px;}.lux-footer-left,.lux-footer-right{display:none;}
+  .calendar-toolbar{align-items:flex-start!important;flex-direction:column!important;}.toolbar-actions{width:100%;justify-content:flex-start!important;}
+  .summary-strip{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  .rail{margin-top:14px;grid-template-columns:1fr!important;}
+  .weekdays,.calendar{min-width:760px;}.calendar-card{overflow-x:auto!important;}
+  .month-title{font-size:21px!important;}.lux-month-badge{width:32px;height:32px;}
+}
+@media(max-width:540px){
+  .toolbar-actions .btn{flex:1 1 calc(50% - 6px);justify-content:center;min-width:0;}
+  .summary-card{min-height:76px!important;padding:11px!important;}.summary-card b{font-size:19px!important;}
+  .drawer{width:100vw!important;padding:16px!important;}
+  .detail-grid{grid-template-columns:1fr!important;}.detail-item{border-right:0!important;}
+  .form-grid.two{grid-template-columns:1fr!important;}
+}
+
+/* Reduce costly visual effects on Safari/mobile. */
+@supports(-webkit-touch-callout:none){
+  .topbar,.calendar-card,.rail-card,.summary-card,.drawer{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+}
+
+
+/* ======================================================================
+   CGK HANDLING V42 — RESPONSIVE + ICON + SAFE-AREA HARDENING
+   Fixes: desktop rail seam, semantic icons, iPhone toolbar collisions,
+   standalone PWA status-bar clipping, and mobile modal safe areas.
+   ====================================================================== */
+
+/* Rail must visually continue through the full viewport while the sticky
+   header paints over its upper segment. This removes the visible 'break'
+   when the document is scrolled. */
+.lux-side-nav{
+  top:0!important;
+  bottom:auto!important;
+  height:100dvh!important;
+  min-height:100vh;
+  padding-top:106px!important;
+  overflow:visible!important;
+  background:linear-gradient(180deg,#002f29 0%,#004338 50%,#002c26 100%)!important;
+}
+.topbar{
+  position:sticky!important;
+  top:0!important;
+  isolation:isolate;
+}
+.lux-nav-btn{overflow:visible!important;}
+.lux-nav-btn::before{
+  content:attr(aria-label);
+  position:absolute;
+  left:58px;
+  top:50%;
+  transform:translate(6px,-50%);
+  padding:7px 9px;
+  border-radius:9px;
+  background:#062f28;
+  color:#fff7e7;
+  border:1px solid rgba(214,174,82,.34);
+  box-shadow:0 9px 24px rgba(0,34,27,.18);
+  font:650 10px/1.1 Inter,system-ui,sans-serif;
+  white-space:nowrap;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .14s ease,transform .14s ease,visibility .14s;
+  z-index:80;
+}
+.lux-nav-btn:hover::before,.lux-nav-btn:focus-visible::before{
+  opacity:1;visibility:visible;transform:translate(0,-50%);
+}
+.lux-nav-btn .icon-slot,.lux-nav-btn .icon-slot svg{width:21px!important;height:21px!important;display:block!important;}
+
+/* Never let toolbar labels collide. */
+.toolbar-actions .btn{min-width:0;max-width:100%;}
+.toolbar-actions .btn .icon-slot{flex:0 0 auto;}
+
+/* Safari / PWA safe-area foundation. */
+html{background:#002d27;}
+body{min-height:100dvh;}
+.pwa-standalone body{background:#002d27;}
+@media (display-mode:standalone){
+  html,body{background:#002d27;}
+}
+
+/* Drawer and overlay controls respect bottom safe-area on notched devices. */
+@supports(padding:max(0px)){
+  .drawer{padding-bottom:max(20px,calc(14px + env(safe-area-inset-bottom)))!important;}
+  .toast{bottom:max(22px,calc(12px + env(safe-area-inset-bottom)))!important;}
+}
+
+@media(max-width:1100px){
+  .lux-side-nav{
+    top:0!important;
+    height:100dvh!important;
+    padding-top:104px!important;
+  }
+}
+
+@media(max-width:820px){
+  /* Explicit grid prevents flex wrapping from creating accidental collisions. */
+  .topbar{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:
+      "brand tools"
+      "search search";
+    height:auto!important;
+    min-height:0!important;
+    align-items:center!important;
+    padding:10px 12px!important;
+    gap:10px 8px!important;
+    overflow:visible!important;
+  }
+  .brand-block{grid-area:brand!important;min-width:0!important;max-width:100%;}
+  .brand-block>div:last-child{min-width:0;}
+  .brand-block h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .top-tools{
+    grid-area:tools!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin:0!important;
+    justify-content:flex-end!important;
+    overflow:visible!important;
+    padding:0!important;
+  }
+  .top-search{
+    grid-area:search!important;
+    order:initial!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin:0!important;
+  }
+  .top-search kbd{display:none!important;}
+  .top-tools .report-top-btn,
+  .top-tools #helpBtn,
+  .top-tools #notifyBtn,
+  .top-tools .profile{display:none!important;}
+  .top-tools .tool-btn,.top-tools .icon-btn{flex:0 0 44px!important;width:44px!important;height:44px!important;min-width:44px!important;padding:0!important;}
+  .top-tools .nav-pair{flex:0 0 auto!important;}
+  .sync-indicator{height:44px!important;min-height:44px!important;border-radius:13px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0 10px!important;}
+  .sync-indicator .sync-label{font-size:9px!important;white-space:nowrap;}
+  .calendar-toolbar{width:100%!important;overflow:hidden!important;}
+  .month-title-wrap{width:100%!important;min-width:0!important;}
+  .month-title{max-width:100%;}
+}
+
+/* Installed iPhone/PWA: push the whole executive header below the Dynamic
+   Island/status bar while retaining the dark emerald safe-area background. */
+@supports(padding:max(0px)){
+  @media(max-width:820px) and (display-mode:standalone){
+    .topbar{
+      padding-top:calc(10px + env(safe-area-inset-top))!important;
+      padding-left:max(12px,env(safe-area-inset-left))!important;
+      padding-right:max(12px,env(safe-area-inset-right))!important;
+    }
+    .drawer{
+      padding-top:calc(16px + env(safe-area-inset-top))!important;
+      padding-left:max(16px,env(safe-area-inset-left))!important;
+      padding-right:max(16px,env(safe-area-inset-right))!important;
+    }
+    .operation-modal,
+    .schedule-modal,
+    .report-root .report-dialog,
+    .poster-preview-card{
+      max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 18px)!important;
+    }
+  }
+  @media(max-width:820px){
+    .pwa-standalone .topbar{
+      padding-top:calc(10px + env(safe-area-inset-top))!important;
+      padding-left:max(12px,env(safe-area-inset-left))!important;
+      padding-right:max(12px,env(safe-area-inset-right))!important;
+    }
+    .pwa-standalone .drawer{
+      padding-top:calc(16px + env(safe-area-inset-top))!important;
+      padding-bottom:calc(16px + env(safe-area-inset-bottom))!important;
+    }
+  }
+}
+
+@media(max-width:540px){
+  /* iPhone: brand, controls, and search each get their own row. */
+  .topbar{
+    grid-template-columns:1fr!important;
+    grid-template-areas:
+      "brand"
+      "tools"
+      "search"!important;
+    gap:10px!important;
+  }
+  .brand-block{width:100%!important;}
+  .brand-icon{flex:0 0 52px!important;width:52px!important;height:52px!important;}
+  .brand-block h1{font-size:20px!important;}
+  .brand-block p{display:none!important;}
+  .top-tools{width:100%!important;justify-content:flex-end!important;gap:7px!important;}
+  .sync-indicator{flex:0 0 44px!important;width:44px!important;padding:0!important;}
+  .sync-indicator .sync-label{display:none!important;}
+  .sync-indicator .sync-dot{margin:0!important;}
+  .top-search{height:48px!important;border-radius:14px!important;}
+
+  /* Toolbar becomes a real 2-column control matrix instead of a one-line
+     scroller. Every action remains visible and tappable without overlap. */
+  .calendar-toolbar{padding:14px!important;gap:13px!important;}
+  .toolbar-actions{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:100%!important;
+    gap:8px!important;
+    overflow:visible!important;
+    flex-wrap:initial!important;
+  }
+  .toolbar-actions .btn,
+  .toolbar-actions .report-btn-top{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    flex:none!important;
+    justify-content:center!important;
+    padding:0 8px!important;
+    font-size:10.5px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .toolbar-actions .btn svg{width:15px!important;height:15px!important;}
+  .month-title{font-size:23px!important;}
+
+  /* Prevent horizontal content from widening the whole page. Calendar alone
+     is allowed to scroll horizontally inside its own card. */
+  .main-grid,.workspace,.calendar-toolbar,.summary-strip,.rail{max-width:100%!important;min-width:0!important;}
+  .calendar-card{max-width:100%!important;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}
+}
+
+@media(max-width:360px){
+  .toolbar-actions{grid-template-columns:1fr!important;}
+  .top-tools{justify-content:space-between!important;}
+  .brand-block h1{font-size:18px!important;}
+}

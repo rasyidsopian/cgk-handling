@@ -1,15 +1,30 @@
 {
   "name": "CGK Handling · Hamdan Tour",
   "short_name": "CGK Handling",
-  "description": "Premium airport handling operations dashboard for CGK Handling.",
+  "description": "CGK Handling premium airport handling operations dashboard — V42 responsive edition.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#002d27",
   "theme_color": "#00382f",
   "icons": [
-    {"src":"./icon-180.png?rev=41","sizes":"180x180","type":"image/png","purpose":"any"},
-    {"src":"./icon-192.png?rev=41","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"./icon-512.png?rev=41","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+    {
+      "src": "./icon-180.png?rev=42",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192.png?rev=42",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png?rev=42",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }
