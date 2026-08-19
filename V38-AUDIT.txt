@@ -1,0 +1,15 @@
+CGK Handling V38 — Exact PAX + Per-Event Staff
+
+Requested behavior:
+1) PAX is displayed exactly from the matched source row. No daily accumulation.
+2) Staff assignments are scoped by event.id only.
+3) Even if 3 handling events happen on the same day, each event has its own staff selection.
+4) "Tampilkan Petugas Handling" summarizes only the currently opened event.
+5) Poster/JPG staff recap is per event, not per day.
+
+Implementation hardening:
+- Added strict single-row group resolver for exact PAX.
+- Added exact pax label preservation (e.g. 44+1 INF remains literal if that is the source value).
+- Added event.id-scoped staff assignment helper.
+- Added current-event summary helper for detail/poster usage.
+- Existing UI architecture and sync configuration were not redesigned.

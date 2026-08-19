@@ -1,0 +1,13 @@
+CGK Handling V37 — Invisible UI Hardening
+
+Fix scope:
+- Invisible textbox / ghost input protection
+- Orphan backdrop cleanup
+- Stale modal cleanup
+- Hidden focus cleanup
+- Body overflow/touch lock cleanup
+- Stale report root cleanup
+- X / Cancel / Save / Escape post-close reconciliation
+
+Existing calendar, drawer, sync, attendance, checklist, staff, report,
+JPG poster and database behavior are retained.

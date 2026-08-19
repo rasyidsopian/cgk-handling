@@ -133,3 +133,38 @@ body.operation-lock{overflow:hidden!important;touch-action:none;}
 /* V35 — Excel-backed group metadata */
 .event .group-name{font-size:7px;margin-top:4px;font-weight:850;letter-spacing:.22px;line-height:1.25;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .detail-hero .group-line{display:block;margin-top:7px;color:#d7eadf;font-size:9px;font-weight:800;letter-spacing:.45px;line-height:1.35}
+
+
+/* ======================================================================
+   V37 INVISIBLE UI HARDENING
+   Hidden UI must be physically removed from layout/hit-testing.
+   ====================================================================== */
+[hidden]{
+  display:none !important;
+}
+[aria-hidden="true"][inert]{
+  pointer-events:none !important;
+}
+#importModal[hidden],
+#scheduleModal[hidden],
+#importBackdrop[hidden],
+#scheduleBackdrop[hidden],
+#operationBackdrop[hidden],
+#checklistModal[hidden],
+#staffModal[hidden],
+#staffManageModal[hidden],
+#staffMemberModal[hidden],
+#staffPoster[hidden]{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+#operationBackdrop:not(.open),
+.operation-modal:not(.open),
+#staffPoster[aria-hidden="true"]{
+  pointer-events:none !important;
+}
+body:not(.modal-open):not(.operation-lock):not(.report-modal-open){
+  touch-action:auto;
+}

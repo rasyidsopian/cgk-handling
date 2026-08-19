@@ -262,7 +262,7 @@
 
 
 <script>
-/* CGK Handling v36 — live Supabase group database + group metadata/JPG summary update. self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
+/* CGK Handling v37 — live Supabase group database + group metadata/JPG summary update. self-contained boot. Existing service workers are removed so stale bundles cannot hide the current code. */
 (async function(){
   try {
     if ('serviceWorker' in navigator) { const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
@@ -22063,6 +22063,377 @@ window.addEventListener('pageshow',()=>{if(!operationUI.active&&document.getElem
   }
   [$r('#reportBtn'),$r('#topReportBtn'),$r('#quickReport')].forEach(btn=>{if(btn)btn.addEventListener('click',openReport);});
   window.CGKReport={open:openReport,close:closeReport};
+})();
+</script>
+
+
+<script>
+/* ======================================================================
+   V37 — INVISIBLE UI / GHOST OVERLAY GUARD
+   Root-cause hardening for stale modal, backdrop, hidden input and body lock.
+   Existing modal managers remain the source of truth.
+   ====================================================================== */
+(function CGKInvisibleUIGuard(){
+  'use strict';
+
+  const modalIds = new Set([
+    'importModal','scheduleModal','checklistModal','staffModal',
+    'staffManageModal','staffMemberModal','staffPoster'
+  ]);
+
+  function hardHide(el){
+    if(!el) return;
+    try{
+      if(el.contains(document.activeElement) && document.activeElement?.blur){
+        document.activeElement.blur();
+      }
+    }catch(_){}
+    el.classList.remove('open','active','visible','show');
+    el.hidden = true;
+    el.setAttribute('aria-hidden','true');
+    try{ el.inert = true; }catch(_){ el.setAttribute('inert',''); }
+    el.style.setProperty('display','none','important');
+    el.style.setProperty('visibility','hidden','important');
+    el.style.setProperty('opacity','0','important');
+    el.style.setProperty('pointer-events','none','important');
+  }
+
+  function isActuallyOpen(el){
+    if(!el || el.hidden || el.getAttribute('aria-hidden') === 'true') return false;
+    if(el.id === 'staffPoster') return true;
+    if(el.id === 'cgkReportRoot') return true;
+    return el.classList.contains('open');
+  }
+
+  function visibleOperationModal(){
+    return ['checklistModal','staffModal','staffManageModal','staffMemberModal']
+      .some(id => isActuallyOpen(document.getElementById(id)));
+  }
+
+  function reconcile(){
+    modalIds.forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el) return;
+      if(
+        el.hidden ||
+        el.getAttribute('aria-hidden')==='true' ||
+        (id!=='staffPoster' && !el.classList.contains('open'))
+      ){
+        hardHide(el);
+      }
+    });
+
+    const importModal=document.getElementById('importModal');
+    if(!isActuallyOpen(importModal)) hardHide(document.getElementById('importBackdrop'));
+
+    const scheduleModal=document.getElementById('scheduleModal');
+    if(!isActuallyOpen(scheduleModal)) hardHide(document.getElementById('scheduleBackdrop'));
+
+    if(!visibleOperationModal()){
+      hardHide(document.getElementById('operationBackdrop'));
+    }
+
+    const reportRoots=[...document.querySelectorAll('#cgkReportRoot,.report-root')];
+    reportRoots.forEach((root,idx)=>{
+      const dialog=root.querySelector('.report-dialog');
+      const valid =
+        root.id==='cgkReportRoot' &&
+        root.getAttribute('aria-hidden')!=='true' &&
+        dialog &&
+        idx===reportRoots.length-1;
+      if(!valid){
+        try{
+          if(root.contains(document.activeElement)) document.activeElement.blur?.();
+        }catch(_){}
+        root.remove();
+      }
+    });
+
+    const anyVisible =
+      isActuallyOpen(importModal) ||
+      isActuallyOpen(scheduleModal) ||
+      visibleOperationModal() ||
+      isActuallyOpen(document.getElementById('staffPoster')) ||
+      !!document.querySelector('#cgkReportRoot[aria-hidden="false"]');
+
+    if(!anyVisible){
+      document.body.classList.remove('modal-open','operation-lock','report-modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('touch-action');
+      document.documentElement.style.removeProperty('overflow');
+      document.documentElement.style.removeProperty('touch-action');
+
+      const active=document.activeElement;
+      if(active && /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName)){
+        const owner=active.closest(
+          '#importModal,#scheduleModal,#checklistModal,#staffModal,#staffManageModal,#staffMemberModal,#staffPoster,#cgkReportRoot'
+        );
+        if(owner && !isActuallyOpen(owner)){
+          try{active.blur();}catch(_){}
+        }
+      }
+    }
+  }
+
+  function bootClean(){
+    document.querySelectorAll('#cgkReportRoot,.report-root').forEach(root=>root.remove());
+
+    [
+      'importModal','scheduleModal','checklistModal','staffModal',
+      'staffManageModal','staffMemberModal','staffPoster',
+      'importBackdrop','scheduleBackdrop','operationBackdrop'
+    ].forEach(id=>hardHide(document.getElementById(id)));
+
+    document.body.classList.remove('modal-open','operation-lock','report-modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('touch-action');
+    document.documentElement.style.removeProperty('overflow');
+    document.documentElement.style.removeProperty('touch-action');
+
+    const active=document.activeElement;
+    if(active && /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName) && active.id!=='search'){
+      try{active.blur();}catch(_){}
+    }
+  }
+
+  document.addEventListener('click',function(e){
+    const closeHit=e.target?.closest?.(
+      '#closeImportModal,#cancelImport,#closeScheduleModal,#cancelSchedule,'+
+      '#closeChecklist,#cancelChecklist,#saveChecklistBtn,'+
+      '#closeStaff,#cancelStaff,#saveStaffBtn,'+
+      '#closeStaffManage,#cancelStaffManage,'+
+      '#closeStaffMember,#cancelStaffMember,#saveStaffMember,'+
+      '#closeStaffPoster,#posterCloseBtn,.report-close,.report-cancel,.report-generate'
+    );
+    if(closeHit){
+      setTimeout(reconcile,0);
+      setTimeout(reconcile,220);
+    }
+  },true);
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      setTimeout(reconcile,0);
+      setTimeout(reconcile,220);
+    }
+  },true);
+
+  const observer=new MutationObserver(function(mutations){
+    let relevant=false;
+    for(const m of mutations){
+      const t=m.target;
+      if(t instanceof Element && (
+        modalIds.has(t.id) ||
+        ['importBackdrop','scheduleBackdrop','operationBackdrop','cgkReportRoot'].includes(t.id) ||
+        t.classList?.contains('report-root')
+      )){
+        relevant=true;
+        break;
+      }
+    }
+    if(relevant) queueMicrotask(reconcile);
+  });
+
+  function start(){
+    bootClean();
+    observer.observe(document.body,{
+      subtree:true,
+      attributes:true,
+      attributeFilter:['hidden','aria-hidden','class','style','inert'],
+      childList:true
+    });
+    setTimeout(reconcile,50);
+    setTimeout(reconcile,500);
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',start,{once:true});
+  }else{
+    start();
+  }
+
+  window.addEventListener('pageshow',function(){
+    setTimeout(reconcile,0);
+    setTimeout(reconcile,250);
+  });
+
+  window.CGKInvisibleUIGuard={reconcile,bootClean};
+})();
+</script>
+
+
+<script>
+/* ======================================================================
+   V38 — EXACT PAX + PER-EVENT STAFF/POSTER HARDENING
+   - PAX shown on each handling event is the exact matched database value.
+   - No daily aggregation / no summing multiple group rows for display.
+   - Staff assignment is always keyed strictly by event.id.
+   - Staff poster always summarizes the currently opened event only.
+   ====================================================================== */
+(function CGKV38EventExactness(){
+  'use strict';
+
+  function currentEvents(){
+    try{
+      if(typeof getAllEvents === 'function') return getAllEvents() || [];
+    }catch(_){}
+    try{
+      if(Array.isArray(window.events)) return window.events;
+    }catch(_){}
+    return [];
+  }
+
+  function normalizeEventId(event){
+    return event && event.id != null ? String(event.id) : '';
+  }
+
+  function exactGroupMatchForEvent(event){
+    if(!event) return null;
+
+    // Prefer an existing resolver if the app exposes one.
+    const resolvers = [
+      'resolveGroupDataForEvent',
+      'resolveGroupForEvent',
+      'getGroupDataForEvent',
+      'findGroupMatchForEvent'
+    ];
+    for(const name of resolvers){
+      try{
+        if(typeof window[name] === 'function'){
+          const result = window[name](event);
+          if(result) return Array.isArray(result) ? (result[0] || null) : result;
+        }
+      }catch(_){}
+    }
+
+    const store =
+      window.CGK_GROUP_DATA ||
+      window.groupDatabaseRows ||
+      window.groupRows ||
+      window.groupScheduleRows ||
+      [];
+
+    if(!Array.isArray(store) || !store.length) return null;
+
+    const type = String(event.type || '').toUpperCase();
+    const date = String(event.date || '');
+    const time = String(event.time || event.handlingTime || '');
+    const airline = String(
+      event.airlineCode || event.airline || event.flight || ''
+    ).toUpperCase();
+
+    const isArrival = /ARRIVAL|TIBA/.test(type);
+    const isDeparture = /DEPARTURE|BERANGKAT/.test(type);
+
+    // Exact-key first.
+    const eventKey = [
+      date,
+      time,
+      (airline.match(/[A-Z]{2}/)||[''])[0],
+      isArrival ? 'ARRIVAL_CGK' : 'DEPARTURE_CGK'
+    ].join('|');
+
+    let exact = store.find(row =>
+      String(isArrival ? row.arrival_event_key : row.departure_event_key || '') === eventKey
+    );
+    if(exact) return exact;
+
+    // Strict field match fallback — return ONE row only, never aggregate.
+    exact = store.find(row => {
+      const rowDate = String(isArrival ? row.return_date : row.departure_date || '');
+      const rowTime = String(isArrival ? row.return_time : row.departure_time || '');
+      const rowAirline = String(row.airline_code || '').toUpperCase();
+
+      const dateOk = !date || rowDate === date;
+      const timeOk = !time || rowTime === time;
+      const airlineOk = !rowAirline || !airline || airline.includes(rowAirline);
+
+      return dateOk && timeOk && airlineOk;
+    });
+
+    return exact || null;
+  }
+
+  function exactPaxValue(event){
+    const match = exactGroupMatchForEvent(event);
+    if(!match) return null;
+
+    // Preserve literal pax label if source provides it.
+    if(match.pax_label != null && String(match.pax_label).trim()){
+      return String(match.pax_label).trim();
+    }
+
+    if(match.pax_total != null && match.pax_total !== ''){
+      return String(match.pax_total);
+    }
+
+    return null;
+  }
+
+  // Expose exact-PAX helpers for renderer/detail/poster integrations.
+  window.CGKExactGroupMatchForEvent = exactGroupMatchForEvent;
+  window.CGKExactPaxValue = exactPaxValue;
+
+  // Strict staff assignment helpers.
+  function getAssignmentStore(){
+    try{
+      if(window.assignedHandlingStaff && typeof window.assignedHandlingStaff === 'object'){
+        return window.assignedHandlingStaff;
+      }
+    }catch(_){}
+
+    try{
+      const raw = localStorage.getItem('cgk-assigned-handling-staff');
+      if(raw) return JSON.parse(raw) || {};
+    }catch(_){}
+
+    return {};
+  }
+
+  function staffIdsForEvent(event){
+    const id = normalizeEventId(event);
+    if(!id) return [];
+    const store = getAssignmentStore();
+    const value = store[id];
+    return Array.isArray(value) ? [...value] : [];
+  }
+
+  window.CGKStaffIdsForEvent = staffIdsForEvent;
+
+  // Patch common staff getter names if they exist so they stay event-scoped.
+  const commonGetters = ['getAssignedHandlingStaff','getAssignedStaffForEvent','getStaffForEvent'];
+  commonGetters.forEach(name=>{
+    if(typeof window[name] === 'function'){
+      const original = window[name];
+      window[name] = function(eventOrId){
+        const id = typeof eventOrId === 'object'
+          ? normalizeEventId(eventOrId)
+          : String(eventOrId || '');
+
+        if(id){
+          const store = getAssignmentStore();
+          if(Array.isArray(store[id])) return [...store[id]];
+        }
+        return original.apply(this, arguments);
+      };
+    }
+  });
+
+  // Helper for poster/detail to ensure current event only.
+  window.CGKCurrentEventSummary = function(event){
+    if(!event) return null;
+    return {
+      eventId: normalizeEventId(event),
+      date: event.date || '',
+      time: event.time || event.handlingTime || '',
+      flight: event.flight || '',
+      route: event.route || '',
+      type: event.type || '',
+      package: event.package || event.program || '',
+      pax: exactPaxValue(event) || event.pax || '',
+      staffIds: staffIdsForEvent(event)
+    };
+  };
 })();
 </script>
 
