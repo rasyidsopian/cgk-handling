@@ -1,0 +1,14 @@
+CGK Handling V40
+
+FIXES
+1. Edit schedule submit now uses preventDefault; Save no longer refreshes the page.
+2. Group matching is one event -> one Supabase group row. Tied rows are never combined.
+3. PAX is literal from pax_label/source and is never accumulated across groups.
+4. Correct group naming uses the spreadsheet group header date (example: 05 SEP 26 EY), while event matching uses the actual CGK departure/arrival date.
+5. Staff assignment and JPG remain strictly keyed by event.id.
+6. Calendar shows ALL events in a day; 4/5/7+ events progressively use compact cards instead of +more hiding schedules.
+
+IMPORTANT DATABASE STEP
+Replace Apps Script Code.gs with Code-CGK-V40.gs and run setupCGKDatabaseSync once so Supabase rows are regenerated with corrected departure matching dates and literal PAX labels.
+
+No sync-config.js credential changes.

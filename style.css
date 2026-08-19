@@ -227,3 +227,39 @@ img, canvas, svg{
     max-height:none;
   }
 }
+
+
+/* ======================================================================
+   V40 — MULTI-EVENT DAY AUTO DENSITY
+   Every schedule remains visible/clickable. Cards compact progressively.
+   ====================================================================== */
+.day.crowded{min-height:205px;padding:8px 9px}
+.day.very-crowded{min-height:245px;padding:7px 8px}
+.day.ultra-crowded{min-height:285px;padding:6px 7px}
+
+.day.crowded .event,
+.day.very-crowded .event,
+.day.ultra-crowded .event{margin-bottom:3px;border-radius:8px}
+.day.crowded .event{padding:5px 6px}
+.day.very-crowded .event{padding:4px 5px}
+.day.ultra-crowded .event{padding:3px 4px}
+
+.day.crowded .event-top,
+.day.very-crowded .event-top,
+.day.ultra-crowded .event-top{margin-bottom:1px;gap:4px}
+.day.crowded .event .type{font-size:6px}.day.crowded .event .time,.day.crowded .event .flight{font-size:9px}
+.day.very-crowded .event .type,.day.ultra-crowded .event .type{font-size:5.5px;letter-spacing:.35px}
+.day.very-crowded .event .time,.day.very-crowded .event .flight{font-size:8.5px}
+.day.ultra-crowded .event .time,.day.ultra-crowded .event .flight{font-size:8px}
+.day.crowded .event .route,.day.crowded .event .group-name{font-size:6.5px;margin-top:1px}
+.day.very-crowded .event .route,.day.very-crowded .event .group-name,
+.day.ultra-crowded .event .group-name{font-size:6px;margin-top:1px;line-height:1.1}
+.day.ultra-crowded .event .route{display:none}
+.day.crowded .event .pax,.day.very-crowded .event .pax,.day.ultra-crowded .event .pax{font-size:6px;margin-top:1px}
+.day.crowded .event-attendance{margin-top:3px;padding:3px 4px;font-size:6.5px;border-radius:6px}
+.day.very-crowded .event-attendance,.day.ultra-crowded .event-attendance{margin-top:2px;padding:2px 3px;font-size:6px;border-radius:5px}
+.day.ultra-crowded .custom-badge{display:none}
+
+@media(max-width:760px){
+  .day.crowded{min-height:200px}.day.very-crowded{min-height:235px}.day.ultra-crowded{min-height:275px}
+}

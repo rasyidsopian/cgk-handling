@@ -20823,37 +20823,75 @@ function rowDates(row){
   return [...new Set(vals)];
 }
 function rowText(row){return Object.values(flatGroupRow(row)).filter(v=>typeof v!=='object').join(' ').toUpperCase()}
+function eventDatabaseKey(event){
+  const code=eventAirlineCode(event);
+  return `${event.date}|${handlingTime(event)}|${code}|${event.type}`;
+}
+function comparableText(v){return String(v||'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').trim()}
 function matchGroupRowToEvent(row,event){
   const direct=groupValue(row,['event_id','eventId','cgk_event_id']);
-  if(direct&&String(direct)===String(event.id))return 100;
-  const txt=rowText(row), flights=rowFlights(row), dates=rowDates(row), ef=String(event.flight||'').toUpperCase().replace(/\s+/g,''), pnr=String(event.pnr||'').toUpperCase();
-  const legs=(event.scheduleLegs||[]).map(l=>String(l.flight||'').toUpperCase().replace(/\s+/g,''));
+  if(direct&&String(direct)===String(event.id))return 10000;
+
+  const dep=event.type==='DEPARTURE_CGK';
+  const dbKey=String(groupValue(row,[dep?'departure_event_key':'arrival_event_key'])||'');
+  if(dbKey&&dbKey===eventDatabaseKey(event))return 9000;
+
+  const ef=String(event.flight||'').toUpperCase().replace(/\s+/g,'');
+  const pnr=String(event.pnr||'').toUpperCase().trim();
+  const rowFlightSet=rowFlights(row);
+  const txt=rowText(row);
+  const eventCode=eventAirlineCode(event);
+  const rowCode=String(groupValue(row,['airline_code','airline','kode_pesawat','kode_maskapai'])||'').toUpperCase().slice(0,2);
+  const rowDate=isoDateValue(groupValue(row,[dep?'departure_date':'return_date',dep?'tanggal_berangkat':'tanggal_pulang',dep?'tgl_berangkat':'tgl_pulang']));
+  const rowTime=String(groupValue(row,[dep?'departure_time':'return_time',dep?'jam_berangkat':'jam_pulang'])||'').trim().slice(0,5);
+  const eventTime=handlingTime(event);
   let score=0;
-  if(ef&&(flights.includes(ef)||txt.includes(ef)))score+=5;
-  else if(flights.some(f=>legs.includes(f)))score+=3;
-  if(pnr&&pnr!=='-'&&txt.includes(pnr))score+=6;
-  if(dates.includes(event.date))score+=4;
-  const dep=event.scheduleLegs?.[0]?.date;if(dep&&dates.includes(dep))score+=4;
-  const airline=String(event.airline||'').toUpperCase();if(airline&&new RegExp(`(^|[^A-Z0-9])${airline}([^A-Z0-9]|$)`).test(txt))score+=1;
+
+  if(ef&&(rowFlightSet.includes(ef)||txt.includes(ef)))score+=120;
+  if(pnr&&pnr!=='-'&&txt.includes(pnr))score+=100;
+  if(rowDate&&rowDate===event.date)score+=70;
+  if(eventCode&&rowCode&&eventCode===rowCode)score+=60;
+  if(rowTime&&eventTime&&rowTime===eventTime)score+=25;
+
+  const sourceProgram=comparableText(groupValue(row,['program_label','package','paket','program']));
+  const eventProgram=comparableText(event.package);
+  if(sourceProgram&&eventProgram){
+    const words=sourceProgram.split(' ').filter(w=>w.length>=4);
+    if(words.some(w=>eventProgram.includes(w)))score+=15;
+  }
+
+  // A mismatched airline must not win merely because the calendar date is equal.
+  if(eventCode&&rowCode&&eventCode!==rowCode)score-=80;
   return score;
 }
 function groupMetaFromRows(rows,event){
-  const matched=rows.map(r=>[r,matchGroupRowToEvent(r,event)]).filter(x=>x[1]>=7).sort((a,b)=>b[1]-a[1]);
+  // One handling event maps to ONE database row. Never aggregate tied rows.
+  const matched=rows.map((r,i)=>[r,matchGroupRowToEvent(r,event),i])
+    .filter(x=>x[1]>=50)
+    .sort((a,b)=>b[1]-a[1]||a[2]-b[2]);
   if(!matched.length)return null;
-  const best=matched[0][1], selected=matched.filter(x=>x[1]===best).map(x=>x[0]);
-  const names=[],deps=[];let pax=0,paxFound=false,paxLabels=[];
-  selected.forEach(r=>{
-    const dep=isoDateValue(groupValue(r,['departure_date','tanggal_berangkat','tgl_berangkat','date_departure','group_departure_date','tanggal_keberangkatan']));if(dep)deps.push(dep);
-    const name=groupValue(r,['group_name','nama_group','nama_grup','group','nama_group_umroh']);
-    const airline=String(groupValue(r,['airline_code','airline','kode_pesawat','kode_maskapai'])||eventAirlineCode(event)||'').toUpperCase().slice(0,2);
-    if(name)names.push(String(name).trim()); else if(dep)names.push(groupNameFromDate(dep,airline));
-    const pv=groupValue(r,['pax','jumlah_pax','total_pax','jumlah_jamaah','jamaah','pax_total']);const pn=numberValue(pv);if(pn!=null){pax+=pn;paxFound=true;if(String(pv).match(/[A-Za-z+]/))paxLabels.push(String(pv).trim())}
-  });
+
+  const r=matched[0][0];
+  const actualDate=isoDateValue(groupValue(r,[event.type==='DEPARTURE_CGK'?'departure_date':'return_date']));
+  const groupDate=isoDateValue(groupValue(r,['group_date','tanggal_group','tgl_group'])) ||
+    isoDateValue(groupValue(r,['raw.group_date'])) ||
+    '';
+  const name=groupValue(r,['group_name','nama_group','nama_grup','group','nama_group_umroh']);
+  const airline=String(groupValue(r,['airline_code','airline','kode_pesawat','kode_maskapai'])||eventAirlineCode(event)||'').toUpperCase().slice(0,2);
   const meta={groupSource:'Supabase Group Database'};
-  if(names.length)meta.groupNames=[...new Set(names)];
-  if(deps.length)meta.groupDepartureDates=[...new Set(deps)];
-  if(paxFound)meta.pax=pax;
-  if(paxLabels.length)meta.groupPaxLabel=[...new Set(paxLabels)].join(' + ');
+
+  const finalName=String(name||'').trim() || (groupDate?groupNameFromDate(groupDate,airline):'');
+  if(finalName)meta.groupNames=[finalName];
+  if(groupDate)meta.groupDepartureDates=[groupDate];
+  else if(actualDate)meta.groupDepartureDates=[actualDate];
+
+  const literalPax=groupValue(r,['pax_label','jumlah_pax_label','pax','jumlah_pax','jumlah_jamaah','jamaah']);
+  const numericPax=numberValue(groupValue(r,['pax_total','total_pax','pax','jumlah_pax','jumlah_jamaah','jamaah']));
+  if(numericPax!=null)meta.pax=numericPax;
+  if(literalPax!=null&&String(literalPax).trim()!=='')meta.groupPaxLabel=String(literalPax).trim();
+  else if(numericPax!=null)meta.groupPaxLabel=String(numericPax);
+
+  meta.groupDatabaseRowId=groupValue(r,['id']);
   return meta;
 }
 function rebuildLiveGroupMeta(){
@@ -20973,7 +21011,8 @@ function renderCalendar(){
     const ds=`${p.y}-${String(p.m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
     const dayEvents=events.filter(e=>e.date===ds).sort((a,b)=>handlingTime(a).localeCompare(handlingTime(b)));
     const now=new Date(),isToday=ds===`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-    html+=`<div class="day ${isToday?"today":""}" data-date="${ds}"><div class="day-head"><span class="day-num">${d}</span><div class="day-actions">${isToday?'<span class="today-badge">TODAY</span>':''}<span class="event-count">${dayEvents.length?dayEvents.length+" events":""}</span><button class="day-add" title="Tambah jadwal" aria-label="Tambah jadwal" data-add-date="${ds}"><span class="icon-slot" data-icon="plus" aria-hidden="true"></span></button></div></div>${dayEvents.slice(0,4).map(eventCard).join("")}${dayEvents.length>4?`<div class="more" data-date="${ds}">+${dayEvents.length-4} more</div>`:""}</div>`;
+    const density=dayEvents.length>=7?"ultra-crowded":dayEvents.length>=5?"very-crowded":dayEvents.length>=4?"crowded":"";
+    html+=`<div class="day ${isToday?"today":""} ${density}" data-date="${ds}" data-event-count="${dayEvents.length}"><div class="day-head"><span class="day-num">${d}</span><div class="day-actions">${isToday?'<span class="today-badge">TODAY</span>':''}<span class="event-count">${dayEvents.length?dayEvents.length+" events":""}</span><button class="day-add" title="Tambah jadwal" aria-label="Tambah jadwal" data-add-date="${ds}"><span class="icon-slot" data-icon="plus" aria-hidden="true"></span></button></div></div>${dayEvents.map(eventCard).join("")}</div>`;
   }
   const total=42,used=start+days;for(let i=used;i<total;i++)html+=`<div class="day muted"><div class="day-head"><span class="day-num"></span></div></div>`;
   $("#calendar").innerHTML=html;
@@ -21123,6 +21162,16 @@ function collectForm(){
   const type=$("#scheduleType").value, time=$("#scheduleTime").value.trim(), date=$("#scheduleDate").value;
   const airline=$("#scheduleAirline").value.trim().toUpperCase();
   return {date,type,time,departureTime:type==="DEPARTURE_CGK"?time:"",arrivalTime:type==="ARRIVAL_CGK"?time:"",airline,airlineName:$("#scheduleAirlineName").value.trim(),flight:$("#scheduleFlight").value.trim().toUpperCase(),route:$("#scheduleRoute").value.trim(),package:$("#schedulePackage").value.trim(),pnr:$("#schedulePnr").value.trim().toUpperCase(),pax:Number($("#schedulePax").value)||0,rooms:Number($("#scheduleRooms").value)||0,hotel:$("#scheduleHotel").value.trim(),vendor:$("#scheduleVendor").value.trim(),status:$("#scheduleStatus").value.trim(),note:$("#scheduleNote").value.trim()};
+}
+const scheduleFormEl=$("#scheduleForm");
+if(scheduleFormEl&&!scheduleFormEl.dataset.boundSubmit){
+  scheduleFormEl.dataset.boundSubmit="1";
+  scheduleFormEl.addEventListener("submit",ev=>{
+    ev.preventDefault();
+    ev.stopPropagation();
+    saveSchedule(collectForm());
+    return false;
+  });
 }
 
 const MONTHS={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
@@ -22217,8 +22266,12 @@ window.addEventListener('pageshow',()=>{if(!operationUI.active&&document.getElem
       setTimeout(reconcile,220);
     }
   },true);
-    setTimeout(reconcile,50);
-    setTimeout(reconcile,500);
+
+  function start(){
+    bootClean();
+    // Bounded startup reconciliation only; no global MutationObserver.
+    setTimeout(reconcile,80);
+    setTimeout(reconcile,650);
   }
 
   if(document.readyState==='loading'){
@@ -22237,180 +22290,6 @@ window.addEventListener('pageshow',()=>{if(!operationUI.active&&document.getElem
 </script>
 
 
-<script>
-/* ======================================================================
-   V38 — EXACT PAX + PER-EVENT STAFF/POSTER HARDENING
-   - PAX shown on each handling event is the exact matched database value.
-   - No daily aggregation / no summing multiple group rows for display.
-   - Staff assignment is always keyed strictly by event.id.
-   - Staff poster always summarizes the currently opened event only.
-   ====================================================================== */
-(function CGKV38EventExactness(){
-  'use strict';
-
-  function currentEvents(){
-    try{
-      if(typeof getAllEvents === 'function') return getAllEvents() || [];
-    }catch(_){}
-    try{
-      if(Array.isArray(window.events)) return window.events;
-    }catch(_){}
-    return [];
-  }
-
-  function normalizeEventId(event){
-    return event && event.id != null ? String(event.id) : '';
-  }
-
-  function exactGroupMatchForEvent(event){
-    if(!event) return null;
-
-    // Prefer an existing resolver if the app exposes one.
-    const resolvers = [
-      'resolveGroupDataForEvent',
-      'resolveGroupForEvent',
-      'getGroupDataForEvent',
-      'findGroupMatchForEvent'
-    ];
-    for(const name of resolvers){
-      try{
-        if(typeof window[name] === 'function'){
-          const result = window[name](event);
-          if(result) return Array.isArray(result) ? (result[0] || null) : result;
-        }
-      }catch(_){}
-    }
-
-    const store =
-      window.CGK_GROUP_DATA ||
-      window.groupDatabaseRows ||
-      window.groupRows ||
-      window.groupScheduleRows ||
-      [];
-
-    if(!Array.isArray(store) || !store.length) return null;
-
-    const type = String(event.type || '').toUpperCase();
-    const date = String(event.date || '');
-    const time = String(event.time || event.handlingTime || '');
-    const airline = String(
-      event.airlineCode || event.airline || event.flight || ''
-    ).toUpperCase();
-
-    const isArrival = /ARRIVAL|TIBA/.test(type);
-    const isDeparture = /DEPARTURE|BERANGKAT/.test(type);
-
-    // Exact-key first.
-    const eventKey = [
-      date,
-      time,
-      (airline.match(/[A-Z]{2}/)||[''])[0],
-      isArrival ? 'ARRIVAL_CGK' : 'DEPARTURE_CGK'
-    ].join('|');
-
-    let exact = store.find(row =>
-      String(isArrival ? row.arrival_event_key : row.departure_event_key || '') === eventKey
-    );
-    if(exact) return exact;
-
-    // Strict field match fallback — return ONE row only, never aggregate.
-    exact = store.find(row => {
-      const rowDate = String(isArrival ? row.return_date : row.departure_date || '');
-      const rowTime = String(isArrival ? row.return_time : row.departure_time || '');
-      const rowAirline = String(row.airline_code || '').toUpperCase();
-
-      const dateOk = !date || rowDate === date;
-      const timeOk = !time || rowTime === time;
-      const airlineOk = !rowAirline || !airline || airline.includes(rowAirline);
-
-      return dateOk && timeOk && airlineOk;
-    });
-
-    return exact || null;
-  }
-
-  function exactPaxValue(event){
-    const match = exactGroupMatchForEvent(event);
-    if(!match) return null;
-
-    // Preserve literal pax label if source provides it.
-    if(match.pax_label != null && String(match.pax_label).trim()){
-      return String(match.pax_label).trim();
-    }
-
-    if(match.pax_total != null && match.pax_total !== ''){
-      return String(match.pax_total);
-    }
-
-    return null;
-  }
-
-  // Expose exact-PAX helpers for renderer/detail/poster integrations.
-  window.CGKExactGroupMatchForEvent = exactGroupMatchForEvent;
-  window.CGKExactPaxValue = exactPaxValue;
-
-  // Strict staff assignment helpers.
-  function getAssignmentStore(){
-    try{
-      if(window.assignedHandlingStaff && typeof window.assignedHandlingStaff === 'object'){
-        return window.assignedHandlingStaff;
-      }
-    }catch(_){}
-
-    try{
-      const raw = localStorage.getItem('cgk-assigned-handling-staff');
-      if(raw) return JSON.parse(raw) || {};
-    }catch(_){}
-
-    return {};
-  }
-
-  function staffIdsForEvent(event){
-    const id = normalizeEventId(event);
-    if(!id) return [];
-    const store = getAssignmentStore();
-    const value = store[id];
-    return Array.isArray(value) ? [...value] : [];
-  }
-
-  window.CGKStaffIdsForEvent = staffIdsForEvent;
-
-  // Patch common staff getter names if they exist so they stay event-scoped.
-  const commonGetters = ['getAssignedHandlingStaff','getAssignedStaffForEvent','getStaffForEvent'];
-  commonGetters.forEach(name=>{
-    if(typeof window[name] === 'function'){
-      const original = window[name];
-      window[name] = function(eventOrId){
-        const id = typeof eventOrId === 'object'
-          ? normalizeEventId(eventOrId)
-          : String(eventOrId || '');
-
-        if(id){
-          const store = getAssignmentStore();
-          if(Array.isArray(store[id])) return [...store[id]];
-        }
-        return original.apply(this, arguments);
-      };
-    }
-  });
-
-  // Helper for poster/detail to ensure current event only.
-  window.CGKCurrentEventSummary = function(event){
-    if(!event) return null;
-    return {
-      eventId: normalizeEventId(event),
-      date: event.date || '',
-      time: event.time || event.handlingTime || '',
-      flight: event.flight || '',
-      route: event.route || '',
-      type: event.type || '',
-      package: event.package || event.program || '',
-      pax: exactPaxValue(event) || event.pax || '',
-      staffIds: staffIdsForEvent(event)
-    };
-  };
-})();
-</script>
 
 
 <script>
