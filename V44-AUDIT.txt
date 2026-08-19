@@ -1,0 +1,13 @@
+CGK Handling V44 - Luxury Gold Handling Report
+
+Scope:
+- Redesigned generated PDF report to match the emerald + luxury gold executive UI.
+- Dark emerald executive report header with gold accent and confidential badge.
+- Premium report metadata card.
+- Five compact executive KPI cards.
+- Refined attendance table with emerald/gold hierarchy.
+- Daily incentive breakdown uses compact two-column cards to fit more content per page.
+- Gold report notes panel and emerald confidential footer.
+- Report generator logic, attendance filtering, incentive engine and snapshot behavior preserved.
+- Report modal polished to same emerald/gold design language.
+- No changes to sync-config.js or database logic.
