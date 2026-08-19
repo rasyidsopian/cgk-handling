@@ -19,7 +19,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?rev=44">
   <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png?rev=44">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?rev=44">
-      <title>CGK Handling · Executive Aviation Operations · v44</title>
+      <title>CGK Handling · Executive Aviation Operations · v45</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=44">
   <style id="report-styles">
@@ -22156,14 +22156,51 @@ window.addEventListener('pageshow',()=>{if(!operationUI.active&&document.getElem
     const headers=['NO','DATE','TYPE','TIME','FLIGHT','ROUTE','PAX','ATTENDANCE','INCENTIVE'];
     const widths=[7,23,21,15,18,35,11,25,27];
     const drawTableHeader=()=>{
-      let x=margin;
-      doc.setFillColor(...emerald);doc.setTextColor(...white);doc.setFont('helvetica','bold');doc.setFontSize(5.9);
-      headers.forEach((h,i)=>{
-        safeRect(doc,x,y,widths[i],8,'F');
-        if(i===0){doc.setFillColor(...gold);safeRect(doc,x,y,widths[i],8,'F');doc.setTextColor(...emerald);}else doc.setTextColor(...white);
-        safePdfText(doc,h,x+1.6,y+5.2);x+=widths[i];
+      const headerH=8.8;
+      const tableW=widths.reduce((sum,w)=>sum+w,0);
+
+      // Paint the header as ONE solid emerald band first. This prevents
+      // individual cells from inheriting a stale fill color and producing
+      // white/invisible header labels in jsPDF on Safari/iOS.
+      doc.setFillColor(...emerald);
+      safeRect(doc,margin,y,tableW,headerH,'F');
+
+      // Gold NO cell, matching the executive emerald-gold visual system.
+      doc.setFillColor(...gold);
+      safeRect(doc,margin,y,widths[0],headerH,'F');
+
+      // Explicit separators so every column remains legible even when the
+      // table is dense. Do not depend on implicit fill/text state.
+      doc.setDrawColor(93,112,102);
+      doc.setLineWidth(0.12);
+      let dividerX=margin;
+      widths.slice(0,-1).forEach(w=>{
+        dividerX+=w;
+        doc.line(dividerX,y,dividerX,y+headerH);
       });
-      y+=8;
+
+      let x=margin;
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(6.15);
+      headers.forEach((h,i)=>{
+        // Explicit high-contrast color on EVERY label.
+        doc.setTextColor(...(i===0?emerald:goldLight));
+        const centerCols=[0,2,3,4,6,7,8].includes(i);
+        safePdfText(
+          doc,
+          h,
+          centerCols?x+(widths[i]/2):x+1.7,
+          y+5.75,
+          centerCols?{align:'center'}:{}
+        );
+        x+=widths[i];
+      });
+
+      // Gold baseline completes the luxury table header and keeps it
+      // visually separated from the first attendance row.
+      doc.setFillColor(...gold);
+      safeRect(doc,margin,y+headerH-0.65,tableW,0.65,'F');
+      y+=headerH;
     };
     drawTableHeader();
     snapshot.attendanceRows.forEach((r,idx)=>{

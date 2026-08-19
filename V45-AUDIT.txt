@@ -1,0 +1,16 @@
+CGK Handling V45 — Handling Report Header Readability Fix
+
+Root cause:
+The PDF attendance-table header relied on mutable jsPDF fill/text state inside the per-cell loop.
+That made later header cells vulnerable to stale color state, creating white/invisible labels on a light background.
+
+Fix:
+1. Paint one full emerald header band for all columns.
+2. Paint the NO cell gold independently.
+3. Set text color explicitly for every header label.
+4. Use gold-light text for DATE, TYPE, TIME, FLIGHT, ROUTE, PAX, ATTENDANCE, INCENTIVE.
+5. Add explicit column separators and gold baseline.
+6. The same drawTableHeader() is reused on continuation pages.
+
+Scope intentionally limited to report rendering.
+No database, attendance, incentive, realtime, Supabase, schedule, checklist, staff, poster or sync-config.js logic changed.
