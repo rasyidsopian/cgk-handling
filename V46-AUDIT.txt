@@ -1,0 +1,13 @@
+CGK Handling V46 — Incentive Level Engine
+
+Levels:
+- Karyawan: 1 dep 150k; 2+ dep 200k; 1 arr 75k; 2+ arr 125k; mixed dep+arr day 200k.
+- Probation: 1 handling/day 50k; 2+ handling/day 75k.
+- Freelance: 1 handling/day 75k; 2+ handling/day 125k.
+- Supir: 200k per attended handling.
+
+The mixed Karyawan rule is generalized to any day containing both departure and arrival at a flat 200k, avoiding double counting for >2 mixed events.
+
+Calculator and Report each use an explicit Level Insentif. Report defaults to the calculator level and recalculates the snapshot using the report-selected level. Received incentive is stored by level+month, with old month-only values preserved as Karyawan fallback.
+
+No changes to sync-config.js, database schema, event IDs, attendance model, checklist, staff assignment, import/export, or schedule data.
