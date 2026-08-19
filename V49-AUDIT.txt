@@ -1,0 +1,20 @@
+CGK Handling V49 — Final Luxury Gold Staff Poster
+
+Updated only the Petugas Handling preview/JPG visual layer:
+- Preview modal now matches the emerald-gold executive UI.
+- JPG remains 1080 x 1350 and uses the same event data.
+- Dark emerald gradient header + metallic-gold accent.
+- Ivory content area with gold dividers and premium hierarchy.
+- Staff assignment remains strictly event.id scoped.
+- Download JPG uses the exact image shown in preview.
+
+No changes to:
+- V48 incentive rules
+- Supabase / sync-config.js
+- attendance
+- checklist
+- report engine
+- group/PAX logic
+- schedule logic
+- staff assignment storage
+- modal lifecycle

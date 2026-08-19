@@ -538,3 +538,50 @@ body{min-height:100dvh;}
   color:#075f4b!important;
   text-shadow:none!important;
 }
+
+
+/* ======================================================================
+   V49 — STAFF POSTER / JPG LUXURY GOLD
+   ====================================================================== */
+#staffPoster{background:rgba(0,35,29,.64)!important;}
+#staffPoster .poster-preview-card{
+  background:#faf8f3!important;border:1px solid rgba(199,154,59,.58)!important;
+  box-shadow:0 34px 90px rgba(0,35,29,.38),0 0 0 1px rgba(230,203,137,.12) inset!important;
+}
+#staffPoster .poster-preview-head{
+  background:linear-gradient(135deg,#002e27 0%,#003f35 55%,#075b49 100%)!important;
+  border-bottom:1px solid rgba(230,203,137,.45)!important;padding:18px 20px!important;
+}
+#staffPoster .poster-preview-head .eyebrow{color:#e6cb89!important;letter-spacing:.12em!important;}
+#staffPoster .poster-preview-head h3{
+  color:#fff9ec!important;font-family:"Playfair Display",Georgia,serif!important;font-size:19px!important;
+}
+#staffPoster .poster-preview-head .icon-btn{
+  color:#f4e8c8!important;border-color:rgba(230,203,137,.48)!important;background:rgba(255,255,255,.05)!important;
+}
+#staffPoster .poster-preview-head .icon-btn:hover{
+  color:#fff!important;border-color:#e6cb89!important;background:rgba(199,154,59,.14)!important;
+}
+#staffPoster .poster-preview-stage{
+  background:radial-gradient(circle at 50% 0%,rgba(230,203,137,.18),transparent 34%),linear-gradient(180deg,#f7f1e4 0%,#f3efe6 100%)!important;
+  padding:18px!important;
+}
+#staffPoster .poster-preview-stage img{
+  border-radius:16px!important;background:#faf8f3!important;border:1px solid rgba(199,154,59,.28)!important;
+  box-shadow:0 20px 54px rgba(0,48,39,.22)!important;
+}
+#staffPoster .poster-loading{color:#705c2d!important;}
+#staffPoster .poster-actions{background:#fffdf8!important;border-top:1px solid rgba(199,154,59,.32)!important;}
+#staffPoster #posterCloseBtn{border-color:rgba(0,63,53,.16)!important;color:#15342b!important;background:#fff!important;}
+#staffPoster #downloadStaffPoster{
+  background:linear-gradient(135deg,#003f35 0%,#075b49 100%)!important;color:#fff9ec!important;
+  border:1px solid rgba(199,154,59,.65)!important;box-shadow:0 8px 22px rgba(0,63,53,.18)!important;
+}
+#staffPoster #downloadStaffPoster:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,63,53,.24)!important;}
+@media(max-width:760px){
+  #staffPoster .poster-preview-card{
+    width:min(96vw,620px)!important;
+    max-height:calc(100dvh - max(20px,env(safe-area-inset-top)) - max(20px,env(safe-area-inset-bottom)))!important;
+  }
+  #staffPoster .poster-preview-stage{padding:10px!important;}
+}
