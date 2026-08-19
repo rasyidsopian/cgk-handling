@@ -168,3 +168,62 @@ body.operation-lock{overflow:hidden!important;touch-action:none;}
 body:not(.modal-open):not(.operation-lock):not(.report-modal-open){
   touch-action:auto;
 }
+
+
+/* ======================================================================
+   V39 RESPONSIVE/PERFORMANCE HARDENING
+   ====================================================================== */
+html, body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+img, canvas, svg{
+  max-width:100%;
+}
+.operation-modal,
+.report-root .report-dialog,
+.poster-preview-card,
+.poster-card{
+  box-sizing:border-box;
+}
+@supports (height: 100dvh){
+  .operation-modal{
+    max-height:min(82dvh,760px);
+  }
+  .report-root .report-dialog{
+    max-height:calc(100dvh - 24px)!important;
+  }
+  .poster-preview-card{
+    max-height:90dvh;
+  }
+}
+@media (max-width: 1024px){
+  .operation-modal{
+    width:min(680px,calc(100vw - 24px));
+  }
+  .staff-selector{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media (max-width: 700px){
+  .operation-modal{
+    width:calc(100vw - 16px);
+    max-height:calc(100dvh - 16px);
+    border-radius:14px;
+  }
+  .operation-modal-head,
+  .operation-modal-foot,
+  .checklist-scroll,
+  .staff-selector{
+    padding-left:14px;
+    padding-right:14px;
+  }
+  .staff-selector{
+    grid-template-columns:1fr 1fr;
+  }
+  .poster-visual{
+    width:100%;
+    min-height:0;
+    max-height:none;
+  }
+}

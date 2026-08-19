@@ -22217,31 +22217,6 @@ window.addEventListener('pageshow',()=>{if(!operationUI.active&&document.getElem
       setTimeout(reconcile,220);
     }
   },true);
-
-  const observer=new MutationObserver(function(mutations){
-    let relevant=false;
-    for(const m of mutations){
-      const t=m.target;
-      if(t instanceof Element && (
-        modalIds.has(t.id) ||
-        ['importBackdrop','scheduleBackdrop','operationBackdrop','cgkReportRoot'].includes(t.id) ||
-        t.classList?.contains('report-root')
-      )){
-        relevant=true;
-        break;
-      }
-    }
-    if(relevant) queueMicrotask(reconcile);
-  });
-
-  function start(){
-    bootClean();
-    observer.observe(document.body,{
-      subtree:true,
-      attributes:true,
-      attributeFilter:['hidden','aria-hidden','class','style','inert'],
-      childList:true
-    });
     setTimeout(reconcile,50);
     setTimeout(reconcile,500);
   }
@@ -22434,6 +22409,65 @@ window.addEventListener('pageshow',()=>{if(!operationUI.active&&document.getElem
       staffIds: staffIdsForEvent(event)
     };
   };
+})();
+</script>
+
+
+<script>
+/* ======================================================================
+   V39 — PERFORMANCE / RESPONSIVENESS FIX
+   Removes recursive DOM observation from the invisible-UI guard.
+   Cleanup is event-driven and bounded to avoid Safari/desktop lockups.
+   ====================================================================== */
+(function CGKV39PerformanceFix(){
+  'use strict';
+
+  let scheduled = false;
+
+  function scheduleCleanup(delay){
+    if(scheduled) return;
+    scheduled = true;
+    setTimeout(function(){
+      scheduled = false;
+      try{
+        window.CGKInvisibleUIGuard?.reconcile?.();
+      }catch(_){}
+    }, delay || 0);
+  }
+
+  // Only explicit interaction paths trigger cleanup.
+  document.addEventListener('click', function(e){
+    const target = e.target?.closest?.(
+      '#closeImportModal,#cancelImport,#closeScheduleModal,#cancelSchedule,'+
+      '#closeChecklist,#cancelChecklist,#saveChecklistBtn,'+
+      '#closeStaff,#cancelStaff,#saveStaffBtn,'+
+      '#closeStaffManage,#cancelStaffManage,'+
+      '#closeStaffMember,#cancelStaffMember,#saveStaffMember,'+
+      '#closeStaffPoster,#posterCloseBtn,.report-close,.report-cancel,.report-generate'
+    );
+    if(target) scheduleCleanup(30);
+  }, true);
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') scheduleCleanup(30);
+  }, true);
+
+  window.addEventListener('pageshow', function(){
+    scheduleCleanup(60);
+  });
+
+  document.addEventListener('visibilitychange', function(){
+    if(!document.hidden) scheduleCleanup(80);
+  });
+
+  // Avoid stale body locks after orientation/viewport changes on Safari.
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      scheduleCleanup(0);
+    }, 180);
+  }, {passive:true});
 })();
 </script>
 

@@ -1,0 +1,15 @@
+CGK Handling V39 — Responsiveness / Safari Performance Fix
+
+Root cause found:
+- V37 invisible-UI hardening used a global MutationObserver watching class/style/hidden/inert
+  changes across the entire body.
+- reconcile() itself changes those same attributes/styles.
+- On complex calendar/modal rendering this can cause repeated observer callbacks,
+  excessive main-thread work and apparent page unresponsiveness, especially Safari.
+
+Fix:
+- Removed always-on MutationObserver.
+- Kept invisible-layer cleanup but made it bounded/event-driven.
+- Added throttled cleanup for close actions, Escape, pageshow, visibility restore and resize.
+- Added viewport/dvh hardening for Safari/mobile.
+- No redesign and no database/sync logic changes.
