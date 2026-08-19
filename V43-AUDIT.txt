@@ -1,0 +1,11 @@
+CGK Handling V43 — Luxury Gold Staff Poster + Office Departure Time
+
+Changes:
+- Staff handling JPG/preview redesigned to match Emerald + Gold luxury UI.
+- Added BERANGKAT DARI KANTOR operational time.
+  * Departure: 7 hours before take-off.
+  * Arrival: 2 hours before landing.
+  * Automatically marks H-1 when subtraction crosses midnight.
+- Added the same office departure time to Handling Detail grid.
+- Poster remains strictly per event.id; staff assignments are not aggregated by day.
+- No changes to Supabase, sync-config.js, attendance, incentive, checklist, report, import/export or event IDs.
