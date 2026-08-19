@@ -532,3 +532,9 @@ body{min-height:100dvh;}
   .top-tools{justify-content:space-between!important;}
   .brand-block h1{font-size:18px!important;}
 }
+
+/* V47 — Expected nominal readability only. Keep label/subtext unchanged. */
+.incentive-stat.highlight b{
+  color:#075f4b!important;
+  text-shadow:none!important;
+}

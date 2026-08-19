@@ -1,0 +1,14 @@
+CGK Handling V47 — Incentive Corrections
+
+Corrections requested:
+- Expected nominal Rupiah text only: luxury emerald green for better contrast.
+  Label and supporting text are intentionally unchanged.
+- Freelance ARRIVAL: 1x/day Rp75.000, 2x+/day Rp125.000.
+- Freelance DEPARTURE: 1x/day Rp150.000, 2x+/day Rp250.000.
+- Freelance mixed day: departure tier + arrival tier are added, because no special mixed flat rate was specified.
+- Driver: flat Rp200.000 per handling day, regardless of 1, 2, 3, 4, 5+ attended events that day.
+- Probation unchanged: 1x/day Rp50.000, 2x+/day Rp75.000.
+- Karyawan unchanged from V46.
+- Report generator continues to use the same central incentive engine, so expected incentive and daily breakdown follow the selected level.
+
+No changes to sync-config.js, attendance state, event IDs, Supabase, checklist, staff assignment, import/export, or PWA logic.

@@ -1,0 +1,14 @@
+CGK Handling V48 — Freelance = Karyawan
+
+Rule correction:
+- Freelance now uses exactly the same daily incentive rules as Karyawan:
+  * 1 departure/day: Rp150.000
+  * 2+ departures/day: Rp200.000
+  * 1 arrival/day: Rp75.000
+  * 2+ arrivals/day: Rp125.000
+  * mixed departure + arrival on the same day: Rp200.000
+- Probation remains: 1x Rp50.000; 2x+ Rp75.000 per day.
+- Supir remains flat Rp200.000 per handling day, regardless of number of attended handlings that day.
+- Report PDF uses the same shared incentive engine, so Freelance reports follow the corrected Karyawan-equivalent rules.
+- Previous Expected nominal contrast request is retained: only the Expected amount is forced to luxury green.
+- No sync-config.js changes.
